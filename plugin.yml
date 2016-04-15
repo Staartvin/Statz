@@ -1,0 +1,5 @@
+main: me.staartvin.statz.Statz
+name: Statz
+version: 1.0
+authors: [Staartvin]
+description: The one-and-all plugin to store stats about any player.
