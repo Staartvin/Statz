@@ -33,32 +33,23 @@ public abstract class Database {
 		SQLiteTable newTable = new SQLiteTable("players");
 
 		// Populate table
-		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the
-															// player
-		newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of
-																	// the
-		// player
+		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
+		newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of player
 		this.addTable(newTable);
 
 		// How many times did a player join this server?
 		newTable = new SQLiteTable("joins");
 
-		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the
-															// player
-		newTable.addColumn("value", false, SQLDataType.INT); // How many times
-																// did the
-		// player join.
+		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player join.
 
 		this.addTable(newTable);
 
 		// How many times did a player die?
 		newTable = new SQLiteTable("death");
 
-		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the
-															// player
-		newTable.addColumn("value", false, SQLDataType.INT); // How many times
-																// did the
-		// player die.
+		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
 
 		this.addTable(newTable);
 
@@ -200,8 +191,10 @@ public abstract class Database {
 	}
 
 	/**
-	 * Sets values to columns in a specific table.
-	 * <br><b>Note:</b> a linked hashmap is used to make sure that the order of the elements does not change.
+	 * Sets values to columns in a specific table. <br>
+	 * <b>Note:</b> a linked hashmap is used to make sure that the order of the
+	 * elements does not change.
+	 * 
 	 * @param table
 	 *            Table to change values in.
 	 * @param results
