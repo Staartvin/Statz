@@ -28,6 +28,9 @@ public abstract class Database {
 		plugin = instance;
 	}
 
+	/**
+	 * Loads all tables into memory. This has to be run before {@linkplain #load()}
+	 */
 	public void loadTables() {
 		// UUID table to look up uuid of players
 		SQLiteTable newTable = new SQLiteTable("players");
@@ -55,6 +58,11 @@ public abstract class Database {
 
 	}
 
+	/**
+	 * Get a {@linkplain SQLiteTable} object by table name.
+	 * @param tableName Name of the table
+	 * @return SQLiteTable object represented by that name or NULL if none was found.
+	 */
 	public SQLiteTable getSQLiteTable(String tableName) {
 
 		tableName = SQLiteConnector.prefix + tableName;
@@ -68,10 +76,21 @@ public abstract class Database {
 		return null;
 	}
 
+	/**
+	 * Sets up a connection between the plugin and the sqlite database.
+	 * @return a connection to the database or null if it couldn't connect.
+	 */
 	public abstract Connection getSQLConnection();
 
+	/**
+	 * Connects to sqlite database and automatically creates tables when needed.
+	 */
 	public abstract void load();
 
+	/**
+	 * Tests whether there is a valid connection available between sqlite database.
+	 * <br>Will spit errors in the console when it could not properly connect.
+	 */
 	public void initialize() {
 		connection = getSQLConnection();
 
@@ -117,7 +136,7 @@ public abstract class Database {
 				return rs.getObject(columnName);
 			}
 		} catch (SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
 				if (ps != null)
@@ -125,7 +144,7 @@ public abstract class Database {
 				if (conn != null)
 					conn.close();
 			} catch (SQLException ex) {
-				plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
+				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
 		return null;
@@ -176,7 +195,7 @@ public abstract class Database {
 				return result;
 			}
 		} catch (SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
 				if (ps != null)
@@ -184,7 +203,7 @@ public abstract class Database {
 				if (conn != null)
 					conn.close();
 			} catch (SQLException ex) {
-				plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
+				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
 		return result;
@@ -236,7 +255,7 @@ public abstract class Database {
 			ps.executeUpdate();
 			return;
 		} catch (SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
 				if (ps != null)
@@ -244,12 +263,17 @@ public abstract class Database {
 				if (conn != null)
 					conn.close();
 			} catch (SQLException ex) {
-				plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
+				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
 		return;
 	}
 
+	/**
+	 * Closes sqlite connection.
+	 * @param ps PreparedStatement to be closed
+	 * @param rs ResultSet to be closed
+	 */
 	public void close(PreparedStatement ps, ResultSet rs) {
 		try {
 			if (ps != null)
@@ -257,7 +281,7 @@ public abstract class Database {
 			if (rs != null)
 				rs.close();
 		} catch (SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
+			plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 		}
 	}
 

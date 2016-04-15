@@ -27,7 +27,9 @@ public class SQLiteConnector extends Database {
 		plugin = instance;
 	}
 
-	// SQL creation stuff, You can leave the blow stuff untouched.
+	/* (non-Javadoc)
+	 * @see me.staartvin.statz.database.Database#getSQLConnection()
+	 */
 	public Connection getSQLConnection() {
 		File dataFile = new File(plugin.getDataFolder(), databaseName + ".db");
 		if (!dataFile.exists()) {
@@ -56,6 +58,9 @@ public class SQLiteConnector extends Database {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see me.staartvin.statz.database.Database#load()
+	 */
 	public void load() {
 		connection = getSQLConnection();
 
@@ -75,6 +80,11 @@ public class SQLiteConnector extends Database {
 		initialize();
 	}
 
+	/**
+	 * This function creates multiple strings in 'SQL style' to create the proper tables. 
+	 * <br>It looks at the tables that are loaded in memory and dynamically creates proper SQL statements.
+	 * @return SQL statements that will create the necessary tables when run.
+	 */
 	public List<String> createTablesStatement() {
     	// Returns a list of statements that need to be run to create the tables.
     	
