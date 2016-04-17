@@ -11,22 +11,22 @@ import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerJoinListener implements Listener {
 
-	private Statz plugin;
+	private final Statz plugin;
 
-	public PlayerJoinListener(Statz plugin) {
+	public PlayerJoinListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
+	public void onJoin(final PlayerJoinEvent event) {
 
 		// Get player
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 
 		// Get table to read and write to.
-		SQLiteTable table = plugin.getSqlConnector().getSQLiteTable("joins");
+		final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable("joins");
 
-		Object currentStat = plugin.getSqlConnector().getObject(table, "value",
+		final Object currentStat = plugin.getSqlConnector().getObject(table, "value",
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString()));
 
 		// Get current value of stat.

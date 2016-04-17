@@ -17,19 +17,20 @@ import me.staartvin.statz.database.datatype.SQLiteTable.SQLDataType;
 import me.staartvin.statz.util.StatzUtil;
 
 public abstract class Database {
-	private Statz plugin;
+	private final Statz plugin;
 
 	// All tables are stored here.
 	private List<SQLiteTable> tables = new ArrayList<SQLiteTable>();
 
 	public Connection connection;
 
-	public Database(Statz instance) {
+	public Database(final Statz instance) {
 		plugin = instance;
 	}
 
 	/**
-	 * Loads all tables into memory. This has to be run before {@linkplain #load()}
+	 * Loads all tables into memory. This has to be run before
+	 * {@linkplain #load()}
 	 */
 	public void loadTables() {
 		// UUID table to look up uuid of players
@@ -60,14 +61,16 @@ public abstract class Database {
 
 	/**
 	 * Get a {@linkplain SQLiteTable} object by table name.
+	 * 
 	 * @param tableName Name of the table
-	 * @return SQLiteTable object represented by that name or NULL if none was found.
+	 * @return SQLiteTable object represented by that name or NULL if none was
+	 *         found.
 	 */
 	public SQLiteTable getSQLiteTable(String tableName) {
 
 		tableName = SQLiteConnector.prefix + tableName;
 
-		for (SQLiteTable table : tables) {
+		for (final SQLiteTable table : tables) {
 			if (table.getTableName().equals(tableName)) {
 				return table;
 			}
@@ -78,6 +81,7 @@ public abstract class Database {
 
 	/**
 	 * Sets up a connection between the plugin and the sqlite database.
+	 * 
 	 * @return a connection to the database or null if it couldn't connect.
 	 */
 	public abstract Connection getSQLConnection();
@@ -88,8 +92,10 @@ public abstract class Database {
 	public abstract void load();
 
 	/**
-	 * Tests whether there is a valid connection available between sqlite database.
-	 * <br>Will spit errors in the console when it could not properly connect.
+	 * Tests whether there is a valid connection available between sqlite
+	 * database.
+	 * <br>
+	 * Will spit errors in the console when it could not properly connect.
 	 */
 	public void initialize() {
 		connection = getSQLConnection();
@@ -121,7 +127,7 @@ public abstract class Database {
 	 * @return An object (either integer or string) if anything was found
 	 *         matching the conditions. NULL otherwise.
 	 */
-	public Object getObject(SQLiteTable table, String columnName, HashMap<String, String> queries) {
+	public Object getObject(final SQLiteTable table, final String columnName, final HashMap<String, String> queries) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -135,7 +141,7 @@ public abstract class Database {
 			while (rs.next()) {
 				return rs.getObject(columnName);
 			}
-		} catch (SQLException ex) {
+		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
@@ -143,7 +149,7 @@ public abstract class Database {
 					ps.close();
 				if (conn != null)
 					conn.close();
-			} catch (SQLException ex) {
+			} catch (final SQLException ex) {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
@@ -167,12 +173,12 @@ public abstract class Database {
 	 * @return a hashmap where every key is a column and a key is the value of
 	 *         that column.
 	 */
-	public HashMap<String, Object> getObjects(SQLiteTable table, HashMap<String, String> queries) {
+	public HashMap<String, Object> getObjects(final SQLiteTable table, final HashMap<String, String> queries) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
-		HashMap<String, Object> result = new HashMap<>();
+		final HashMap<String, Object> result = new HashMap<>();
 
 		try {
 			conn = getSQLConnection();
@@ -184,8 +190,8 @@ public abstract class Database {
 
 				// Populate hashmap
 				for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-					String columnName = rs.getMetaData().getColumnName(i + 1);
-					Object value = rs.getObject(i + 1);
+					final String columnName = rs.getMetaData().getColumnName(i + 1);
+					final Object value = rs.getObject(i + 1);
 
 					// Put value in hashmap if not null, otherwise just put
 					// empty string
@@ -194,7 +200,7 @@ public abstract class Database {
 
 				return result;
 			}
-		} catch (SQLException ex) {
+		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
@@ -202,7 +208,7 @@ public abstract class Database {
 					ps.close();
 				if (conn != null)
 					conn.close();
-			} catch (SQLException ex) {
+			} catch (final SQLException ex) {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
@@ -224,21 +230,21 @@ public abstract class Database {
 	 *            that we set the value of <i>uuid</i> to
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
 	 */
-	public void setObjects(SQLiteTable table, LinkedHashMap<String, String> results) {
+	public void setObjects(final SQLiteTable table, final LinkedHashMap<String, String> results) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
 		StringBuilder columnNames = new StringBuilder("(");
 		StringBuilder resultNames = new StringBuilder("(");
 
-		for (Entry<String, String> result : results.entrySet()) {
+		for (final Entry<String, String> result : results.entrySet()) {
 			columnNames.append(result.getKey() + ",");
 
 			try {
 				// Try to check if it is an integer
 				Integer.parseInt(result.getValue());
 				resultNames.append(result.getValue() + ",");
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				resultNames.append("'" + result.getValue() + "',");
 			}
 
@@ -254,7 +260,7 @@ public abstract class Database {
 					+ " VALUES" + resultNames);
 			ps.executeUpdate();
 			return;
-		} catch (SQLException ex) {
+		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
 		} finally {
 			try {
@@ -262,7 +268,7 @@ public abstract class Database {
 					ps.close();
 				if (conn != null)
 					conn.close();
-			} catch (SQLException ex) {
+			} catch (final SQLException ex) {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
@@ -271,16 +277,17 @@ public abstract class Database {
 
 	/**
 	 * Closes sqlite connection.
+	 * 
 	 * @param ps PreparedStatement to be closed
 	 * @param rs ResultSet to be closed
 	 */
-	public void close(PreparedStatement ps, ResultSet rs) {
+	public void close(final PreparedStatement ps, final ResultSet rs) {
 		try {
 			if (ps != null)
 				ps.close();
 			if (rs != null)
 				rs.close();
-		} catch (SQLException ex) {
+		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 		}
 	}
@@ -289,11 +296,11 @@ public abstract class Database {
 		return tables;
 	}
 
-	public void setTables(List<SQLiteTable> tables) {
+	public void setTables(final List<SQLiteTable> tables) {
 		this.tables = tables;
 	}
 
-	public void addTable(SQLiteTable table) {
+	public void addTable(final SQLiteTable table) {
 		tables.add(table);
 	}
 }

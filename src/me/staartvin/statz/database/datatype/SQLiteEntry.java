@@ -7,15 +7,16 @@ public class SQLiteEntry {
 	private String columnName;
 	private boolean primaryKey = false, notNull = false;
 	private SQLDataType dataType = SQLDataType.TEXT;
-	
-	public SQLiteEntry(String columnName, boolean primaryKey, SQLDataType dataType) {
+
+	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);
 		this.setDataType(dataType);
 		this.setNotNull(true);
 	}
-	
-	public SQLiteEntry(String columnName, boolean primaryKey, SQLDataType dataType, boolean notNull) {
+
+	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType,
+			final boolean notNull) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);
 		this.setDataType(dataType);
@@ -26,7 +27,7 @@ public class SQLiteEntry {
 		return columnName;
 	}
 
-	public void setColumnName(String columnName) {
+	public void setColumnName(final String columnName) {
 		this.columnName = columnName;
 	}
 
@@ -34,7 +35,7 @@ public class SQLiteEntry {
 		return dataType;
 	}
 
-	public void setDataType(SQLDataType dataType) {
+	public void setDataType(final SQLDataType dataType) {
 		this.dataType = dataType;
 	}
 
@@ -42,7 +43,7 @@ public class SQLiteEntry {
 		return primaryKey;
 	}
 
-	public void setPrimaryKey(boolean primaryKey) {
+	public void setPrimaryKey(final boolean primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 
@@ -50,7 +51,7 @@ public class SQLiteEntry {
 		return notNull;
 	}
 
-	public void setNotNull(boolean notNull) {
+	public void setNotNull(final boolean notNull) {
 		this.notNull = notNull;
 	}
 }

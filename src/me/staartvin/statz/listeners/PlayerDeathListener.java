@@ -12,34 +12,36 @@ import net.md_5.bungee.api.ChatColor;
 
 public class PlayerDeathListener implements Listener {
 
-	private Statz plugin;
-	
-	public PlayerDeathListener(Statz plugin) {
+	private final Statz plugin;
+
+	public PlayerDeathListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
-	public void onDie(PlayerDeathEvent event) {
-		
+	public void onDie(final PlayerDeathEvent event) {
+
 		// Get player
-		Player player = event.getEntity();
-		
+		final Player player = event.getEntity();
+
 		// Get table to read and write to.
-		SQLiteTable table = plugin.getSqlConnector().getSQLiteTable("death"); 
-		
-		Object currentStat = plugin.getSqlConnector().getObject(table, "value", StatzUtil.makeQuery("uuid", player.getUniqueId().toString()));
-		
+		final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable("death");
+
+		final Object currentStat = plugin.getSqlConnector().getObject(table, "value",
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString()));
+
 		// Get current value of stat.
 		int currentValue = 0;
-		
+
 		// Only cast if currentStat is not null (hence it has an entry)
 		if (currentStat != null) {
 			currentValue = (int) currentStat;
 		}
-		
+
 		// Update value to new stat.
-		plugin.getSqlConnector().setObjects(table, StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1 ) + ""));
-		
+		plugin.getSqlConnector().setObjects(table,
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1) + ""));
+
 		player.sendMessage(ChatColor.RED + "Your death counter is now " + ChatColor.GOLD + (currentValue + 1));
 	}
 }

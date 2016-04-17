@@ -21,7 +21,7 @@ public class SQLiteTable {
 
 	private List<SQLiteEntry> columns = new ArrayList<SQLiteEntry>();
 
-	public SQLiteTable(String tableName) {
+	public SQLiteTable(final String tableName) {
 		this.setTableName(tableName);
 	}
 
@@ -29,16 +29,16 @@ public class SQLiteTable {
 		return columns;
 	}
 
-	public void setColumns(List<SQLiteEntry> columns) {
+	public void setColumns(final List<SQLiteEntry> columns) {
 		this.columns = columns;
 	}
 
-	public SQLiteTable addColumn(String columnName, boolean primaryKey, SQLDataType type) {
+	public SQLiteTable addColumn(final String columnName, final boolean primaryKey, final SQLDataType type) {
 		columns.add(new SQLiteEntry(columnName, primaryKey, type));
 		return this; // Return this to allow chaining.
 	}
-	
-	public SQLiteTable addColumn(SQLiteEntry entry) {
+
+	public SQLiteTable addColumn(final SQLiteEntry entry) {
 		columns.add(entry);
 		return this;
 	}
@@ -47,12 +47,12 @@ public class SQLiteTable {
 		return tableName;
 	}
 
-	public void setTableName(String tableName) {
+	public void setTableName(final String tableName) {
 		this.tableName = SQLiteConnector.prefix + tableName;
 	}
 
 	public String getPrimaryKey() {
-		for (SQLiteEntry column : columns) {
+		for (final SQLiteEntry column : columns) {
 			if (column.isPrimaryKey())
 				return column.getColumnName();
 		}
@@ -60,12 +60,12 @@ public class SQLiteTable {
 		return null;
 	}
 
-	public void setPrimaryKey(String primaryKey) {
-		for (SQLiteEntry column: columns) {
+	public void setPrimaryKey(final String primaryKey) {
+		for (final SQLiteEntry column : columns) {
 			column.setPrimaryKey(false);
 		}
-		
-		for (SQLiteEntry column: columns) {
+
+		for (final SQLiteEntry column : columns) {
 			if (column.getColumnName().equalsIgnoreCase(primaryKey)) {
 				column.setPrimaryKey(true);
 			}
