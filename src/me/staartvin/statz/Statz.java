@@ -3,12 +3,14 @@ package me.staartvin.statz;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.database.SQLiteConnector;
+import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.listeners.PlayerDeathListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
 
 public class Statz extends JavaPlugin {
 
 	private SQLiteConnector sqlConnector;
+	private DataManager dataManager;
 
 	@Override
 	public void onEnable() {
@@ -22,6 +24,9 @@ public class Statz extends JavaPlugin {
 
 		// Register listeners
 		this.registerListeners();
+		
+		// Load data manager as database is loaded!
+		this.setDataManager(new DataManager(this));
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -42,5 +47,13 @@ public class Statz extends JavaPlugin {
 
 	public void setSqlConnector(final SQLiteConnector sqlConnector) {
 		this.sqlConnector = sqlConnector;
+	}
+
+	public DataManager getDataManager() {
+		return dataManager;
+	}
+
+	public void setDataManager(DataManager dataManager) {
+		this.dataManager = dataManager;
 	}
 }

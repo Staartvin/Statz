@@ -50,7 +50,7 @@ public abstract class Database {
 		this.addTable(newTable);
 
 		// How many times did a player die?
-		newTable = new SQLiteTable("death");
+		newTable = new SQLiteTable("deaths");
 
 		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
@@ -155,6 +155,16 @@ public abstract class Database {
 		}
 		return null;
 	}
+	
+	/**
+	 * @see #getObject(SQLiteTable, String, HashMap)
+	 * @param tableName Name of the table to get data from
+	 * @param columnName Name of column to get value from
+	 * @param queries Queries to search for specifics
+	 */
+	public Object getObject(final String tableName, final String columnName, final HashMap<String, String> queries) {
+		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
+	}
 
 	/**
 	 * Gets a complete row of values from a specific table with a specific
@@ -213,6 +223,16 @@ public abstract class Database {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * @see #getObjects(SQLiteTable, HashMap)
+	 * @param tableName Name of the table to get data from
+	 * @param queries Queries to execute
+	 * @return
+	 */
+	public HashMap<String, Object> getObjects(String tableName, final HashMap<String, String> queries) {
+		return this.getObjects(this.getSQLiteTable(tableName), queries);
 	}
 
 	/**

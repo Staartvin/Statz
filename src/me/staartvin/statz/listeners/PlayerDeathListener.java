@@ -6,9 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.SQLiteTable;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 
 public class PlayerDeathListener implements Listener {
 
@@ -21,27 +21,27 @@ public class PlayerDeathListener implements Listener {
 	@EventHandler
 	public void onDie(final PlayerDeathEvent event) {
 
+		PlayerStat stat = PlayerStat.DEATHS;
+
 		// Get player
 		final Player player = event.getEntity();
 
-		// Get table to read and write to.
-		final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable("death");
+		// Update name in database.
+		plugin.getSqlConnector().setObjects(plugin.getSqlConnector().getSQLiteTable("players"),
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
 
-		final Object currentStat = plugin.getSqlConnector().getObject(table, "value",
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString()));
+		// Get player info.
+		PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
 
 		// Get current value of stat.
 		int currentValue = 0;
 
-		// Only cast if currentStat is not null (hence it has an entry)
-		if (currentStat != null) {
-			currentValue = (int) currentStat;
+		// Check if it is valid!
+		if (info.isValid()) {
+			currentValue = Integer.parseInt(info.getValue(stat.toString()));
 		}
 
 		// Update value to new stat.
-		plugin.getSqlConnector().setObjects(table,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1) + ""));
-
-		player.sendMessage(ChatColor.RED + "Your death counter is now " + ChatColor.GOLD + (currentValue + 1));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, "uuid", player.getUniqueId().toString(), "value", (currentValue + 1));
 	}
 }
