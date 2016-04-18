@@ -37,7 +37,7 @@ public abstract class Database {
 	public void loadTables() {
 		// UUID table to look up uuid of players
 		SQLiteTable newTable = new SQLiteTable("players");
-		
+
 		SQLiteEntry id = new SQLiteEntry("id", true, SQLDataType.INT, true);
 
 		// Populate table
@@ -45,8 +45,6 @@ public abstract class Database {
 		newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of player
 		this.addTable(newTable);
 
-		
-		
 		// How many times did a player join this server?
 		newTable = new SQLiteTable(PlayerStat.JOINS.getTableName());
 
@@ -55,8 +53,6 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
-		
-		
 		// How many times did a player die?
 		newTable = new SQLiteTable(PlayerStat.DEATHS.getTableName());
 
@@ -64,24 +60,73 @@ public abstract class Database {
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
 
 		this.addTable(newTable);
-		
-		
-		
+
 		// How many times did a player catch an item and what type?
 		newTable = new SQLiteTable(PlayerStat.ITEMS_CAUGHT.getTableName());
-		
+
 		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
 		newTable.addColumn(id);
-		
+
 		SQLiteEntry uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
 		SQLiteEntry caught = new SQLiteEntry("caught", false, SQLDataType.TEXT, true);
-		
+		SQLiteEntry world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
 		newTable.addColumn(uuid); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT);
 		newTable.addColumn(caught);
-		
+		newTable.addColumn(world);
+
 		newTable.addUniqueMatched(uuid);
 		newTable.addUniqueMatched(caught);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// What block did a player place and how many times?
+		newTable = new SQLiteTable(PlayerStat.BLOCKS_PLACED.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		newTable.addColumn(id);
+
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		SQLiteEntry typeID = new SQLiteEntry("typeid", false, SQLDataType.INT, true);
+		SQLiteEntry dataValue = new SQLiteEntry("datavalue", false, SQLDataType.INT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+		newTable.addColumn(dataValue);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(dataValue);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// What block did a player place and how many times?
+		newTable = new SQLiteTable(PlayerStat.BLOCKS_BROKEN.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		newTable.addColumn(id);
+
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("typeid", false, SQLDataType.INT, true);
+		dataValue = new SQLiteEntry("datavalue", false, SQLDataType.INT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+		newTable.addColumn(dataValue);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(dataValue);
+		newTable.addUniqueMatched(world);
 
 		this.addTable(newTable);
 
@@ -296,7 +341,6 @@ public abstract class Database {
 
 		StringBuilder resultNames = new StringBuilder("(");
 
-
 		for (final Entry<String, String> result : results.entrySet()) {
 			columnNames.append(result.getKey() + ",");
 
@@ -313,9 +357,9 @@ public abstract class Database {
 		// Remove last comma
 		columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
 		resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
-		
-		String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
-		+ " VALUES " + resultNames;
+
+		String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
+				+ resultNames;
 
 		try {
 			conn = getSQLConnection();

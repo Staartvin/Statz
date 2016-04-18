@@ -4,6 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
+import me.staartvin.statz.listeners.PlayerBlockBreakListener;
+import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
 import me.staartvin.statz.listeners.PlayerDeathListener;
 import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
@@ -41,6 +43,8 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerBlockPlaceListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerBlockBreakListener(this), this);
 	}
 
 	public SQLiteConnector getSqlConnector() {

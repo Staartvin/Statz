@@ -70,7 +70,8 @@ public class PlayerFishListener implements Listener {
 		// Check if it is valid!
 		if (info.isValid()) {
 			for (HashMap<String, Object> map : info.getResults()) {				
-				if (map.get("caught") != null && map.get("caught").toString().equalsIgnoreCase(materialName)) {
+				if (map.get("caught") != null && map.get("caught").toString().equalsIgnoreCase(materialName)
+						&& map.get("world") != null && map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
 					currentValue += Integer.parseInt(map.get("value").toString());
 				}
 			}
@@ -78,6 +79,6 @@ public class PlayerFishListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "caught", materialName));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "caught", materialName, "world", player.getWorld().getName()));
 	}
 }

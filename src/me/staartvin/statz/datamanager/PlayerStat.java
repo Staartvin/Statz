@@ -17,7 +17,15 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player catch an item with fishing?
 	 */
-	ITEMS_CAUGHT("items_caught");
+	ITEMS_CAUGHT("items_caught"),
+	/**
+	 * What kind of blocks (and how many) where placed by a player?
+	 */
+	BLOCKS_PLACED("blocks_placed"),
+	/**
+	 * What kind of blocks (and how many) where broken by a player?
+	 */
+	BLOCKS_BROKEN("blocks_broken");
 
 	private String tableName;
 
