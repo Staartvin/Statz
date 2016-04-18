@@ -1,5 +1,8 @@
 package me.staartvin.statz.datamanager;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 import me.staartvin.statz.Statz;
@@ -8,53 +11,45 @@ import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
- * This class handles all incoming data queries from other plugins (and from internal calls).
- * <br>Getting info of a player should be done here.
+ * This class handles all incoming data queries from other plugins (and from
+ * internal calls).
+ * <br>
+ * Getting info of a player should be done here.
  * <p>
- * Date created:  15:03:12
+ * Date created: 15:03:12
  * 17 apr. 2016
+ * 
  * @author "Staartvin"
  *
  */
 public class DataManager {
 
-	private Statz plugin;
-	
-	public DataManager(Statz instance) {
+	private final Statz plugin;
+
+	public DataManager(final Statz instance) {
 		plugin = instance;
 	}
-	
-	public PlayerInfo getPlayerInfo(UUID uuid, PlayerStat statType) {
-		PlayerInfo info = new PlayerInfo(uuid);
-		
-		Object result = null;
-		
-		if (statType.equals(PlayerStat.JOINS)) {
-			result = plugin.getSqlConnector().getObject(statType.getTableName(), "value", StatzUtil.makeQuery("uuid", uuid.toString()));
-		} else if (statType.equals(PlayerStat.DEATHS)) {
-			result = plugin.getSqlConnector().getObject(statType.getTableName(), "value", StatzUtil.makeQuery("uuid", uuid.toString()));
-		}
-		
+
+	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) {
+		final PlayerInfo info = new PlayerInfo(uuid);
+
+		List<HashMap<String, Object>> result = plugin.getSqlConnector().getObjects(statType.getTableName(),
+				StatzUtil.makeQuery("uuid", uuid.toString()));
+
 		// Result is not null, so this is a valid player info.
-		if (result != null) {
+		if (result != null && !result.isEmpty()) {
 			info.setValid(true);
-			
-			info.setValue(statType.toString(), result.toString());
+
+			info.setResults(result);
 		}
-		
+
 		return info;
 	}
-	
-	public void setPlayerInfo(UUID uuid, PlayerStat statType, Object... parameters) {
-		
-		String[] strings = new String[parameters.length];
-		
-		for (int i=0;i<parameters.length;i++) {
-			strings[i] = parameters[i].toString();
-		}
-		
-		SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(statType.getTableName());
-		
-		plugin.getSqlConnector().setObjects(table, StatzUtil.makeQuery(strings));
+
+	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, LinkedHashMap<String, String> results) {
+
+		final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(statType.getTableName());
+
+		plugin.getSqlConnector().setObjects(table,  results);
 	}
 }

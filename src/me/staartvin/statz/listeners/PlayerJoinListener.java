@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 
-		PlayerStat stat = PlayerStat.JOINS;
+		final PlayerStat stat = PlayerStat.JOINS;
 
 		// Get player
 		final Player player = event.getPlayer();
@@ -31,17 +31,18 @@ public class PlayerJoinListener implements Listener {
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
 
 		// Get player info.
-		PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			currentValue = Integer.parseInt(info.getValue(stat.toString()));
+			currentValue = Integer.parseInt(info.getResults().get(0).get("value").toString());
 		}
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, "uuid", player.getUniqueId().toString(), "value", (currentValue + 1));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1)));
 	}
 }

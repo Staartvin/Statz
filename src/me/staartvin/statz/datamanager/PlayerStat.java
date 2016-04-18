@@ -7,17 +7,21 @@ package me.staartvin.statz.datamanager;
 public enum PlayerStat {
 
 	/**
-	 * How many times did this player join the server?
+	 * How many times did a player join the server?
 	 */
-	JOINS("joins"), 
+	JOINS("joins"),
 	/**
-	 * How many times did this player die?
+	 * How many times did a player die?
 	 */
-	DEATHS("deaths");
-	
+	DEATHS("deaths"),
+	/**
+	 * How many times did a player catch an item with fishing?
+	 */
+	ITEMS_CAUGHT("items_caught");
+
 	private String tableName;
-	
-	PlayerStat(String tableName) {
+
+	PlayerStat(final String tableName) {
 		this.setTableName(tableName);
 	}
 
@@ -25,9 +29,8 @@ public enum PlayerStat {
 		return tableName;
 	}
 
-	public void setTableName(String tableName) {
+	public void setTableName(final String tableName) {
 		this.tableName = tableName;
 	}
-	
-	
+
 }

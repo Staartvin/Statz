@@ -20,6 +20,8 @@ public class SQLiteTable {
 	private String tableName = "";
 
 	private List<SQLiteEntry> columns = new ArrayList<SQLiteEntry>();
+	
+	private List<SQLiteEntry> uniqueMatched = new ArrayList<SQLiteEntry>();
 
 	public SQLiteTable(final String tableName) {
 		this.setTableName(tableName);
@@ -70,6 +72,18 @@ public class SQLiteTable {
 				column.setPrimaryKey(true);
 			}
 		}
+	}
+
+	public List<SQLiteEntry> getUniqueMatched() {
+		return uniqueMatched;
+	}
+
+	public void setUniqueMatched(List<SQLiteEntry> uniqueMatched) {
+		this.uniqueMatched = uniqueMatched;
+	}
+	
+	public void addUniqueMatched(SQLiteEntry entry) {
+		this.uniqueMatched.add(entry);
 	}
 
 }

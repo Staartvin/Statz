@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.listeners.PlayerDeathListener;
+import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
 
 public class Statz extends JavaPlugin {
@@ -24,7 +25,7 @@ public class Statz extends JavaPlugin {
 
 		// Register listeners
 		this.registerListeners();
-		
+
 		// Load data manager as database is loaded!
 		this.setDataManager(new DataManager(this));
 
@@ -39,6 +40,7 @@ public class Statz extends JavaPlugin {
 	private void registerListeners() {
 		this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
 	}
 
 	public SQLiteConnector getSqlConnector() {
@@ -53,7 +55,7 @@ public class Statz extends JavaPlugin {
 		return dataManager;
 	}
 
-	public void setDataManager(DataManager dataManager) {
+	public void setDataManager(final DataManager dataManager) {
 		this.dataManager = dataManager;
 	}
 }

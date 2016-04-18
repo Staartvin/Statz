@@ -12,8 +12,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.SQLiteEntry;
 import me.staartvin.statz.database.datatype.SQLiteTable;
 import me.staartvin.statz.database.datatype.SQLiteTable.SQLDataType;
+import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
 public abstract class Database {
@@ -35,25 +37,51 @@ public abstract class Database {
 	public void loadTables() {
 		// UUID table to look up uuid of players
 		SQLiteTable newTable = new SQLiteTable("players");
+		
+		SQLiteEntry id = new SQLiteEntry("id", true, SQLDataType.INT, true);
 
 		// Populate table
 		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
 		newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of player
 		this.addTable(newTable);
 
+		
+		
 		// How many times did a player join this server?
-		newTable = new SQLiteTable("joins");
+		newTable = new SQLiteTable(PlayerStat.JOINS.getTableName());
 
 		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player join.
 
 		this.addTable(newTable);
 
+		
+		
 		// How many times did a player die?
-		newTable = new SQLiteTable("deaths");
+		newTable = new SQLiteTable(PlayerStat.DEATHS.getTableName());
 
 		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
+
+		this.addTable(newTable);
+		
+		
+		
+		// How many times did a player catch an item and what type?
+		newTable = new SQLiteTable(PlayerStat.ITEMS_CAUGHT.getTableName());
+		
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		newTable.addColumn(id);
+		
+		SQLiteEntry uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		SQLiteEntry caught = new SQLiteEntry("caught", false, SQLDataType.TEXT, true);
+		
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(caught);
+		
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(caught);
 
 		this.addTable(newTable);
 
@@ -108,63 +136,69 @@ public abstract class Database {
 		return;
 	}
 
-	/**
-	 * Gets a column value from a specific table with a specific query.
-	 * 
-	 * @param table
-	 *            Name of the table to get info from
-	 * @param columnName
-	 *            Name of the column to get the value from
-	 * @param queries
-	 *            A hashmap that will specify what queries should be applied.
-	 *            <br>
-	 *            You could call a hashmap with key: 'uuid' and value:
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-	 *            that we only search for the value of <i>columnName</i> with
-	 *            the condition that the 'uuid' column must be equal to
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-	 * 
-	 * @return An object (either integer or string) if anything was found
-	 *         matching the conditions. NULL otherwise.
-	 */
-	public Object getObject(final SQLiteTable table, final String columnName, final HashMap<String, String> queries) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		try {
-			conn = getSQLConnection();
-			ps = conn.prepareStatement(
-					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
-
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				return rs.getObject(columnName);
-			}
-		} catch (final SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
-		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-				if (conn != null)
-					conn.close();
-			} catch (final SQLException ex) {
-				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @see #getObject(SQLiteTable, String, HashMap)
-	 * @param tableName Name of the table to get data from
-	 * @param columnName Name of column to get value from
-	 * @param queries Queries to search for specifics
-	 */
-	public Object getObject(final String tableName, final String columnName, final HashMap<String, String> queries) {
-		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
-	}
+//	/**
+//	 * Gets a column value from a specific table with a specific query.
+//	 * 
+//	 * @param table
+//	 *            Name of the table to get info from
+//	 * @param columnName
+//	 *            Name of the column to get the value from
+//	 * @param queries
+//	 *            A hashmap that will specify what queries should be applied.
+//	 *            <br>
+//	 *            You could call a hashmap with key: 'uuid' and value:
+//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
+//	 *            that we only search for the value of <i>columnName</i> with
+//	 *            the condition that the 'uuid' column must be equal to
+//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
+//	 * 
+//	 * @return A list of objects (either integer or string) if anything was
+//	 *         found
+//	 *         matching the conditions. NULL otherwise.
+//	 */
+//	public List<Object> getObject(final SQLiteTable table, final String columnName,
+//			final HashMap<String, String> queries) {
+//		Connection conn = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//
+//		final List<Object> results = new ArrayList<>();
+//
+//		try {
+//			conn = getSQLConnection();
+//			ps = conn.prepareStatement(
+//					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+//
+//			rs = ps.executeQuery();
+//			while (rs.next()) {
+//				results.add(rs.getObject(columnName));
+//			}
+//		} catch (final SQLException ex) {
+//			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+//			return results;
+//		} finally {
+//			try {
+//				if (ps != null)
+//					ps.close();
+//				if (conn != null)
+//					conn.close();
+//			} catch (final SQLException ex) {
+//				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+//			}
+//		}
+//		return results;
+//	}
+//
+//	/**
+//	 * @see #getObject(SQLiteTable, String, HashMap)
+//	 * @param tableName Name of the table to get data from
+//	 * @param columnName Name of column to get value from
+//	 * @param queries Queries to search for specifics
+//	 */
+//	public List<Object> getObject(final String tableName, final String columnName,
+//			final HashMap<String, String> queries) {
+//		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
+//	}
 
 	/**
 	 * Gets a complete row of values from a specific table with a specific
@@ -180,15 +214,16 @@ public abstract class Database {
 	 *            that we only search for the value of <i>columnName</i> with
 	 *            the condition that the 'uuid' column must be equal to
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-	 * @return a hashmap where every key is a column and a key is the value of
+	 * @return a list of hashmaps where every key is a column and a key is the
+	 *         value of
 	 *         that column.
 	 */
-	public HashMap<String, Object> getObjects(final SQLiteTable table, final HashMap<String, String> queries) {
+	public List<HashMap<String, Object>> getObjects(final SQLiteTable table, final HashMap<String, String> queries) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
-		final HashMap<String, Object> result = new HashMap<>();
+		final List<HashMap<String, Object>> results = new ArrayList<>();
 
 		try {
 			conn = getSQLConnection();
@@ -197,6 +232,8 @@ public abstract class Database {
 
 			rs = ps.executeQuery();
 			while (rs.next()) {
+
+				final HashMap<String, Object> result = new HashMap<>();
 
 				// Populate hashmap
 				for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
@@ -208,10 +245,11 @@ public abstract class Database {
 					result.put(columnName, (value != null ? value : ""));
 				}
 
-				return result;
+				results.add(result);
 			}
 		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+			return results;
 		} finally {
 			try {
 				if (ps != null)
@@ -222,16 +260,16 @@ public abstract class Database {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
 		}
-		return result;
+		return results;
 	}
-	
+
 	/**
 	 * @see #getObjects(SQLiteTable, HashMap)
 	 * @param tableName Name of the table to get data from
 	 * @param queries Queries to execute
 	 * @return
 	 */
-	public HashMap<String, Object> getObjects(String tableName, final HashMap<String, String> queries) {
+	public List<HashMap<String, Object>> getObjects(final String tableName, final HashMap<String, String> queries) {
 		return this.getObjects(this.getSQLiteTable(tableName), queries);
 	}
 
@@ -255,7 +293,9 @@ public abstract class Database {
 		PreparedStatement ps = null;
 
 		StringBuilder columnNames = new StringBuilder("(");
+
 		StringBuilder resultNames = new StringBuilder("(");
+
 
 		for (final Entry<String, String> result : results.entrySet()) {
 			columnNames.append(result.getKey() + ",");
@@ -273,12 +313,15 @@ public abstract class Database {
 		// Remove last comma
 		columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
 		resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
+		
+		String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
+		+ " VALUES " + resultNames;
 
 		try {
 			conn = getSQLConnection();
-			ps = conn.prepareStatement("INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
-					+ " VALUES" + resultNames);
+			ps = conn.prepareStatement(update);
 			ps.executeUpdate();
+
 			return;
 		} catch (final SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);

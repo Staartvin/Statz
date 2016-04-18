@@ -21,27 +21,24 @@ public class PlayerDeathListener implements Listener {
 	@EventHandler
 	public void onDie(final PlayerDeathEvent event) {
 
-		PlayerStat stat = PlayerStat.DEATHS;
+		final PlayerStat stat = PlayerStat.DEATHS;
 
 		// Get player
 		final Player player = event.getEntity();
 
-		// Update name in database.
-		plugin.getSqlConnector().setObjects(plugin.getSqlConnector().getSQLiteTable("players"),
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
-
 		// Get player info.
-		PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			currentValue = Integer.parseInt(info.getValue(stat.toString()));
+			currentValue = Integer.parseInt(info.getResults().get(0).get("value").toString());
 		}
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, "uuid", player.getUniqueId().toString(), "value", (currentValue + 1));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1)));
 	}
 }

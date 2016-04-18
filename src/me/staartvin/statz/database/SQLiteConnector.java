@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.SQLiteEntry;
 import me.staartvin.statz.database.datatype.SQLiteTable;
+import me.staartvin.statz.database.datatype.SQLiteTable.SQLDataType;
 
 public class SQLiteConnector extends Database {
 
@@ -97,25 +98,63 @@ public class SQLiteConnector extends Database {
 		final List<String> statements = new ArrayList<String>();
 
 		for (final SQLiteTable table : this.getTables()) {
-			final StringBuilder statement = new StringBuilder(
+			StringBuilder statement = new StringBuilder(
 					"CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (");
 
 			// For each column in the table, add it to the table.
 			for (final SQLiteEntry column : table.getColumns()) {
 
-				statement.append("'" + column.getColumnName() + "' " + column.getDataType().toString() + " ");
+				if (column.getDataType().equals(SQLDataType.INT)) {
+					statement.append("'" + column.getColumnName() + "' INTEGER");
+				} else {
+					statement.append("'" + column.getColumnName() + "' " + column.getDataType().toString());
+				}
+				
 
+				if (column.isPrimaryKey()) {
+					statement.append(" PRIMARY KEY");
+				}
+				
+				if (column.isAutoIncrement()) {
+					statement.append(" AUTOINCREMENT");
+				}
+				
 				if (column.isNotNull()) {
 					statement.append(" NOT NULL");
+				}
+				
+				if (column.isUnique()) {
+					statement.append(" UNIQUE");
 				}
 
 				statement.append(",");
 
 			}
 
-			// All tables are added, now add primary key.
-
-			statement.append("PRIMARY KEY('" + table.getPrimaryKey() + "'));");
+			/*if (table.getPrimaryKey() == null) {
+				// Remove last comma
+				statement = new StringBuilder(statement.substring(0, statement.lastIndexOf(",")));
+			}*/
+			
+			if (!table.getUniqueMatched().isEmpty()) {
+				
+				statement.append("UNIQUE (");
+				
+				for (SQLiteEntry matched : table.getUniqueMatched()) {
+					statement.append(matched.getColumnName() + ",");
+				}
+				
+				// Remove last comma
+				statement = new StringBuilder(statement.substring(0, statement.lastIndexOf(",")) + ")");
+			} else {
+				statement = new StringBuilder(statement.substring(0, statement.lastIndexOf(",")));
+			}
+			
+			
+			
+			statement.append(");");
+			
+			System.out.println("Statement: " + statement);
 
 			statements.add(statement.toString());
 		}

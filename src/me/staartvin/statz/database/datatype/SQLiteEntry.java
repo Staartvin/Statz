@@ -5,7 +5,7 @@ import me.staartvin.statz.database.datatype.SQLiteTable.SQLDataType;
 public class SQLiteEntry {
 
 	private String columnName;
-	private boolean primaryKey = false, notNull = false;
+	private boolean primaryKey = false, notNull = false, isUnique = false, autoIncrement = false;
 	private SQLDataType dataType = SQLDataType.TEXT;
 
 	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType) {
@@ -21,6 +21,15 @@ public class SQLiteEntry {
 		this.setPrimaryKey(primaryKey);
 		this.setDataType(dataType);
 		this.setNotNull(notNull);
+	}
+	
+	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType,
+			final boolean notNull, final boolean isUnique) {
+		this.setColumnName(columnName);
+		this.setPrimaryKey(primaryKey);
+		this.setDataType(dataType);
+		this.setNotNull(notNull);
+		this.setUnique(isUnique);
 	}
 
 	public String getColumnName() {
@@ -53,5 +62,21 @@ public class SQLiteEntry {
 
 	public void setNotNull(final boolean notNull) {
 		this.notNull = notNull;
+	}
+
+	public boolean isUnique() {
+		return isUnique;
+	}
+
+	public void setUnique(boolean isUnique) {
+		this.isUnique = isUnique;
+	}
+
+	public boolean isAutoIncrement() {
+		return autoIncrement;
+	}
+
+	public void setAutoIncrement(boolean autoIncrement) {
+		this.autoIncrement = autoIncrement;
 	}
 }
