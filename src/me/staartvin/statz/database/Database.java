@@ -45,6 +45,7 @@ public abstract class Database {
 		newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of player
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
 		// How many times did a player join this server?
 		newTable = new SQLiteTable(PlayerStat.JOINS.getTableName());
 
@@ -53,14 +54,23 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
 		// How many times did a player die?
 		newTable = new SQLiteTable(PlayerStat.DEATHS.getTableName());
 
-		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		newTable.addColumn(id);
+
+		newTable.addColumn("uuid", false, SQLDataType.TEXT); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
+		newTable.addColumn("world", false, SQLDataType.TEXT); // What world did the player die.
+
+		newTable.addUniqueMatched("uuid");
+		newTable.addUniqueMatched("world");
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
 		// How many times did a player catch an item and what type?
 		newTable = new SQLiteTable(PlayerStat.ITEMS_CAUGHT.getTableName());
 
@@ -82,6 +92,7 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
 		// What block did a player place and how many times?
 		newTable = new SQLiteTable(PlayerStat.BLOCKS_PLACED.getTableName());
 
@@ -106,17 +117,17 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
-		// What block did a player place and how many times?
+		// ----------------------------------------------------------
+		// What block did a player break and how many times?
 		newTable = new SQLiteTable(PlayerStat.BLOCKS_BROKEN.getTableName());
 
 		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
-		newTable.addColumn(id);
-
 		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
 		typeID = new SQLiteEntry("typeid", false, SQLDataType.INT, true);
 		dataValue = new SQLiteEntry("datavalue", false, SQLDataType.INT, true);
 		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
 
+		newTable.addColumn(id);
 		newTable.addColumn(uuid); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT);
 		newTable.addColumn(world);
@@ -126,6 +137,126 @@ public abstract class Database {
 		newTable.addUniqueMatched(uuid);
 		newTable.addUniqueMatched(typeID);
 		newTable.addUniqueMatched(dataValue);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// What mobs did a player kill?
+		newTable = new SQLiteTable(PlayerStat.KILLS_MOBS.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("mob", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// What players did a player kill?
+		newTable = new SQLiteTable(PlayerStat.KILLS_PLAYERS.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("playerKilled", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How long did a player play (in minutes)?
+		newTable = new SQLiteTable(PlayerStat.TIME_PLAYED.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// What food did a player eat?
+		newTable = new SQLiteTable(PlayerStat.FOOD_EATEN.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("foodEaten", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How much damage has a player taken?
+		newTable = new SQLiteTable(PlayerStat.DAMAGE_TAKEN.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("cause", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many sheep did a player shear?
+		newTable = new SQLiteTable(PlayerStat.TIMES_SHORN.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
 		newTable.addUniqueMatched(world);
 
 		this.addTable(newTable);
@@ -181,69 +312,69 @@ public abstract class Database {
 		return;
 	}
 
-//	/**
-//	 * Gets a column value from a specific table with a specific query.
-//	 * 
-//	 * @param table
-//	 *            Name of the table to get info from
-//	 * @param columnName
-//	 *            Name of the column to get the value from
-//	 * @param queries
-//	 *            A hashmap that will specify what queries should be applied.
-//	 *            <br>
-//	 *            You could call a hashmap with key: 'uuid' and value:
-//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-//	 *            that we only search for the value of <i>columnName</i> with
-//	 *            the condition that the 'uuid' column must be equal to
-//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-//	 * 
-//	 * @return A list of objects (either integer or string) if anything was
-//	 *         found
-//	 *         matching the conditions. NULL otherwise.
-//	 */
-//	public List<Object> getObject(final SQLiteTable table, final String columnName,
-//			final HashMap<String, String> queries) {
-//		Connection conn = null;
-//		PreparedStatement ps = null;
-//		ResultSet rs = null;
-//
-//		final List<Object> results = new ArrayList<>();
-//
-//		try {
-//			conn = getSQLConnection();
-//			ps = conn.prepareStatement(
-//					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
-//
-//			rs = ps.executeQuery();
-//			while (rs.next()) {
-//				results.add(rs.getObject(columnName));
-//			}
-//		} catch (final SQLException ex) {
-//			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
-//			return results;
-//		} finally {
-//			try {
-//				if (ps != null)
-//					ps.close();
-//				if (conn != null)
-//					conn.close();
-//			} catch (final SQLException ex) {
-//				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-//			}
-//		}
-//		return results;
-//	}
-//
-//	/**
-//	 * @see #getObject(SQLiteTable, String, HashMap)
-//	 * @param tableName Name of the table to get data from
-//	 * @param columnName Name of column to get value from
-//	 * @param queries Queries to search for specifics
-//	 */
-//	public List<Object> getObject(final String tableName, final String columnName,
-//			final HashMap<String, String> queries) {
-//		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
-//	}
+	//	/**
+	//	 * Gets a column value from a specific table with a specific query.
+	//	 * 
+	//	 * @param table
+	//	 *            Name of the table to get info from
+	//	 * @param columnName
+	//	 *            Name of the column to get the value from
+	//	 * @param queries
+	//	 *            A hashmap that will specify what queries should be applied.
+	//	 *            <br>
+	//	 *            You could call a hashmap with key: 'uuid' and value:
+	//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
+	//	 *            that we only search for the value of <i>columnName</i> with
+	//	 *            the condition that the 'uuid' column must be equal to
+	//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
+	//	 * 
+	//	 * @return A list of objects (either integer or string) if anything was
+	//	 *         found
+	//	 *         matching the conditions. NULL otherwise.
+	//	 */
+	//	public List<Object> getObject(final SQLiteTable table, final String columnName,
+	//			final HashMap<String, String> queries) {
+	//		Connection conn = null;
+	//		PreparedStatement ps = null;
+	//		ResultSet rs = null;
+	//
+	//		final List<Object> results = new ArrayList<>();
+	//
+	//		try {
+	//			conn = getSQLConnection();
+	//			ps = conn.prepareStatement(
+	//					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+	//
+	//			rs = ps.executeQuery();
+	//			while (rs.next()) {
+	//				results.add(rs.getObject(columnName));
+	//			}
+	//		} catch (final SQLException ex) {
+	//			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+	//			return results;
+	//		} finally {
+	//			try {
+	//				if (ps != null)
+	//					ps.close();
+	//				if (conn != null)
+	//					conn.close();
+	//			} catch (final SQLException ex) {
+	//				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+	//			}
+	//		}
+	//		return results;
+	//	}
+	//
+	//	/**
+	//	 * @see #getObject(SQLiteTable, String, HashMap)
+	//	 * @param tableName Name of the table to get data from
+	//	 * @param columnName Name of column to get value from
+	//	 * @param queries Queries to search for specifics
+	//	 */
+	//	public List<Object> getObject(final String tableName, final String columnName,
+	//			final HashMap<String, String> queries) {
+	//		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
+	//	}
 
 	/**
 	 * Gets a complete row of values from a specific table with a specific

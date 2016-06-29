@@ -85,5 +85,28 @@ public class SQLiteTable {
 	public void addUniqueMatched(SQLiteEntry entry) {
 		this.uniqueMatched.add(entry);
 	}
+	
+	public SQLiteEntry getColumn(String columnName) {
+		for (SQLiteEntry e: columns) {
+			if (e.getColumnName().equalsIgnoreCase(columnName)) {
+				return e;
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean addUniqueMatched(String columnName) {
+		SQLiteEntry entry = this.getColumn(columnName);
+		
+		// No entry found. -> Return false
+		if (entry == null) {
+			return false;
+		}
+		
+		// Found entry, add it to the unique matched.
+		this.addUniqueMatched(entry);
+		return true;
+	}
 
 }

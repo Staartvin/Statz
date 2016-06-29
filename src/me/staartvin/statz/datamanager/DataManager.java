@@ -50,6 +50,6 @@ public class DataManager {
 
 		final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(statType.getTableName());
 
-		plugin.getSqlConnector().setObjects(table,  results);
+		plugin.getSqlConnector().setObjects(table, results);
 	}
 }

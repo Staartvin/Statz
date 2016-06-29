@@ -25,7 +25,38 @@ public enum PlayerStat {
 	/**
 	 * What kind of blocks (and how many) where broken by a player?
 	 */
-	BLOCKS_BROKEN("blocks_broken");
+	BLOCKS_BROKEN("blocks_broken"),
+	
+	/**
+	 * What kind of mobs did a player kill?
+	 */
+	KILLS_MOBS("kills_mobs"),
+	
+	/**
+	 * How many players did a player kill?
+	 */
+	KILLS_PLAYERS("kills_players"),
+	
+	/**
+	 * How many minutes has a player played on the server?
+	 */
+	TIME_PLAYED("time_played"),
+	
+	/**
+	 * What food has a player eaten?
+	 */
+	FOOD_EATEN("food_eaten"),
+	
+	/**
+	 * How much damage has a player taken?
+	 * Uses Spigot's {@link org.bukkit.event.entity.EntityDamageEvent.DamageCause} class.
+	 */
+	DAMAGE_TAKEN("damage_taken"),
+	
+	/**
+	 * How many times did a player shear sheep?
+	 */
+	TIMES_SHORN("times_shorn");
 
 	private String tableName;
 

@@ -56,6 +56,19 @@ public class PlayerInfo {
 		return map.get(key);
 	}
 
+	/**
+	 * Get a list of hashmaps that contain the data that is stored in the database. 
+	 * <br>Every hashmap in the list represents one row in the database.
+	 * <br>Each row contains keys. Each key is the column name of the specific dataset in the database.
+	 * <br>To get the value of a column from a specific row, take these steps:
+	 * <br>
+	 * <li>First get a specific row. Since lists are zero-based, the first row would be 
+	 * <br>{@code HashMap map = getResults().get(0)}</li>
+	 * <li>Secondly, to get the value of a column name, we need to check if it exists:
+	 * <br>{@code if (map.get("world") != null)}</li>
+	 * <li>Lastly, since map.get() returns an Object, it is recommended to convert it to a primitive type (or string)</li>
+	 * @return a list of hashmaps containing the data in the database of this specific player.
+	 */
 	public List<HashMap<String, Object>> getResults() {
 		return results;
 	}
@@ -63,7 +76,7 @@ public class PlayerInfo {
 	public void setResults(List<HashMap<String, Object>> result) {
 		this.results = result;
 	}
-	
+
 	public void addResult(HashMap<String, Object> map) {
 		this.results.add(map);
 	}
