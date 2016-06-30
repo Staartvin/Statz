@@ -1,14 +1,10 @@
 package me.staartvin.statz;
 
-import java.util.UUID;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.api.API;
 import me.staartvin.statz.database.SQLiteConnector;
-import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
