@@ -321,6 +321,15 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
+		// How many times did a player vote for this server?
+		newTable = new SQLiteTable(PlayerStat.VOTES.getTableName());
+
+		newTable.addColumn("uuid", true, SQLDataType.TEXT); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player vote.
+
+		this.addTable(newTable);
+
 	}
 
 	/**

@@ -8,6 +8,10 @@ package me.staartvin.statz.datamanager;
  * @author Staartvin
  *
  */
+/**
+ * @author Staartvin
+ *
+ */
 public enum PlayerStat {
 
 	/**
@@ -75,7 +79,12 @@ public enum PlayerStat {
 	/**
 	 * How much XP did a player gain in total?
 	 */
-	XP_GAINED("xp_gained");
+	XP_GAINED("xp_gained"),
+	
+	/**
+	 * How many times did a player vote (with Votifier)?
+	 */
+	VOTES("votes");
 
 	private String tableName;
 
