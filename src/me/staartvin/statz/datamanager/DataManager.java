@@ -32,7 +32,7 @@ public class DataManager {
 
 	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) {
 		final PlayerInfo info = new PlayerInfo(uuid);
-
+		
 		List<HashMap<String, Object>> result = plugin.getSqlConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 

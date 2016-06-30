@@ -560,7 +560,7 @@ public abstract class Database {
 
 		String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
 				+ resultNames;
-
+		
 		try {
 			conn = getSQLConnection();
 			ps = conn.prepareStatement(update);

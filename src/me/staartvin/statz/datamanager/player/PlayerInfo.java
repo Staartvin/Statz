@@ -34,7 +34,7 @@ public class PlayerInfo {
 	}
 
 	/**
-	 * Checks whether this player info is valid. Player info is considered valid
+	 * Checks whether this player info is valid. PlayerInfo is considered valid
 	 * when:
 	 * <ul>
 	 * <li>The data is not corrupt.

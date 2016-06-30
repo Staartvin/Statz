@@ -1,9 +1,14 @@
 package me.staartvin.statz;
 
+import java.util.UUID;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.staartvin.statz.api.API;
 import me.staartvin.statz.database.SQLiteConnector;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
+import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
@@ -23,6 +28,7 @@ public class Statz extends JavaPlugin {
 
 	private SQLiteConnector sqlConnector;
 	private DataManager dataManager;
+	private API statzAPI;
 
 	@Override
 	public void onEnable() {
@@ -39,6 +45,11 @@ public class Statz extends JavaPlugin {
 
 		// Load data manager as database is loaded!
 		this.setDataManager(new DataManager(this));
+		
+		// Load API
+		this.setStatzAPI(new API(this));
+		
+		System.out.println("API TEST: " + this.getStatzAPI().getSpecificData(PlayerStat.KILLS_MOBS, UUID.fromString("555e6254-246c-430c-a3ae-129c959ce61c"), new RowRequirement("mob", "COW"), new RowRequirement("world", "world")));
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -79,5 +90,13 @@ public class Statz extends JavaPlugin {
 
 	public void setDataManager(final DataManager dataManager) {
 		this.dataManager = dataManager;
+	}
+
+	public API getStatzAPI() {
+		return statzAPI;
+	}
+
+	public void setStatzAPI(API statzAPI) {
+		this.statzAPI = statzAPI;
 	}
 }
