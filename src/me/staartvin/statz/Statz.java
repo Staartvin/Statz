@@ -48,8 +48,6 @@ public class Statz extends JavaPlugin {
 		
 		// Load API
 		this.setStatzAPI(new API(this));
-		
-		System.out.println("API TEST: " + this.getStatzAPI().getSpecificData(PlayerStat.KILLS_MOBS, UUID.fromString("555e6254-246c-430c-a3ae-129c959ce61c"), new RowRequirement("mob", "COW"), new RowRequirement("world", "world")));
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
