@@ -5,6 +5,12 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class StatzUtil {
@@ -205,5 +211,42 @@ public class StatzUtil {
 			return new ItemStack(Material.SPIDER_EYE, 1);
 		} else
 			return null;
+	}
+
+	// Courtesy to Lolmewn for this code.
+	public static String getMovementType(Player player) {
+		if (player.isFlying()) {
+			return "FLY";
+		}
+		if (player.isInsideVehicle()) {
+			Entity vehicle = player.getVehicle();
+			
+			if (vehicle instanceof Boat) {
+				return "BOAT";
+			} else if (vehicle instanceof Minecart) {
+				
+				if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Player) {
+					return "MINECART";
+				} else if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Pig){
+					return "PIG IN MINECART";
+				} else if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Horse) {
+					return "HORSE IN MINECART";
+				}
+			} else if (vehicle instanceof Pig) {
+				if (vehicle.isInsideVehicle() && vehicle.getVehicle() instanceof Minecart) {
+					return "PIG IN MINECART";
+				} else {
+					return "PIG";
+				}
+			} else {
+				try {
+					if (vehicle instanceof Horse) {
+						return "HORSE";
+					}
+				} catch (Exception e) {
+				}
+			}
+		}
+		return "WALK"; // Default to walking
 	}
 }

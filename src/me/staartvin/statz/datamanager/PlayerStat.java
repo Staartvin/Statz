@@ -4,6 +4,10 @@ package me.staartvin.statz.datamanager;
  * Stats that are recorded for a player by Statz
  * <p>
  */
+/**
+ * @author Staartvin
+ *
+ */
 public enum PlayerStat {
 
 	/**
@@ -56,7 +60,22 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player shear sheep?
 	 */
-	TIMES_SHORN("times_shorn");
+	TIMES_SHORN("times_shorn"),
+	
+	/**
+	 * How far and in what way did a player travel?
+	 */
+	DISTANCE_TRAVELLED("distance_travelled"),
+	
+	/**
+	 * What kind of items did a player craft?
+	 */
+	ITEMS_CRAFTED("items_crafted"),
+	
+	/**
+	 * How much XP did a player gain in total?
+	 */
+	XP_GAINED("xp_gained");
 
 	private String tableName;
 

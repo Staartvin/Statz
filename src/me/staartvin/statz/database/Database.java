@@ -261,6 +261,66 @@ public abstract class Database {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
+		// How far and in what way has a player travelled?
+		newTable = new SQLiteTable(PlayerStat.DISTANCE_TRAVELLED.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("moveType", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How far and in what way has a player travelled?
+		newTable = new SQLiteTable(PlayerStat.ITEMS_CRAFTED.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		typeID = new SQLiteEntry("item", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(typeID);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How much XP did a player gain?
+		newTable = new SQLiteTable(PlayerStat.XP_GAINED.getTableName());
+
+		id = new SQLiteEntry("id", true, SQLDataType.INT, true);
+		uuid = new SQLiteEntry("uuid", false, SQLDataType.TEXT, true);
+		world = new SQLiteEntry("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
 	}
 
 	/**

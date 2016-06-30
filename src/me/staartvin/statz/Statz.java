@@ -4,15 +4,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
+import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
 import me.staartvin.statz.listeners.PlayerDeathListener;
 import me.staartvin.statz.listeners.PlayerFishListener;
+import me.staartvin.statz.listeners.PlayerGainXPListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
+import me.staartvin.statz.listeners.PlayerMoveListener;
 import me.staartvin.statz.listeners.PlayerShearListener;
 import me.staartvin.statz.listeners.PlayerTakeDamageListener;
+import me.staartvin.statz.listeners.VehicleMoveListener;
 
 public class Statz extends JavaPlugin {
 
@@ -53,6 +57,10 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new EatFoodListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerTakeDamageListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerShearListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
 	}
 
 	public SQLiteConnector getSqlConnector() {

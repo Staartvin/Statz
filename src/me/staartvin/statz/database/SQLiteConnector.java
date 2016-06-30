@@ -153,10 +153,10 @@ public class SQLiteConnector extends Database {
 			
 			
 			statement.append(");");
-			
-			System.out.println("Statement: " + statement);
 
 			statements.add(statement.toString());
+			
+			plugin.getLogger().info("Loaded table '" + table.getTableName() + "'");
 		}
 
 		return statements;
