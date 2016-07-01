@@ -38,6 +38,9 @@ public class DataPoolManager {
 	// The PlayerStat key is to distinguish which table the query belongs to.
 	// The List contains all queries for one specific table. A LinkedHashMap is one query to the database.
 	private HashMap<PlayerStat, List<HashMap<String, String>>> pool = new HashMap<>();
+	
+	// What queries were most recently written to the database?
+	private HashMap<PlayerStat, List<HashMap<String, String>>> lastWrittenQueries = new HashMap<>();
 
 	public DataPoolManager(Statz plugin) {
 		this.plugin = plugin;
@@ -54,6 +57,7 @@ public class DataPoolManager {
 	 * @return true if the query was successfully added to the pool, false if otherwise.
 	 */
 	public boolean addQuery(PlayerStat stat, HashMap<String, String> query) {
+		
 		List<HashMap<String, String>> queries = this.getStatQueries(stat);
 
 		if (queries == null) {
@@ -64,6 +68,8 @@ public class DataPoolManager {
 			// Since there are no other queries, we do not have to check for conflicting ones.
 			queries.add(query);
 			pool.put(stat, queries);
+
+			//System.out.println("Add to pool (because empty): " + query);
 			return true;
 		}
 
@@ -73,6 +79,7 @@ public class DataPoolManager {
 		if (conflictsQuery == null || conflictsQuery.isEmpty()) {
 			queries.add(query);
 			pool.put(stat, queries);
+			//System.out.println("Add to pool (because no conflict): " + query);
 			return true;
 		}
 
@@ -81,6 +88,8 @@ public class DataPoolManager {
 
 		// Add new query
 		queries.add(query);
+
+		//System.out.println("Add to pool (after conflict): " + query);
 
 		pool.put(stat, queries);
 
@@ -96,6 +105,8 @@ public class DataPoolManager {
 			List<HashMap<String, String>> queries) {
 		List<HashMap<String, String>> conflictingQueries = new ArrayList<>();
 
+		if (queries == null) return null;
+		
 		// Do reverse traversal
 		for (int i = queries.size() - 1; i >= 0; i--) {
 
@@ -153,7 +164,7 @@ public class DataPoolManager {
 
 			public void run() {
 
-				//printPool();
+				printPool();
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					List<HashMap<String, String>> queries = getStatQueries(stat);
@@ -166,19 +177,47 @@ public class DataPoolManager {
 						continue;
 					}
 
+					// Add to last written query
+					List<HashMap<String, String>> lastWritten = lastWrittenQueries.get(stat);
+					
 					// Send to database
 					for (HashMap<String, String> query : queries) {
 						// Send query to database.
 						plugin.getSqlConnector().setObjects(table, query);
-
+						
+						if (lastWritten == null) {
+							lastWritten = new ArrayList<>();
+						}
+						
+						List<HashMap<String, String>> conflicts = findConflicts(stat, query, lastWritten);
+						
+						if (conflicts != null && !conflicts.isEmpty()) {
+							// Override last written query if one conflicts
+							for (HashMap<String, String> conflict: conflicts) {
+								//System.out.println("Remove from last written: " + conflict);
+								lastWritten.remove(conflict);
+							}
+						}
+						
+						//System.out.println("Add to last written: " + query);
+						lastWritten.add(query);
+						
+						
 						deletedQueries.add(query);
+
 					}
+					
+					lastWrittenQueries.put(stat, lastWritten);
 
 					// Remove sent queries from pool
 					queries.removeAll(deletedQueries);
 				}
 			}
 		});
+	}
+	
+	public List<HashMap<String, String>> getLatestQueries(PlayerStat stat) {
+		return lastWrittenQueries.get(stat);
 	}
 
 	public void printPool() {
