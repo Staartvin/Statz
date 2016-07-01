@@ -33,6 +33,15 @@ public class SQLiteConnector extends Database {
 	 */
 	@Override
 	public Connection getSQLConnection() {
+		try {
+			if (connection != null && !connection.isClosed()) {
+				return connection;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		final File dataFile = new File(plugin.getDataFolder(), databaseName + ".db");
 		if (!dataFile.exists()) {
 			plugin.getLogger().info("Database not found! Creating one for you.");
@@ -46,9 +55,6 @@ public class SQLiteConnector extends Database {
 		}
 
 		try {
-			if (connection != null && !connection.isClosed()) {
-				return connection;
-			}
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile);
 			return connection;

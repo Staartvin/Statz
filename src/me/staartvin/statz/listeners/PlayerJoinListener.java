@@ -54,7 +54,6 @@ public class PlayerJoinListener implements Listener {
 		BukkitRunnable run = new BukkitRunnable() {
 			public void run(){
 				if (!player.isOnline()) {
-					System.out.println("Cancel task");
 					this.cancel();
 					return;
 				}
@@ -67,7 +66,7 @@ public class PlayerJoinListener implements Listener {
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (HashMap<String, Object> map : info.getResults()) {
+					for (HashMap<String, String> map : info.getResults()) {
 						if (map.get("world") != null && map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
 							currentValue += Integer.parseInt(map.get("value").toString());
 						}

@@ -42,7 +42,7 @@ public class PlayerVoteListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, Object> map : info.getResults()) {
+			for (HashMap<String, String> map : info.getResults()) {
 				currentValue += Integer.parseInt(map.get("value").toString());
 			}
 		}

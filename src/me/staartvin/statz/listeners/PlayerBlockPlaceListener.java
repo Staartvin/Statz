@@ -45,7 +45,7 @@ public class PlayerBlockPlaceListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, Object> map : info.getResults()) {
+			for (HashMap<String, String> map : info.getResults()) {
 				if (map.get("typeid") != null && map.get("typeid").toString().equalsIgnoreCase(typeId + "")
 						&& map.get("datavalue") != null
 						&& map.get("datavalue").toString().equalsIgnoreCase(dataValue + "") && map.get("world") != null

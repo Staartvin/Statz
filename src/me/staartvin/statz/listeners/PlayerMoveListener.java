@@ -22,7 +22,7 @@ public class PlayerMoveListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onDamage(final PlayerMoveEvent event) {
+	public void onMove(final PlayerMoveEvent event) {
 
 		final PlayerStat stat = PlayerStat.DISTANCE_TRAVELLED;
 		
@@ -45,7 +45,7 @@ public class PlayerMoveListener implements Listener {
 		
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, Object> map : info.getResults()) {
+			for (HashMap<String, String> map : info.getResults()) {
 				if (map.get("world") != null
 						&& map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())
 						&& map.get("moveType") != null && map.get("moveType").toString().equalsIgnoreCase(movementType)) {

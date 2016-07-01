@@ -249,4 +249,17 @@ public class StatzUtil {
 		}
 		return "WALK"; // Default to walking
 	}
+	
+
+	public static String printQuery(HashMap<String, String> query) {
+		StringBuilder builder = new StringBuilder("[");
+
+		for (Entry<String, String> entry : query.entrySet()) {
+			builder.append(entry.getKey() + " - " + entry.getValue() + ", ");
+		}
+		
+		builder.append("]");
+		
+		return builder.toString();
+	}
 }

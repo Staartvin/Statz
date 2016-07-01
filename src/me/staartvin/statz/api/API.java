@@ -36,21 +36,21 @@ public class API {
 
 		double value = 0;
 
-		List<HashMap<String, Object>> results = info.getResults();
+		List<HashMap<String, String>> results = info.getResults();
 
 		if (results == null || results.isEmpty())
 			return value;
 
 		if (worldName != null) {
 			// Add every value that is in the proper world
-			for (HashMap<String, Object> result : results) {
+			for (HashMap<String, String> result : results) {
 				if (result.get("world") != null && result.get("world").toString().equalsIgnoreCase(worldName)) {
 					value += Double.parseDouble(result.get("value").toString());
 				}
 			}
 		} else {
 			// Add every value regardless of the world
-			for (HashMap<String, Object> result : results) {
+			for (HashMap<String, String> result : results) {
 				value += Double.parseDouble(result.get("value").toString());
 			}
 		}
@@ -80,12 +80,12 @@ public class API {
 
 		double value = 0;
 
-		List<HashMap<String, Object>> results = info.getResults();
+		List<HashMap<String, String>> results = info.getResults();
 
 		if (results == null || results.isEmpty())
 			return value;
 
-		for (HashMap<String, Object> result : results) {
+		for (HashMap<String, String> result : results) {
 			boolean isValid = true;
 			
 			for (int i=0;i<conditions.length;i++) {

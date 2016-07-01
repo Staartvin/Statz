@@ -19,7 +19,7 @@ public class PlayerInfo {
 	private UUID uuid;
 	private boolean isValid;
 
-	private List<HashMap<String, Object>> results = new ArrayList<>();
+	private List<HashMap<String, String>> results = new ArrayList<>();
 
 	public PlayerInfo(final UUID uuid) {
 		this.setUUID(uuid);
@@ -69,15 +69,15 @@ public class PlayerInfo {
 	 * <li>Lastly, since map.get() returns an Object, it is recommended to convert it to a primitive type (or string)</li>
 	 * @return a list of hashmaps containing the data in the database of this specific player.
 	 */
-	public List<HashMap<String, Object>> getResults() {
+	public List<HashMap<String, String>> getResults() {
 		return results;
 	}
 
-	public void setResults(List<HashMap<String, Object>> result) {
+	public void setResults(List<HashMap<String, String>> result) {
 		this.results = result;
 	}
 
-	public void addResult(HashMap<String, Object> map) {
+	public void addResult(HashMap<String, String> map) {
 		this.results.add(map);
 	}
 }

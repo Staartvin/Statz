@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -381,70 +380,6 @@ public abstract class Database {
 		return;
 	}
 
-	//	/**
-	//	 * Gets a column value from a specific table with a specific query.
-	//	 * 
-	//	 * @param table
-	//	 *            Name of the table to get info from
-	//	 * @param columnName
-	//	 *            Name of the column to get the value from
-	//	 * @param queries
-	//	 *            A hashmap that will specify what queries should be applied.
-	//	 *            <br>
-	//	 *            You could call a hashmap with key: 'uuid' and value:
-	//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-	//	 *            that we only search for the value of <i>columnName</i> with
-	//	 *            the condition that the 'uuid' column must be equal to
-	//	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-	//	 * 
-	//	 * @return A list of objects (either integer or string) if anything was
-	//	 *         found
-	//	 *         matching the conditions. NULL otherwise.
-	//	 */
-	//	public List<Object> getObject(final SQLiteTable table, final String columnName,
-	//			final HashMap<String, String> queries) {
-	//		Connection conn = null;
-	//		PreparedStatement ps = null;
-	//		ResultSet rs = null;
-	//
-	//		final List<Object> results = new ArrayList<>();
-	//
-	//		try {
-	//			conn = getSQLConnection();
-	//			ps = conn.prepareStatement(
-	//					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
-	//
-	//			rs = ps.executeQuery();
-	//			while (rs.next()) {
-	//				results.add(rs.getObject(columnName));
-	//			}
-	//		} catch (final SQLException ex) {
-	//			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
-	//			return results;
-	//		} finally {
-	//			try {
-	//				if (ps != null)
-	//					ps.close();
-	//				if (conn != null)
-	//					conn.close();
-	//			} catch (final SQLException ex) {
-	//				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-	//			}
-	//		}
-	//		return results;
-	//	}
-	//
-	//	/**
-	//	 * @see #getObject(SQLiteTable, String, HashMap)
-	//	 * @param tableName Name of the table to get data from
-	//	 * @param columnName Name of column to get value from
-	//	 * @param queries Queries to search for specifics
-	//	 */
-	//	public List<Object> getObject(final String tableName, final String columnName,
-	//			final HashMap<String, String> queries) {
-	//		return this.getObject(this.getSQLiteTable(tableName), columnName, queries);
-	//	}
-
 	/**
 	 * Gets a complete row of values from a specific table with a specific
 	 * query.
@@ -463,12 +398,12 @@ public abstract class Database {
 	 *         value of
 	 *         that column.
 	 */
-	public List<HashMap<String, Object>> getObjects(final SQLiteTable table, final HashMap<String, String> queries) {
+	public List<HashMap<String, String>> getObjects(final SQLiteTable table, final HashMap<String, String> queries) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
-		final List<HashMap<String, Object>> results = new ArrayList<>();
+		final List<HashMap<String, String>> results = new ArrayList<>();
 
 		try {
 			conn = getSQLConnection();
@@ -478,12 +413,12 @@ public abstract class Database {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 
-				final HashMap<String, Object> result = new HashMap<>();
+				final HashMap<String, String> result = new HashMap<>();
 
 				// Populate hashmap
 				for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
 					final String columnName = rs.getMetaData().getColumnName(i + 1);
-					final Object value = rs.getObject(i + 1);
+					final String value = rs.getObject(i + 1).toString();
 
 					// Put value in hashmap if not null, otherwise just put
 					// empty string
@@ -499,8 +434,8 @@ public abstract class Database {
 			try {
 				if (ps != null)
 					ps.close();
-				if (conn != null)
-					conn.close();
+				//if (conn != null)
+					//conn.close();
 			} catch (final SQLException ex) {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
@@ -514,7 +449,7 @@ public abstract class Database {
 	 * @param queries Queries to execute
 	 * @return
 	 */
-	public List<HashMap<String, Object>> getObjects(final String tableName, final HashMap<String, String> queries) {
+	public List<HashMap<String, String>> getObjects(final String tableName, final HashMap<String, String> queries) {
 		return this.getObjects(this.getSQLiteTable(tableName), queries);
 	}
 
@@ -533,53 +468,60 @@ public abstract class Database {
 	 *            that we set the value of <i>uuid</i> to
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
 	 */
-	public void setObjects(final SQLiteTable table, final LinkedHashMap<String, String> results) {
-		Connection conn = null;
-		PreparedStatement ps = null;
+	public void setObjects(final SQLiteTable table, final HashMap<String, String> results) {
+		// Run SQLite query async to not disturb the main Server thread
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			
+			public void run() {
+				
+				plugin.getLogger().info("Save Statz database.");
+				Connection conn = null;
+				PreparedStatement ps = null;
 
-		StringBuilder columnNames = new StringBuilder("(");
+				StringBuilder columnNames = new StringBuilder("(");
 
-		StringBuilder resultNames = new StringBuilder("(");
+				StringBuilder resultNames = new StringBuilder("(");
 
-		for (final Entry<String, String> result : results.entrySet()) {
-			columnNames.append(result.getKey() + ",");
+				for (final Entry<String, String> result : results.entrySet()) {
+					columnNames.append(result.getKey() + ",");
 
-			try {
-				// Try to check if it is an integer
-				Integer.parseInt(result.getValue());
-				resultNames.append(result.getValue() + ",");
-			} catch (final NumberFormatException e) {
-				resultNames.append("'" + result.getValue() + "',");
+					try {
+						// Try to check if it is an integer
+						Integer.parseInt(result.getValue());
+						resultNames.append(result.getValue() + ",");
+					} catch (final NumberFormatException e) {
+						resultNames.append("'" + result.getValue() + "',");
+					}
+
+				}
+
+				// Remove last comma
+				columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
+				resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
+
+				String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
+						+ resultNames;
+				
+				try {
+					conn = getSQLConnection();
+					ps = conn.prepareStatement(update);
+					ps.executeUpdate();
+
+					return;
+				} catch (final SQLException ex) {
+					plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+				} finally {
+					try {
+						if (ps != null)
+							ps.close();
+						//if (conn != null)
+							//conn.close();
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+					}
+				}
 			}
-
-		}
-
-		// Remove last comma
-		columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
-		resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
-
-		String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
-				+ resultNames;
-		
-		try {
-			conn = getSQLConnection();
-			ps = conn.prepareStatement(update);
-			ps.executeUpdate();
-
-			return;
-		} catch (final SQLException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
-		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-				if (conn != null)
-					conn.close();
-			} catch (final SQLException ex) {
-				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-			}
-		}
-		return;
+		});
 	}
 
 	/**

@@ -39,7 +39,7 @@ public class CraftItemListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, Object> map : info.getResults()) {
+			for (HashMap<String, String> map : info.getResults()) {
 				if (map.get("world") != null
 						&& map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())
 						&& map.get("item") != null && map.get("item").toString().equalsIgnoreCase(itemCrafted)) {

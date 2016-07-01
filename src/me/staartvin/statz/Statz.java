@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.staartvin.statz.api.API;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
+import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
@@ -25,10 +26,14 @@ public class Statz extends JavaPlugin {
 	private SQLiteConnector sqlConnector;
 	private DataManager dataManager;
 	private API statzAPI;
+	private DataPoolManager dataPoolManager;
 
 	@Override
 	public void onEnable() {
 		this.setSqlConnector(new SQLiteConnector(this));
+		
+		// Set up Data Pool Manager
+		this.setDataPoolManager(new DataPoolManager(this));
 
 		// Load tables into hashmap
 		this.getSqlConnector().loadTables();
@@ -44,6 +49,12 @@ public class Statz extends JavaPlugin {
 		
 		// Load API
 		this.setStatzAPI(new API(this));
+		
+		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
+			public void run() {
+				getDataPoolManager().sendPool();
+			}
+		}, 20, 20*10);
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -92,5 +103,13 @@ public class Statz extends JavaPlugin {
 
 	public void setStatzAPI(API statzAPI) {
 		this.statzAPI = statzAPI;
+	}
+
+	public DataPoolManager getDataPoolManager() {
+		return dataPoolManager;
+	}
+
+	public void setDataPoolManager(DataPoolManager dataPoolManager) {
+		this.dataPoolManager = dataPoolManager;
 	}
 }

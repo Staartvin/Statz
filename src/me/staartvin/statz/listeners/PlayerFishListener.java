@@ -70,7 +70,7 @@ public class PlayerFishListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, Object> map : info.getResults()) {				
+			for (HashMap<String, String> map : info.getResults()) {				
 				if (map.get("caught") != null && map.get("caught").toString().equalsIgnoreCase(materialName)
 						&& map.get("world") != null && map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
 					currentValue += Integer.parseInt(map.get("value").toString());
