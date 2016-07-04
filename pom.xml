@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Statz</groupId>
 	<artifactId>Statz</artifactId>
-	<version>1.0-DEV-DEV</version>
+	<version>1.0-DEV</version>
 	<name>Statz</name>
 	<description>Maven project for Spigot plugin Statz
 	</description>
