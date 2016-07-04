@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>Statz</groupId>
+	<artifactId>Statz</artifactId>
+	<version>1.0</version>
+	<name>Statz</name>
+	<description>Maven project for Spigot plugin Statz
+	</description>
+	<url>Unknown</url>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+
+
+		<resources>
+
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>*.yml</include>
+				</includes>
+			</resource>
+
+
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source />
+					<target />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>staartvin-repo</id>
+			<url>http://62.131.38.74:8081/artifactory/ext-release-local/</url>
+		</repository>
+
+		<repository>
+			<id>Spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+
+
+	</repositories>
+
+	<dependencies>
+	
+	<dependency>
+		<groupId>org.spigotmc</groupId>
+		<artifactId>spigot-api</artifactId>
+		<version>1.10.2-R0.1-SNAPSHOT</version>
+		<scope>provided</scope>
+		<type>jar</type>
+	</dependency>
+
+	<dependency>
+		<groupId>com.vexsoftware</groupId>
+		<artifactId>votifier</artifactId>
+		<version>1.9</version>
+	</dependency>
+
+</dependencies>
+
+</project>
