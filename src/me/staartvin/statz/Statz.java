@@ -1,11 +1,14 @@
 package me.staartvin.statz;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.api.API;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
+import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.HooksManager;
 import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
@@ -27,11 +30,17 @@ public class Statz extends JavaPlugin {
 	private DataManager dataManager;
 	private API statzAPI;
 	private DataPoolManager dataPoolManager;
+	private HooksManager hooksManager;
 
 	@Override
 	public void onEnable() {
-		this.setSqlConnector(new SQLiteConnector(this));
 		
+		// Load hooks
+		this.setHooksManager(new HooksManager(this));
+		
+		// Load SQL connector
+		this.setSqlConnector(new SQLiteConnector(this));
+
 		// Set up Data Pool Manager
 		this.setDataPoolManager(new DataPoolManager(this));
 
@@ -46,15 +55,19 @@ public class Statz extends JavaPlugin {
 
 		// Load data manager as database is loaded!
 		this.setDataManager(new DataManager(this));
-		
+
 		// Load API
 		this.setStatzAPI(new API(this));
-		
-		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
+
+		// Send pool update every 10 seconds
+		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
 				getDataPoolManager().sendPool();
 			}
-		}, 20, 20*10);
+		}, 20, 20 * 10);
+		
+		// Do a check on all present hooks
+		this.getHooksManager().checkHooks();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -78,7 +91,14 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
+		
+		if (this.getHooksManager().isAvailable(Dependency.VOTIFIER)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
+		}	
+	}
+	
+	public void debugMessage(String message) {
+		this.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "[Statz debug] " + message));
 	}
 
 	public SQLiteConnector getSqlConnector() {
@@ -111,5 +131,13 @@ public class Statz extends JavaPlugin {
 
 	public void setDataPoolManager(DataPoolManager dataPoolManager) {
 		this.dataPoolManager = dataPoolManager;
+	}
+
+	public HooksManager getHooksManager() {
+		return hooksManager;
+	}
+
+	public void setHooksManager(HooksManager hooksManager) {
+		this.hooksManager = hooksManager;
 	}
 }

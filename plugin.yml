@@ -2,5 +2,5 @@ main: me.staartvin.statz.Statz
 name: Statz
 version: ${project.version}
 authors: [Staartvin]
-description: The one-and-all plugin to store stats about any player.
-depend: [Votifier]
+description: The one-and-all plugin to record and store stats about any player.
+softdepend: [Votifier]
