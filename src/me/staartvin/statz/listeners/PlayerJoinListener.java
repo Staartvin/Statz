@@ -13,7 +13,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 
 public class PlayerJoinListener implements Listener {
 
@@ -72,8 +71,6 @@ public class PlayerJoinListener implements Listener {
 						}
 					}
 				}
-				
-				player.sendMessage(ChatColor.GOLD + "Statz: " + ChatColor.GREEN + "Updated your play time to " + (currentValue + 1));
 
 				// Update value to new stat.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED,

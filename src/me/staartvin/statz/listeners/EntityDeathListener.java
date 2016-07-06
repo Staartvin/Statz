@@ -149,7 +149,6 @@ public class EntityDeathListener implements Listener {
 			}
 		} else {
 			// Entity died of something else
-			System.out.println("Something else");
 		}
 
 		//		

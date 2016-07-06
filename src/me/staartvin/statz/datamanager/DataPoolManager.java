@@ -164,7 +164,7 @@ public class DataPoolManager {
 
 			public void run() {
 
-				printPool();
+				//printPool();
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					List<HashMap<String, String>> queries = getStatQueries(stat);
