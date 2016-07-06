@@ -54,44 +54,46 @@ public class DataManager {
 		//System.out.println("----------------------");
 		final PlayerInfo info = new PlayerInfo(uuid);
 
+		// Get results from database
 		List<HashMap<String, String>> results = plugin.getSqlConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 
-		List<HashMap<String, String>> storedQueries = plugin.getDataPoolManager().getStoredQueries(statType,
-				StatzUtil.makeQuery("uuid", uuid.toString()));
+		// Get a list of queries currently in the pool
+		List<HashMap<String, String>> storedQueries = plugin.getDataPoolManager().getStoredQueries(statType);
 
-		//System.out.println("StoredQueries: " + storedQueries);
-
+		// If we have queries in the pool, check for conflicting ones.
 		if (storedQueries != null && !storedQueries.isEmpty()) {
 			// There ARE conflicting queries and since the pool is more up to date, we have to override the old ones.
-
-			//System.out.println("QUERY NOT NULL");
 
 			for (HashMap<String, String> storedQuery : storedQueries) {
 
 				// There is no data of this stat in the database, so storedQueries are always more up to date.
 				if (results == null || results.isEmpty()) {
-//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery)
-//							+ " was more up to date since there is no record in database");
+					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery)
+					//							+ " was more up to date since there is no record in database");
 					results.add(storedQuery);
 					continue;
 				}
 
 				//System.out.println("Stored query: " + StatzUtil.printQuery(storedQuery));
 
-				List<HashMap<String, String>> conflictingQueries = plugin.getDataPoolManager().findConflicts(statType,
-						storedQuery, results);
+				// Get the queries of the pool that conflict with the 'old' database results.
+				List<HashMap<String, String>> conflictingQueries = plugin.getDataPoolManager()
+						.findConflicts(storedQuery, results);
 
+				// No conflicts found, yeah!!
 				if (conflictingQueries == null || conflictingQueries.isEmpty()) {
-//					System.out.println(
-//							"No conflicts found between " + StatzUtil.printQuery(storedQuery) + " and " + results);
+					//					System.out.println(
+					//							"No conflicts found between " + StatzUtil.printQuery(storedQuery) + " and " + results);
 					results.add(storedQuery);
 					continue;
 				}
 
+				// We found conflicting queries.
 				for (HashMap<String, String> conflictingQuery : conflictingQueries) {
-//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery) + " conflicts with "
-//							+ StatzUtil.printQuery(conflictingQuery));
+					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery) + " conflicts with "
+					//							+ StatzUtil.printQuery(conflictingQuery));
+					// Remove old data from results and add new (more updated data) to the results pool.
 					results.remove(conflictingQuery);
 					results.add(storedQuery);
 				}
@@ -104,11 +106,14 @@ public class DataManager {
 			// IF query is null, it could be due to a 'just-update', so we look at the last written query to find the most recent data.
 			List<HashMap<String, String>> lastQueries = plugin.getDataPoolManager().getLatestQueries(statType);
 
+			// We found old queries that were performed on the database, check if they are of any use.
 			if (lastQueries != null) {
 				for (HashMap<String, String> lastQuery : lastQueries) {
-					// Find the last written values that we can use by checking for conflicts
-					List<HashMap<String, String>> conflicts = plugin.getDataPoolManager().findConflicts(statType, lastQuery, results);
+					// By checking for conflicts, we can search for old queries that are useful to use now.
+					List<HashMap<String, String>> conflicts = plugin.getDataPoolManager().findConflicts(lastQuery,
+							results);
 
+					// We found old queries that are useful, yeah!
 					if (conflicts != null && !conflicts.isEmpty()) {
 						// Use last written query if one conflicts
 						for (HashMap<String, String> conflict : conflicts) {

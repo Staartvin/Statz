@@ -541,14 +541,26 @@ public abstract class Database {
 		}
 	}
 
+	/**
+	 * Get a list of currently loaded tables.
+	 * @return a list of loaded tables.
+	 */
 	public List<SQLiteTable> getTables() {
 		return tables;
 	}
 
+	/**
+	 * Set the list of loaded tables.
+	 * @param tables Tables to set the loaded list to.
+	 */
 	public void setTables(final List<SQLiteTable> tables) {
 		this.tables = tables;
 	}
 
+	/**
+	 * Add a table to the list of loaded tables.
+	 * @param table Table to add.
+	 */
 	public void addTable(final SQLiteTable table) {
 		tables.add(table);
 	}
