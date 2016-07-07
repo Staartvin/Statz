@@ -11,7 +11,6 @@
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 
-
 		<resources>
 			<resource>
 				<filtering>true</filtering>
