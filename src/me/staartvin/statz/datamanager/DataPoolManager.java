@@ -176,7 +176,7 @@ public class DataPoolManager {
 	 * @return a list of queries that are in the pool or null if there are no queries in the pool.
 	 */
 	public List<HashMap<String, String>> getStoredQueries(PlayerStat stat) {
-		List<HashMap<String, String>> queries = this.getStoredQueries(stat);
+		List<HashMap<String, String>> queries = pool.get(stat);
 
 		if (queries == null || queries.isEmpty()) {
 			return null;

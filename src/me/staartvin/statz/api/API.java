@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Statistic;
+
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.DependencyHandler;
 
 public class API {
 
@@ -105,5 +109,25 @@ public class API {
 		}
 
 		return value;
+	}
+	
+	/**
+	 * Get a dependency handler of Statz. Since Statz also 'tracks' data of other plugins (in reality it provides a way to connect to other plugins,
+	 * but does not actually store the information in its database). 
+	 * @param dep The dependency to get the Statz handler for.
+	 * @return a {@link DependencyHandler} to control data from another plugin, or null if none exists.
+	 */
+	public DependencyHandler getDependencyHandler(Dependency dep) {
+		return plugin.getDependencyManager().getDependency(dep);
+	}
+	
+	/**
+	 * Get a value for a statistic that is stored by vanilla Minecraft.
+	 * @param uuid UUID of the player to get the Statistic for.
+	 * @param stat Stat to get
+	 * @return an int value representing the value of the statistic.
+	 */
+	public int getMinecraftStatistic(UUID uuid, Statistic stat) {
+		return plugin.getServer().getPlayer(uuid).getStatistic(stat);
 	}
 }

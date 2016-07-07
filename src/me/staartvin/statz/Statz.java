@@ -8,7 +8,7 @@ import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.hooks.Dependency;
-import me.staartvin.statz.hooks.HooksManager;
+import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.listeners.CraftItemListener;
 import me.staartvin.statz.listeners.EatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
@@ -30,13 +30,13 @@ public class Statz extends JavaPlugin {
 	private DataManager dataManager;
 	private API statzAPI;
 	private DataPoolManager dataPoolManager;
-	private HooksManager hooksManager;
+	private DependencyManager depManager;
 
 	@Override
 	public void onEnable() {
 		
 		// Load hooks
-		this.setHooksManager(new HooksManager(this));
+		this.setDependencyManager(new DependencyManager(this));
 		
 		// Load SQL connector
 		this.setSqlConnector(new SQLiteConnector(this));
@@ -67,7 +67,7 @@ public class Statz extends JavaPlugin {
 		}, 20, 20 * 10);
 		
 		// Do a check on all present hooks
-		this.getHooksManager().checkHooks();
+		this.getDependencyManager().loadDependencies();		
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -92,7 +92,7 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
 		
-		if (this.getHooksManager().isAvailable(Dependency.VOTIFIER)) {
+		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
 		}	
 	}
@@ -133,11 +133,11 @@ public class Statz extends JavaPlugin {
 		this.dataPoolManager = dataPoolManager;
 	}
 
-	public HooksManager getHooksManager() {
-		return hooksManager;
+	public DependencyManager getDependencyManager() {
+		return depManager;
 	}
 
-	public void setHooksManager(HooksManager hooksManager) {
-		this.hooksManager = hooksManager;
+	public void setDependencyManager(DependencyManager depManager) {
+		this.depManager = depManager;
 	}
 }
