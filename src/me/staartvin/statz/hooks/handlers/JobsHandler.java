@@ -16,6 +16,7 @@ import com.gamingmesh.jobs.container.PlayerPoints;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
+import me.staartvin.statz.util.StatzUtil;
 
 /**
  * Handles all connections with Vault
@@ -104,7 +105,7 @@ public class JobsHandler implements DependencyHandler {
 		if (pointInfo == null)
 			return -1;
 
-		return pointInfo.getCurrentPoints();
+		return StatzUtil.roundDouble(pointInfo.getCurrentPoints(), 2);
 	}
 
 	public double getTotalPoints(UUID uuid) {
@@ -116,7 +117,7 @@ public class JobsHandler implements DependencyHandler {
 		if (pointInfo == null)
 			return -1;
 
-		return pointInfo.getTotalPoints();
+		return StatzUtil.roundDouble(pointInfo.getTotalPoints(), 2);
 	}
 
 	public double getCurrentXP(Player player, String jobName) {
@@ -138,7 +139,7 @@ public class JobsHandler implements DependencyHandler {
 		if (progress == null)
 			return -1;
 
-		return progress.getExperience();
+		return StatzUtil.roundDouble(progress.getExperience(), 2);
 	}
 
 	public double getCurrentLevel(Player player, String jobName) {
@@ -160,7 +161,7 @@ public class JobsHandler implements DependencyHandler {
 		if (progress == null)
 			return -1;
 
-		return progress.getLevel();
+		return StatzUtil.roundDouble(progress.getLevel(), 2);
 	}
 
 	public Job getJob(String jobName) {

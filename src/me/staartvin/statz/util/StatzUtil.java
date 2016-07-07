@@ -1,5 +1,7 @@
 package me.staartvin.statz.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -261,5 +263,13 @@ public class StatzUtil {
 		builder.append("]");
 		
 		return builder.toString();
+	}
+	
+	public static double roundDouble(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 }
