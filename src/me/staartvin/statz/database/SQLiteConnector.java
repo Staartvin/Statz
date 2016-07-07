@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
+
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.SQLiteEntry;
 import me.staartvin.statz.database.datatype.SQLiteTable;
@@ -44,11 +46,11 @@ public class SQLiteConnector extends Database {
 		
 		final File dataFile = new File(plugin.getDataFolder(), databaseName + ".db");
 		if (!dataFile.exists()) {
-			plugin.getLogger().info("Database not found! Creating one for you.");
+			plugin.debugMessage(ChatColor.YELLOW + "Database not found! Creating one for you.");
 			try {
 				dataFile.getParentFile().mkdirs();
 				dataFile.createNewFile();
-				plugin.getLogger().info("Database created!");
+				plugin.debugMessage(ChatColor.GREEN + "Database created!");
 			} catch (final IOException e) {
 				plugin.getLogger().log(Level.SEVERE, "File write error: " + databaseName + ".db");
 			}
@@ -162,7 +164,7 @@ public class SQLiteConnector extends Database {
 
 			statements.add(statement.toString());
 			
-			plugin.getLogger().info("Loaded table '" + table.getTableName() + "'");
+			plugin.debugMessage(ChatColor.BLUE + "Loaded table '" + table.getTableName() + "'");
 		}
 
 		return statements;

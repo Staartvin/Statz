@@ -22,9 +22,9 @@ public interface DependencyHandler {
 	public Plugin get();
 
 	/**
-	 * Check whether Autorank has hooked this dependency and thus can use it.
+	 * Check whether Statz has hooked this dependency and thus can use it.
 	 * 
-	 * @return true if Autorank hooked into it, false otherwise.
+	 * @return true if Statz hooked into it, false otherwise.
 	 */
 	public boolean isAvailable();
 

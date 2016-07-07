@@ -4,14 +4,26 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.hooks.handlers.AFKTerminatorHandler;
+import me.staartvin.statz.hooks.handlers.ASkyBlockHandler;
+import me.staartvin.statz.hooks.handlers.AcidIslandHandler;
+import me.staartvin.statz.hooks.handlers.EssentialsHandler;
+import me.staartvin.statz.hooks.handlers.FactionsHandler;
 import me.staartvin.statz.hooks.handlers.JobsHandler;
 import me.staartvin.statz.hooks.handlers.McMMOHandler;
+import me.staartvin.statz.hooks.handlers.OnTimeHandler;
+import me.staartvin.statz.hooks.handlers.RoyalCommandsHandler;
+import me.staartvin.statz.hooks.handlers.StatisticsAPIHandler;
+import me.staartvin.statz.hooks.handlers.StatsAPIHandler;
+import me.staartvin.statz.hooks.handlers.UltimateCoreHandler;
+import me.staartvin.statz.hooks.handlers.VaultHandler;
 import me.staartvin.statz.hooks.handlers.VotifierHandler;
+import me.staartvin.statz.hooks.handlers.WorldGuardHandler;
 import net.md_5.bungee.api.ChatColor;
 
 
 /**
- * This class is used for loading all the dependencies Autorank has. <br>
+ * This class is used for loading all the dependencies Statz has. <br>
  * Not all dependencies are required, some are optional.
  * <p>
  * Date created: 18:18:43 2 mrt. 2014
@@ -32,6 +44,19 @@ public class DependencyManager {
 		handlers.put(Dependency.VOTIFIER, new VotifierHandler(instance));
 		handlers.put(Dependency.JOBS, new JobsHandler(instance));
 		handlers.put(Dependency.MCMMO, new McMMOHandler(instance));
+		handlers.put(Dependency.ASKYBLOCK, new ASkyBlockHandler(instance));
+		handlers.put(Dependency.ACIDISLAND, new AcidIslandHandler(instance));
+		handlers.put(Dependency.WORLDGUARD, new WorldGuardHandler(instance));
+		handlers.put(Dependency.ROYAL_COMMANDS, new RoyalCommandsHandler(instance));
+		handlers.put(Dependency.ON_TIME, new OnTimeHandler(instance));
+		handlers.put(Dependency.AFKTERMINATOR, new AFKTerminatorHandler(instance));
+		handlers.put(Dependency.ESSENTIALS, new EssentialsHandler(instance));
+		handlers.put(Dependency.FACTIONS, new FactionsHandler(instance));
+		handlers.put(Dependency.STATISTICS, new StatisticsAPIHandler(instance));
+		handlers.put(Dependency.STATS, new StatsAPIHandler(instance));
+		handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
+		handlers.put(Dependency.VAULT, new VaultHandler(instance));
+		
 	}
 
 	/**

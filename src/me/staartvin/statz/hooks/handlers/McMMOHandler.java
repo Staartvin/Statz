@@ -41,7 +41,7 @@ public class McMMOHandler implements DependencyHandler {
 	}
 
 	public int getPowerLevel(final Player player) {
-		int powerLevel = 0;
+		int powerLevel = -1;
 
 		if (!isAvailable())
 			return powerLevel;
@@ -77,7 +77,7 @@ public class McMMOHandler implements DependencyHandler {
 	 * @return level of requested skill, or -1 if the skill is invalid.
 	 */
 	public int getSkillLevel(final Player player, final String skillName) {
-		int skillLevel = 0;
+		int skillLevel = -1;
 
 		if (!isAvailable())
 			return skillLevel;

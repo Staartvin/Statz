@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
+
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.SQLiteEntry;
 import me.staartvin.statz.database.datatype.SQLiteTable;
@@ -474,7 +476,7 @@ public abstract class Database {
 			
 			public void run() {
 				
-				plugin.getLogger().info("Save Statz database.");
+				plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 				Connection conn = null;
 				PreparedStatement ps = null;
 

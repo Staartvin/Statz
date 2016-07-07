@@ -3,26 +3,27 @@ package me.staartvin.statz.hooks.handlers;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
-import com.vexsoftware.votifier.Votifier;
-
+import me.edge209.OnTime.OnTime;
+import me.edge209.OnTime.OnTimeAPI;
+import me.edge209.OnTime.OnTimeAPI.data;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
- * Handles all connections with Votifier
+ * Handles all connections with OnTime
  * <p>
- * Date created: 21:02:20 15 mrt. 2014
+ * Date created: 21:02:05 15 mrt. 2014
  * 
  * @author Staartvin
  * 
  */
-public class VotifierHandler implements DependencyHandler {
+public class OnTimeHandler implements DependencyHandler {
 
+	private OnTime api;
 	private final Statz plugin;
-	private Votifier api;
 
-	public VotifierHandler(final Statz instance) {
+	public OnTimeHandler(final Statz instance) {
 		plugin = instance;
 	}
 
@@ -31,14 +32,22 @@ public class VotifierHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.VOTIFIER.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.ON_TIME.getInternalString());
 
-		// May not be loaded
-		if (plugin == null || !(plugin instanceof Votifier)) {
+		// WorldGuard may not be loaded
+		if (plugin == null || !(plugin instanceof OnTime)) {
 			return null; // Maybe you want throw an exception instead
 		}
 
 		return plugin;
+	}
+
+	public int getPlayTime(final String playerName) {
+		if (!isAvailable())
+			return -1;
+
+		// Divide by 60000 because time is in milliseconds
+		return (int) (OnTimeAPI.getPlayerTimeData(playerName, data.TOTALPLAY) / 60000);
 	}
 
 	/* (non-Javadoc)
@@ -54,7 +63,7 @@ public class VotifierHandler implements DependencyHandler {
 	 */
 	@Override
 	public boolean isInstalled() {
-		final Votifier plugin = (Votifier) get();
+		final Plugin plugin = get();
 
 		return plugin != null && plugin.isEnabled();
 	}
@@ -66,20 +75,20 @@ public class VotifierHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
+				plugin.debugMessage(ChatColor.RED + Dependency.ON_TIME.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
-			api = (Votifier) get();
+			api = (OnTime) get();
 
 			if (api != null) {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found and can be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ON_TIME.getInternalString() + " has been found and can be used!");
 				}
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ON_TIME.getInternalString() + " has been found but cannot be used!");
 				}
 				return false;
 			}

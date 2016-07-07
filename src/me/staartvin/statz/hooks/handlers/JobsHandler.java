@@ -20,7 +20,7 @@ import me.staartvin.statz.hooks.DependencyHandler;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
- * Handles all connections with Vault
+ * Handles all connections with Jobs
  * <p>
  * Date created: 21:02:20 15 mrt. 2014
  * 
@@ -84,7 +84,7 @@ public class JobsHandler implements DependencyHandler {
 
 			if (api != null) {
 				if (verbose) {
-					plugin.getLogger().info(Dependency.JOBS.getInternalString() + " has been found and can be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.JOBS.getInternalString() + " has been found and can be used!");
 				}
 				return true;
 			} else {

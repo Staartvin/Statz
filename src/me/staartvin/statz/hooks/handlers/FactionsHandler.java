@@ -1,28 +1,31 @@
 package me.staartvin.statz.hooks.handlers;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.vexsoftware.votifier.Votifier;
+import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.entity.MPlayer;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
+
 /**
- * Handles all connections with Votifier
+ * Handles all connections with Factions
  * <p>
- * Date created: 21:02:20 15 mrt. 2014
+ * Date created: 21:01:50 15 mrt. 2014
  * 
  * @author Staartvin
  * 
  */
-public class VotifierHandler implements DependencyHandler {
+public class FactionsHandler implements DependencyHandler {
 
+	private Factions api;
 	private final Statz plugin;
-	private Votifier api;
 
-	public VotifierHandler(final Statz instance) {
+	public FactionsHandler(final Statz instance) {
 		plugin = instance;
 	}
 
@@ -31,14 +34,27 @@ public class VotifierHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.VOTIFIER.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.FACTIONS.getInternalString());
 
-		// May not be loaded
-		if (plugin == null || !(plugin instanceof Votifier)) {
+		// WorldGuard may not be loaded
+		if (plugin == null || !(plugin instanceof Factions)) {
 			return null; // Maybe you want throw an exception instead
 		}
 
 		return plugin;
+	}
+
+	public double getFactionPower(final Player player) {
+		if (!isAvailable())
+			return -1;
+
+		final MPlayer uPlayer = MPlayer.get(player);
+
+		if (!uPlayer.hasFaction()) {
+			return -1;
+		}
+
+		return uPlayer.getFaction().getPower();
 	}
 
 	/* (non-Javadoc)
@@ -54,7 +70,7 @@ public class VotifierHandler implements DependencyHandler {
 	 */
 	@Override
 	public boolean isInstalled() {
-		final Votifier plugin = (Votifier) get();
+		final Factions plugin = (Factions) get();
 
 		return plugin != null && plugin.isEnabled();
 	}
@@ -66,20 +82,21 @@ public class VotifierHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
+				plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has not been found!");
 			}
+
 			return false;
 		} else {
-			api = (Votifier) get();
+			api = (Factions) get();
 
 			if (api != null) {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found and can be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has been found and can be used!");
 				}
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has been found but cannot be used!");
 				}
 				return false;
 			}
