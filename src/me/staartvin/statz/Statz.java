@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.api.API;
+import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
@@ -31,6 +32,7 @@ public class Statz extends JavaPlugin {
 	private API statzAPI;
 	private DataPoolManager dataPoolManager;
 	private DependencyManager depManager;
+	private ConfigHandler configHandler;
 
 	@Override
 	public void onEnable() {
@@ -49,6 +51,12 @@ public class Statz extends JavaPlugin {
 
 		// Create and load database
 		this.getSqlConnector().load();
+		
+		// Load confighandler
+		this.setConfigHandler(new ConfigHandler(this));
+		
+		// Load config with default values
+		this.getConfigHandler().loadConfig();
 
 		// Register listeners
 		this.registerListeners();
@@ -78,6 +86,11 @@ public class Statz extends JavaPlugin {
 	}
 
 	private void registerListeners() {
+		if (!this.getConfigHandler().getStatsTracking()) {
+			this.debugMessage(ChatColor.GOLD + "Statz won't track stats of any player!");
+			return; // We don't track stats, so we don't register listeners
+		}
+		
 		this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
@@ -139,5 +152,13 @@ public class Statz extends JavaPlugin {
 
 	public void setDependencyManager(DependencyManager depManager) {
 		this.depManager = depManager;
+	}
+
+	public ConfigHandler getConfigHandler() {
+		return configHandler;
+	}
+
+	public void setConfigHandler(ConfigHandler configHandler) {
+		this.configHandler = configHandler;
 	}
 }
