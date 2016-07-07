@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.handlers.JobsHandler;
+import me.staartvin.statz.hooks.handlers.McMMOHandler;
 import me.staartvin.statz.hooks.handlers.VotifierHandler;
 import net.md_5.bungee.api.ChatColor;
 
@@ -30,6 +31,7 @@ public class DependencyManager {
 		// Register handlers
 		handlers.put(Dependency.VOTIFIER, new VotifierHandler(instance));
 		handlers.put(Dependency.JOBS, new JobsHandler(instance));
+		handlers.put(Dependency.MCMMO, new McMMOHandler(instance));
 	}
 
 	/**
@@ -110,10 +112,8 @@ public class DependencyManager {
 					case VOTIFIER:
 						plugin.debugMessage(ChatColor.GREEN + "Votifier was found and so Statz records votes!");
 						break;
-					case JOBS:
-						plugin.debugMessage(ChatColor.GREEN + "Jobs was found and Statz now tracks Jobs data!");
-						break;
 					default:
+						plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString() + " was found and Statz now tracks its data!");
 						break;
 				}
 			}

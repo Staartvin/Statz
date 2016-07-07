@@ -3,6 +3,7 @@ package me.staartvin.statz.hooks.handlers;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -75,7 +76,7 @@ public class JobsHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.getLogger().info(Dependency.JOBS.getInternalString() + " has not been found!");
+				plugin.debugMessage(ChatColor.RED + Dependency.JOBS.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {

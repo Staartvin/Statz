@@ -2,7 +2,7 @@ package me.staartvin.statz.hooks;
 
 public enum Dependency {
 
-	VOTIFIER("Votifier"), JOBS("Jobs");
+	VOTIFIER("Votifier"), JOBS("Jobs"), MCMMO("mcMMO");
 	
 	Dependency(String internalName) {
 		this.internalName = internalName;

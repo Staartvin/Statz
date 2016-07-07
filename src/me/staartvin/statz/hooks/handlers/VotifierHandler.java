@@ -1,5 +1,6 @@
 package me.staartvin.statz.hooks.handlers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
 import com.vexsoftware.votifier.Votifier;
@@ -65,7 +66,7 @@ public class VotifierHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.getLogger().info(Dependency.VOTIFIER.getInternalString() + " has not been found!");
+				plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
