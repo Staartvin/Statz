@@ -73,9 +73,6 @@ public class VotifierHandler implements DependencyHandler {
 			api = (Votifier) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

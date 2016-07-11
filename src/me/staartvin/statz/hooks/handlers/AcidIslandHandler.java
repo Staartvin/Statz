@@ -93,9 +93,6 @@ public class AcidIslandHandler implements DependencyHandler {
 			api = (ASkyBlock) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ACIDISLAND.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

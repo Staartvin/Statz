@@ -114,9 +114,6 @@ public class WorldGuardHandler implements DependencyHandler {
 		} else {
 			worldGuardAPI = (WorldGuardPlugin) get();
 			if (worldGuardAPI != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

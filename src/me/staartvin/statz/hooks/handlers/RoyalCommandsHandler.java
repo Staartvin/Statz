@@ -81,9 +81,6 @@ public class RoyalCommandsHandler implements DependencyHandler {
 			api = (RoyalCommands) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ROYAL_COMMANDS.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

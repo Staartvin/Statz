@@ -102,9 +102,6 @@ public class EssentialsHandler implements DependencyHandler {
 			api = (Essentials) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ESSENTIALS.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

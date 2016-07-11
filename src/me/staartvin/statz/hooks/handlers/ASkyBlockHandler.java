@@ -94,9 +94,6 @@ public class ASkyBlockHandler implements DependencyHandler {
 			api = (ASkyBlock) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ASKYBLOCK.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

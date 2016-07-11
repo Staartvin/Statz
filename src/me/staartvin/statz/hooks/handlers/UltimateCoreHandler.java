@@ -82,10 +82,6 @@ public class UltimateCoreHandler implements DependencyHandler {
 			api = get();
 
 			if (api != null) {
-
-				if (verbose) {
-					instance.debugMessage(ChatColor.RED + Dependency.ULTIMATE_CORE.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

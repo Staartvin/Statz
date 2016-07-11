@@ -78,9 +78,6 @@ public class VaultHandler implements DependencyHandler {
 			api = (Vault) get();
 
 			if (api != null && setupEconomy() && setupPermissions()) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VAULT.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

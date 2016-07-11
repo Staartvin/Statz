@@ -82,9 +82,6 @@ public class OnTimeHandler implements DependencyHandler {
 			api = (OnTime) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ON_TIME.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

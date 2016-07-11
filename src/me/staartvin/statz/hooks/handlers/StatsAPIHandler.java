@@ -339,9 +339,6 @@ public class StatsAPIHandler implements DependencyHandler {
 			stats = (BukkitMain) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.STATS.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

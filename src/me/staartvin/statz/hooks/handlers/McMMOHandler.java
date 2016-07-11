@@ -141,10 +141,6 @@ public class McMMOHandler implements DependencyHandler {
 			api = (mcMMO) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(Dependency.MCMMO.getInternalString() + " has been found and can be used!");
-				}
-
 				return true;
 			} else {
 				if (verbose) {

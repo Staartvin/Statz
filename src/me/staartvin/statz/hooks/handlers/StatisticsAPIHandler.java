@@ -109,9 +109,6 @@ public class StatisticsAPIHandler implements DependencyHandler {
 			api = new StatisticsAPI();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.STATISTICS.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

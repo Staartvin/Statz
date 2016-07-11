@@ -90,9 +90,6 @@ public class FactionsHandler implements DependencyHandler {
 			api = (Factions) get();
 
 			if (api != null) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {

@@ -79,9 +79,6 @@ public class AFKTerminatorHandler implements DependencyHandler {
 			return false;
 		} else {
 			if (isInstalled()) {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.AFKTERMINATOR.getInternalString() + " has been found and can be used!");
-				}
 				return true;
 			} else {
 				if (verbose) {
