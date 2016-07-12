@@ -437,7 +437,7 @@ public abstract class Database {
 				if (ps != null)
 					ps.close();
 				//if (conn != null)
-					//conn.close();
+				//conn.close();
 			} catch (final SQLException ex) {
 				plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 			}
@@ -473,10 +473,13 @@ public abstract class Database {
 	public void setObjects(final SQLiteTable table, final HashMap<String, String> results) {
 		// Run SQLite query async to not disturb the main Server thread
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			
+
 			public void run() {
+
+				if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
+					plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
+				}
 				
-				plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 				Connection conn = null;
 				PreparedStatement ps = null;
 
@@ -501,9 +504,9 @@ public abstract class Database {
 				columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
 				resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
 
-				String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
-						+ resultNames;
-				
+				String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
+						+ " VALUES " + resultNames;
+
 				try {
 					conn = getSQLConnection();
 					ps = conn.prepareStatement(update);
@@ -517,7 +520,7 @@ public abstract class Database {
 						if (ps != null)
 							ps.close();
 						//if (conn != null)
-							//conn.close();
+						//conn.close();
 					} catch (final SQLException ex) {
 						plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
 					}

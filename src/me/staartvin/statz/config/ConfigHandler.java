@@ -19,6 +19,7 @@ public class ConfigHandler {
 				+ "\nThe 'track stats' option can either be true of false. When it is true, Statz will record data of players. If it is false, Statz won't record any data.");
 		
 		plugin.getConfig().addDefault("track stats", true);
+		plugin.getConfig().addDefault("show database save message", true);
 		
 		plugin.getConfig().options().copyDefaults(true);
 
@@ -40,5 +41,14 @@ public class ConfigHandler {
 	
 	public boolean getStatsTracking() {
 		return plugin.getConfig().getBoolean("track stats", true);
+	}
+	
+	public boolean shouldShowDatabaseSave() {
+		return plugin.getConfig().getBoolean("show database save message", true);
+	}
+	
+	public void setShowDatabaseSave(boolean value) {
+		plugin.getConfig().set("show database save message", value);
+		plugin.saveConfig();
 	}
 }
