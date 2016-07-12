@@ -31,12 +31,12 @@
 	<classpathentry kind="lib" path="lib/RoyalCommands.jar"/>
 	<classpathentry kind="lib" path="lib/OnTime.jar"/>
 	<classpathentry kind="lib" path="lib/afkTerminator.jar"/>
-	<classpathentry kind="lib" path="lib/Essentials.jar"/>
 	<classpathentry kind="lib" path="lib/Factions.jar"/>
 	<classpathentry kind="lib" path="lib/MassiveCore.jar"/>
 	<classpathentry kind="lib" path="lib/Statistics.jar"/>
 	<classpathentry kind="lib" path="lib/Stats3.jar"/>
 	<classpathentry kind="lib" path="lib/UltimateCore.jar"/>
 	<classpathentry kind="lib" path="lib/Vault.jar"/>
+	<classpathentry kind="lib" path="lib/EssentialsX-2.0.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
