@@ -9,6 +9,7 @@ import me.staartvin.statz.hooks.handlers.ASkyBlockHandler;
 import me.staartvin.statz.hooks.handlers.AcidIslandHandler;
 import me.staartvin.statz.hooks.handlers.EssentialsHandler;
 import me.staartvin.statz.hooks.handlers.FactionsHandler;
+import me.staartvin.statz.hooks.handlers.GriefPreventionHandler;
 import me.staartvin.statz.hooks.handlers.JobsHandler;
 import me.staartvin.statz.hooks.handlers.McMMOHandler;
 import me.staartvin.statz.hooks.handlers.OnTimeHandler;
@@ -56,6 +57,7 @@ public class DependencyManager {
 		handlers.put(Dependency.STATS, new StatsAPIHandler(instance));
 		handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
 		handlers.put(Dependency.VAULT, new VaultHandler(instance));
+		handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
 		
 	}
 
