@@ -16,7 +16,9 @@ public class ConfigHandler {
 		
 		plugin.getConfig().options()
 		.header("This is the config file of " + plugin.getDescription().getFullName() + ". \nYou can configure Statz with this file."
-				+ "\nThe 'track stats' option can either be true of false. When it is true, Statz will record data of players. If it is false, Statz won't record any data.");
+				+ "\nThe 'track stats' option can either be true of false. When it is true, Statz will record data of players. If it is false, Statz won't record any data."
+				+ "\nThe 'show database save message' option allows you to toggle the visibility of the 'Save message'. Every few minutes, the database of Statz is saved. If you"
+				+ "set this option to false, Statz will still save the database, but won't show the message.");
 		
 		plugin.getConfig().addDefault("track stats", true);
 		plugin.getConfig().addDefault("show database save message", true);
