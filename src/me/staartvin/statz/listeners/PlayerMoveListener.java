@@ -34,7 +34,14 @@ public class PlayerMoveListener implements Listener {
 
 		String movementType = StatzUtil.getMovementType(player);
 		
-		double distTravelled = event.getFrom().distance(event.getTo());
+		double distTravelled; 
+		
+		try {
+			distTravelled = event.getFrom().distance(event.getTo());
+		} catch (IllegalArgumentException e) {
+			// Did not move correctly, so ignore it.
+			return;
+		}
 		
 		if (distTravelled == 0) {
 			return;
