@@ -140,7 +140,7 @@ public class DataPoolManager {
 
 	/**
 	 * Find conflicts for the current queries in the pool.
-	 * For more info, see {@link DataPoolManager#findConflicts(HashMap, List)}.
+	 * For more info, see {@link Query#findConflicts(List)}.
 	 * @param stat Stat to get the queries from
 	 * @param queryCompare Query to compare other queries (currently in the pool) to.
 	 * @return a list of conflicting queries or null if there are no conflicting queries.

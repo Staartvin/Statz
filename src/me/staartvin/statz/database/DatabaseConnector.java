@@ -2,7 +2,6 @@ package me.staartvin.statz.database;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -104,10 +103,15 @@ public abstract class DatabaseConnector {
 	public abstract List<Query> getObjects(final Table table, final Query queries);
 
 	/**
-	 * @see #getObjects(SQLiteTable, HashMap)
+	 * @see #getObjects(Table, Query)
 	 * @param tableName Name of the table to get data from
 	 * @param queries Queries to execute
-	 * @return
+	 * @return A hashmap that will specify what results should be applied.
+	 *            <br>
+	 *            You could call a hashmap with key: 'uuid' and value:
+	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
+	 *            that we set the value of <i>uuid</i> to
+	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
 	 */
 	public List<Query> getObjects(final String tableName, final Query queries) {
 		return this.getObjects(this.getTable(tableName), queries);
@@ -132,7 +136,7 @@ public abstract class DatabaseConnector {
 	
 	/**
 	 * Instead of updating one single row, you can also perform a batch of updates.
-	 * This can drastically improve update time. See {@link #setObjects(Table, HashMap)} for more info.
+	 * This can drastically improve update time. See {@link #setObjects(Table, Query)} for more info.
 	 */
 	public abstract void setBatchObjects(final Table table, final List<Query> queries);
 
