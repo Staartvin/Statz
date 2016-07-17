@@ -30,8 +30,7 @@ public class PlayerJoinListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Update name in database.
-		plugin.getSqlConnector().setObjects(plugin.getSqlConnector().getTable("players"),
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.PLAYERS, StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
 
 		// Get player info.
 		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);

@@ -273,6 +273,7 @@ public class DataPoolManager {
 				}
 
 				for (PlayerStat stat : PlayerStat.values()) {
+					
 					List<Query> queries = getStoredQueries(stat);
 					List<Query> deletedQueries = new ArrayList<>();
 

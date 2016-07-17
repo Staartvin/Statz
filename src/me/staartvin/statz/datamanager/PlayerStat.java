@@ -84,7 +84,12 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player vote (with Votifier)?
 	 */
-	VOTES("votes");
+	VOTES("votes"),
+	
+	/**
+	 * What are the names of corresponding UUIDs (internal database)
+	 */
+	PLAYERS("players"),;
 
 	private String tableName;
 
