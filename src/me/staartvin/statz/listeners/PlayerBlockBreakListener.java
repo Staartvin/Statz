@@ -1,7 +1,5 @@
 package me.staartvin.statz.listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -45,12 +44,12 @@ public class PlayerBlockBreakListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, String> map : info.getResults()) {
-				if (map.get("typeid") != null && map.get("typeid").toString().equalsIgnoreCase(typeId + "")
-						&& map.get("datavalue") != null
-						&& map.get("datavalue").toString().equalsIgnoreCase(dataValue + "") && map.get("world") != null
-						&& map.get("world").toString().equalsIgnoreCase(worldName)) {
-					currentValue += Integer.parseInt(map.get("value").toString());
+			for (Query map : info.getResults()) {
+				if (map.getValue("typeid") != null && map.getValue("typeid").toString().equalsIgnoreCase(typeId + "")
+						&& map.getValue("datavalue") != null
+						&& map.getValue("datavalue").toString().equalsIgnoreCase(dataValue + "") && map.getValue("world") != null
+						&& map.getValue("world").toString().equalsIgnoreCase(worldName)) {
+					currentValue += Double.parseDouble(map.getValue("value").toString());
 				}
 			}
 		}

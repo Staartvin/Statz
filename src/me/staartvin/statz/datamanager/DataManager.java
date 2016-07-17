@@ -1,11 +1,10 @@
 package me.staartvin.statz.datamanager;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
@@ -55,47 +54,58 @@ public class DataManager {
 		final PlayerInfo info = new PlayerInfo(uuid);
 
 		// Get results from database
-		List<HashMap<String, String>> results = plugin.getSqlConnector().getObjects(statType.getTableName(),
+		List<Query> results = plugin.getSqlConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 
+		//		for (HashMap<String, String> map : results) {
+		//			System.out.println("RESULT: " + map);
+		//		}
+
 		// Get a list of queries currently in the pool
-		List<HashMap<String, String>> storedQueries = plugin.getDataPoolManager().getStoredQueries(statType);
+		List<Query> pooledQueries = plugin.getDataPoolManager().getStoredQueries(statType);
 
 		// If we have queries in the pool, check for conflicting ones.
-		if (storedQueries != null && !storedQueries.isEmpty()) {
-			// There ARE conflicting queries and since the pool is more up to date, we have to override the old ones.
+		if (pooledQueries != null && !pooledQueries.isEmpty()) {
 
-			for (HashMap<String, String> storedQuery : storedQueries) {
+			//			for (HashMap<String, String> store : storedQueries) {
+			//				System.out.println("STORED: "  + store);
+			//			}
 
-				// There is no data of this stat in the database, so storedQueries are always more up to date.
+			// There ARE stored queries and since the pool is more up to date, we have to override the old ones.
+			for (Query pooledQuery : pooledQueries) {
+				// If UUID of query in the pool is not matching with uuid of player, don't add it.
+				if (!pooledQuery.getValue("uuid").toString().equalsIgnoreCase(uuid.toString())) {
+					continue;
+				}
+
+				// There is no data of this stat in the database, so storedQueries are always more up to date. (IF the UUIDs match)
 				if (results == null || results.isEmpty()) {
 					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery)
 					//							+ " was more up to date since there is no record in database");
-					results.add(storedQuery);
+					results.add(pooledQuery);
 					continue;
 				}
 
 				//System.out.println("Stored query: " + StatzUtil.printQuery(storedQuery));
 
 				// Get the queries of the pool that conflict with the 'old' database results.
-				List<HashMap<String, String>> conflictingQueries = plugin.getDataPoolManager()
-						.findConflicts(storedQuery, results);
+				List<Query> conflictingQueries = pooledQuery.findConflicts(results);
 
 				// No conflicts found, yeah!!
 				if (conflictingQueries == null || conflictingQueries.isEmpty()) {
 					//					System.out.println(
 					//							"No conflicts found between " + StatzUtil.printQuery(storedQuery) + " and " + results);
-					results.add(storedQuery);
+					results.add(pooledQuery);
 					continue;
 				}
 
 				// We found conflicting queries.
-				for (HashMap<String, String> conflictingQuery : conflictingQueries) {
+				for (Query conflictingQuery : conflictingQueries) {
 					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery) + " conflicts with "
 					//							+ StatzUtil.printQuery(conflictingQuery));
 					// Remove old data from results and add new (more updated data) to the results pool.
 					results.remove(conflictingQuery);
-					results.add(storedQuery);
+					results.add(pooledQuery);
 				}
 
 			}
@@ -104,21 +114,20 @@ public class DataManager {
 			// No queries in the pool
 
 			// IF query is null, it could be due to a 'just-update', so we look at the last written query to find the most recent data.
-			List<HashMap<String, String>> lastQueries = plugin.getDataPoolManager().getLatestQueries(statType);
+			List<Query> lastQueries = plugin.getDataPoolManager().getLatestQueries(statType);
 
 			// We found old queries that were performed on the database, check if they are of any use.
 			if (lastQueries != null) {
-				for (HashMap<String, String> lastQuery : lastQueries) {
+				for (Query lastQuery : lastQueries) {
 					// By checking for conflicts, we can search for old queries that are useful to use now.
-					List<HashMap<String, String>> conflicts = plugin.getDataPoolManager().findConflicts(lastQuery,
-							results);
+					List<Query> conflicts = lastQuery.findConflicts(results);
 
 					// We found old queries that are useful, yeah!
 					if (conflicts != null && !conflicts.isEmpty()) {
 						// Use last written query if one conflicts
-						for (HashMap<String, String> conflict : conflicts) {
+						for (Query conflict : conflicts) {
 							// Use last written value as old value
-							conflict.put("value", lastQuery.get("value"));
+							conflict.setValue("value", lastQuery.getValue());
 						}
 					}
 				}
@@ -131,13 +140,19 @@ public class DataManager {
 
 			info.setResults(results);
 		}
+		//		
+		//		for (HashMap<String, String> map : results) {
+		//			System.out.println("END RESULT: " + map);
+		//		}
 
 		return info;
 	}
 
-	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, LinkedHashMap<String, String> results) {
+	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
 
 		//final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(statType.getTableName());
+
+		//System.out.println("Add to query: " + results);
 
 		// Add query to the pool.
 		plugin.getDataPoolManager().addQuery(statType, results);

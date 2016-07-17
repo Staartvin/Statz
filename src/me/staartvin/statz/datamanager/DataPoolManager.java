@@ -1,12 +1,16 @@
 package me.staartvin.statz.datamanager;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.ChatColor;
+
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.SQLiteTable;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.Table;
 
 /**
  * Since Statz is event-driven, a lot of queries are made to the database in sequential order. 
@@ -40,10 +44,10 @@ public class DataPoolManager {
 
 	// The PlayerStat key is to distinguish which table the query belongs to.
 	// The List contains all queries for one specific table. A LinkedHashMap is one query to the database.
-	private HashMap<PlayerStat, List<HashMap<String, String>>> pool = new HashMap<>();
-	
+	private HashMap<PlayerStat, List<Query>> pool = new HashMap<>();
+
 	// What queries were most recently written to the database?
-	private HashMap<PlayerStat, List<HashMap<String, String>>> lastWrittenQueries = new HashMap<>();
+	private HashMap<PlayerStat, List<Query>> lastWrittenQueries = new HashMap<>();
 
 	public DataPoolManager(Statz plugin) {
 		this.plugin = plugin;
@@ -55,16 +59,16 @@ public class DataPoolManager {
 	 * @param query The actual query
 	 * @return true if the query was successfully added to the pool, false if otherwise.
 	 */
-	public boolean addQuery(PlayerStat stat, HashMap<String, String> query) {
-		
-		List<HashMap<String, String>> queries = this.getStoredQueries(stat);
+	public synchronized boolean addQuery(PlayerStat stat, Query query) {
+
+		List<Query> queries = this.getStoredQueries(stat);
 
 		if (queries == null) {
 			queries = new ArrayList<>();
 		}
 
 		if (queries.isEmpty()) {
-			// Since there are no other queries, we do not have to check for conflicting ones.
+			// Since there are no other queries in the pool, we do not have to check for conflicting ones.
 			queries.add(query);
 			pool.put(stat, queries);
 
@@ -72,7 +76,7 @@ public class DataPoolManager {
 			return true;
 		}
 
-		List<HashMap<String, String>> conflictsQuery = this.findConflicts(stat, query);
+		List<Query> conflictsQuery = this.findConflicts(stat, query);
 
 		// No conflicting queries found, so we can just add the given query to the pool without having to worry about conflicts.
 		if (conflictsQuery == null || conflictsQuery.isEmpty()) {
@@ -82,7 +86,7 @@ public class DataPoolManager {
 			return true;
 		}
 
-		// Shit, we found a conflicting query. Remove them and add a new query.
+		// Shit, we found a conflicting query. Remove conflicting ones and add a new query.
 		queries.removeAll(conflictsQuery);
 
 		// Add new query
@@ -90,13 +94,50 @@ public class DataPoolManager {
 
 		//System.out.println("Add to pool (after conflict): " + query);
 
+		// Update pool with new queries
 		pool.put(stat, queries);
 
 		return true;
-
 	}
 	
+	public synchronized void removeQuery(PlayerStat stat, Query query) {
+		List<Query> queries = this.getStoredQueries(stat);
+
+		if (queries == null) {
+			queries = new ArrayList<>();
+		}
+		
+		if (queries.isEmpty()) {
+			// Since there are no other queries in the pool, we cannot delete any queries.
+			return;
+		}
+		
+		Query toBeDeleted = null;
+		
+		for (Query iterateQuery: queries) {
+			if (query.equals(iterateQuery)) {
+				toBeDeleted = iterateQuery;
+			}
+		}
+		
+		// No query found to be deleted
+		if (toBeDeleted == null) return;
+		
+		// Remove query from copy pool
+		queries.remove(toBeDeleted);
+		
+		// Update pool with removed query
+		pool.put(stat, queries);
+		
+		return;
+	}
 	
+	public synchronized void removeQueries(PlayerStat stat, List<Query> queries) {
+		for (Query q: queries) {
+			this.removeQuery(stat, q);
+		}
+	}
+
 	/**
 	 * Find conflicts for the current queries in the pool.
 	 * For more info, see {@link DataPoolManager#findConflicts(HashMap, List)}.
@@ -104,86 +145,118 @@ public class DataPoolManager {
 	 * @param queryCompare Query to compare other queries (currently in the pool) to.
 	 * @return a list of conflicting queries or null if there are no conflicting queries.
 	 */
-	public List<HashMap<String, String>> findConflicts(PlayerStat stat, HashMap<String, String> queryCompare) {
-		return this.findConflicts(queryCompare, (List<HashMap<String, String>>) this.getStoredQueries(stat));
-	}
-
-	/**
-	 * Get queries in the given list of queries that conflict with the given queryCompare.
-	 * A query conflicts with another query when they have the same values for the same columns (except for the column 'value').
-	 * <br>
-	 * <br>Let's assume there are three queries: A, B and C.
-	 * Query A consists of {uuid: Staartvin, mob: COW, world: testWorld}. Query B is made of {uuid: Staartvin, mob:COW, world: noTestWorld}.
-	 * Lastly, Query C is made of {uuid: BuilderGuy, mob:COW, world: testWorld}. None of these queries conflict with each other.
-	 * <br><br>Query A does not conflict with B, as the world columns do not have the same values. Query A does also not conflict with C,
-	 * since the UUIDs don't match. Lastly, query B does not conflict with query C, since both the UUID and world columns do not match.
-	 *
-	 * @param queryCompare Query to compare to other queries
-	 * @param queries A list of queries to check whether they conflict with the given queryCompare. 
-	 * @return a list of queries (from the given queries list) that conflict with queryCompare or null if no conflicts were found.
-	 */
-	public List<HashMap<String, String>> findConflicts(HashMap<String, String> queryCompare,
-			List<HashMap<String, String>> queries) {
-		List<HashMap<String, String>> conflictingQueries = new ArrayList<>();
-
-		if (queries == null) return null;
+	public List<Query> findConflicts(PlayerStat stat, Query queryCompare) {
+		List<Query> conflicts = new ArrayList<Query>();
 		
-		// Do reverse traversal
-		for (int i = queries.size() - 1; i >= 0; i--) {
-
-			HashMap<String, String> comparedQuery = queries.get(i);
-
-			boolean isSame = true;
-
-			for (Entry<String, String> entry : queryCompare.entrySet()) {
-				String columnName = entry.getKey();
-				String columnValue = entry.getValue();
-
-				if (columnName.equalsIgnoreCase("value"))
-					continue;
-
-				// Stored query does not have value that the given query has -> this cannot conflict
-				if (comparedQuery.get(columnName) == null) {
-					isSame = false;
-					break;
-				}
-
-				// If value of condition in stored query is not the same as the given query, they cannot conflict. 
-				if (!comparedQuery.get(columnName).equalsIgnoreCase(columnValue)) {
-					isSame = false;
-					break;
-				}
-			}
-
-			// We have found a conflicting query
-			if (isSame) {
-				conflictingQueries.add(comparedQuery);
-			}
+		if (queryCompare == null) {
+			return conflicts; // Empty list.
 		}
-
-		// No conflicting query found
-		if (conflictingQueries.isEmpty()) {
-			return null;
-		} else {
-			return conflictingQueries;
+		
+		List<Query> poolQueries = this.getStoredQueries(stat);
+		
+		if (poolQueries == null || poolQueries.isEmpty()) {
+			return conflicts; // Empty list.
 		}
-
+ 		
+		conflicts = queryCompare.findConflicts(poolQueries);
+		
+		return conflicts;
 	}
+
+//	/**
+//	 * Get queries in the given list of queries that conflict with the given queryCompare.
+//	 * A query conflicts with another query when they have the same values for the same columns (except for the column 'value').
+//	 * <br>
+//	 * <br>Let's assume there are three queries: A, B and C.
+//	 * Query A consists of {uuid: Staartvin, mob: COW, world: testWorld}. Query B is made of {uuid: Staartvin, mob:COW, world: noTestWorld}.
+//	 * Lastly, Query C is made of {uuid: BuilderGuy, mob:COW, world: testWorld}. None of these queries conflict with each other.
+//	 * <br><br>Query A does not conflict with B, as the world columns do not have the same values. Query A does also not conflict with C,
+//	 * since the UUIDs don't match. Lastly, query B does not conflict with query C, since both the UUID and world columns do not match.
+//	 *
+//	 * @param queryCompare Query to compare to other queries
+//	 * @param queries A list of queries to check whether they conflict with the given queryCompare. 
+//	 * @return a list of queries (from the given queries list) that conflict with queryCompare or null if no conflicts were found.
+//	 */
+//	public List<HashMap<String, String>> findConflicts(HashMap<String, String> queryCompare,
+//			List<HashMap<String, String>> queries) {
+//		List<HashMap<String, String>> conflictingQueries = new ArrayList<>();
+//
+//		if (queries == null)
+//			return null;
+//
+//		// Do reverse traversal
+//		for (int i = queries.size() - 1; i >= 0; i--) {
+//
+//			HashMap<String, String> comparedQuery = queries.get(i);
+//
+//			boolean isSame = true;
+//
+//			for (Entry<String, String> entry : queryCompare.entrySet()) {
+//				String columnName = entry.getKey();
+//				String columnValue = entry.getValue();
+//
+//				if (columnName.equalsIgnoreCase("value"))
+//					continue;
+//
+//				// Stored query does not have value that the given query has -> this cannot conflict
+//				if (comparedQuery.get(columnName) == null) {
+//					isSame = false;
+//					break;
+//				}
+//
+//				// If value of condition in stored query is not the same as the given query, they cannot conflict. 
+//				if (!comparedQuery.get(columnName).equalsIgnoreCase(columnValue)) {
+//					isSame = false;
+//					break;
+//				}
+//			}
+//
+//			if (!comparedQuery.get("uuid").equalsIgnoreCase(queryCompare.get("uuid"))) {
+//				isSame = false;
+//			}
+//
+//			// We have found a conflicting query
+//			if (isSame) {
+//				conflictingQueries.add(comparedQuery);
+//			}
+//		}
+//
+//		// No conflicting query found
+//		if (conflictingQueries.isEmpty()) {
+//			return null;
+//		} else {
+//			return conflictingQueries;
+//		}
+//
+//	}
 
 	/**
 	 * Get the queries that are currently in the pool (and have not been set to the database yet).
 	 * @param stat Queries of what stat type?
 	 * @return a list of queries that are in the pool or null if there are no queries in the pool.
 	 */
-	public List<HashMap<String, String>> getStoredQueries(PlayerStat stat) {
-		List<HashMap<String, String>> queries = pool.get(stat);
+	public List<Query> getStoredQueries(PlayerStat stat) {
+		List<Query> queries = pool.get(stat);
 
 		if (queries == null || queries.isEmpty()) {
 			return null;
 		}
 
-		return queries;
+		// Return a copy of the list
+		return new ArrayList<Query>(queries);
 	}
+	
+//	// Return exactly the same as getStoredQueries(), except the returned list is not a copy but the real object.
+//	private List<Query> getRawQueries(PlayerStat stat) {
+//		List<Query> queries = pool.get(stat);
+//
+//		if (queries == null || queries.isEmpty()) {
+//			return null;
+//		}
+//
+//		// Return a copy of the list
+//		return queries;
+//	}
 
 	/**
 	 * Send queries that are currently in the pool to the database. This will remove the queries from the pool that are sent to the database.
@@ -193,64 +266,78 @@ public class DataPoolManager {
 
 			public void run() {
 
-				//printPool();
+				printPool();
+
+				if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
+					plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
+				}
 
 				for (PlayerStat stat : PlayerStat.values()) {
-					List<HashMap<String, String>> queries = getStoredQueries(stat);
-					List<HashMap<String, String>> deletedQueries = new ArrayList<>();
+					List<Query> queries = getStoredQueries(stat);
+					List<Query> deletedQueries = new ArrayList<>();
 
-					SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(stat.getTableName());
+					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
 
-					if (getStoredQueries(stat) == null || table == null) {
+					if (queries == null || table == null) {
 						// Pool is empty
 						continue;
 					}
 
+					//Update in batch.
+					plugin.getSqlConnector().setBatchObjects(table, queries);
+
+					System.out.println("In pool: " + queries.size() + " for stat " + stat.getTableName());
+
 					// Add to last written query
-					List<HashMap<String, String>> lastWritten = lastWrittenQueries.get(stat);
-					
+					List<Query> lastWritten = lastWrittenQueries.get(stat);
+
 					// Send to database
-					for (HashMap<String, String> query : queries) {
-						// Send query to database.
-						plugin.getSqlConnector().setObjects(table, query);
-						
+					for (Query query : queries) {
+						// Send query to database. Update: Do not send this directly to database, but use batch update instead.
+						//plugin.getSqlConnector().setObjects(table, query);
+
 						if (lastWritten == null) {
 							lastWritten = new ArrayList<>();
 						}
-						
-						List<HashMap<String, String>> conflicts = findConflicts(query, lastWritten);
-						
+
+						List<Query> conflicts = query.findConflicts(lastWritten);
+
 						if (conflicts != null && !conflicts.isEmpty()) {
 							// Override last written query if one conflicts
-							for (HashMap<String, String> conflict: conflicts) {
+							for (Query conflict : conflicts) {
 								//System.out.println("Remove from last written: " + conflict);
 								lastWritten.remove(conflict);
 							}
 						}
-						
+
 						//System.out.println("Add to last written: " + query);
 						lastWritten.add(query);
-						
-						
+
 						deletedQueries.add(query);
 
 					}
-					
+
 					lastWrittenQueries.put(stat, lastWritten);
 
-					// Remove sent queries from pool
-					queries.removeAll(deletedQueries);
+					try {
+						// Remove sent queries from pool
+						//queries.removeAll(deletedQueries);
+						removeQueries(stat, deletedQueries);
+					} catch (ConcurrentModificationException e) {
+						plugin.debugMessage("Some data may not have been removed.");
+					}
+
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Get the queries that were last performed (from the pool) on the database.
 	 * @param stat What statType do we need to get the queries from.
 	 * @return a query in the form of a hashmap.
 	 */
-	public List<HashMap<String, String>> getLatestQueries(PlayerStat stat) {
+	public synchronized List<Query> getLatestQueries(PlayerStat stat) {
 		return lastWrittenQueries.get(stat);
 	}
 
@@ -262,7 +349,7 @@ public class DataPoolManager {
 		System.out.println("------------------------");
 		for (PlayerStat stat : PlayerStat.values()) {
 
-			List<HashMap<String, String>> queries = this.getStoredQueries(stat);
+			List<Query> queries = this.getStoredQueries(stat);
 
 			if (queries == null || queries.isEmpty()) {
 				System.out.println("[PlayerStat: " + stat + "]: EMPTY");
@@ -270,14 +357,16 @@ public class DataPoolManager {
 			}
 
 			System.out.println("------------------------");
-			System.out.println("[PlayerStat: " + stat + "]");
-
-			for (HashMap<String, String> query : queries) {
+			System.out.println("[PlayerStat: " + stat + "] Size: " + queries.size());
+			
+			for (Query query : queries) {
 				System.out.println("------------------------");
-				System.out.println("Query size: " + query.size());
-				for (Entry<String, String> entry : query.entrySet()) {
-					System.out.println(entry.getKey() + " - " + entry.getValue());
+				StringBuilder builder = new StringBuilder("{");
+				for (Entry<String, String> entry : query.getEntrySet()) {
+					builder.append(entry.getKey() + ": " + entry.getValue() + ", ");
 				}
+				builder.append("}");
+				System.out.println(builder.toString());
 			}
 		}
 	}

@@ -1,9 +1,10 @@
 package me.staartvin.statz.datamanager.player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import me.staartvin.statz.database.datatype.Query;
 
 /**
  * Statistics about a player recorded by Statz
@@ -19,7 +20,7 @@ public class PlayerInfo {
 	private UUID uuid;
 	private boolean isValid;
 
-	private List<HashMap<String, String>> results = new ArrayList<>();
+	private List<Query> results = new ArrayList<>();
 
 	public PlayerInfo(final UUID uuid) {
 		this.setUUID(uuid);
@@ -52,8 +53,8 @@ public class PlayerInfo {
 		this.isValid = isValid;
 	}
 
-	public String getValue(HashMap<String, String> map, final String key) {
-		return map.get(key);
+	public String getValue(Query map, final String key) {
+		return map.getValue(key).toString();
 	}
 
 	/**
@@ -69,15 +70,15 @@ public class PlayerInfo {
 	 * <li>Lastly, since map.get() returns an Object, it is recommended to convert it to a primitive type (or string)</li>
 	 * @return a list of hashmaps containing the data in the database of this specific player.
 	 */
-	public List<HashMap<String, String>> getResults() {
+	public List<Query> getResults() {
 		return results;
 	}
 
-	public void setResults(List<HashMap<String, String>> result) {
+	public void setResults(List<Query> result) {
 		this.results = result;
 	}
 
-	public void addResult(HashMap<String, String> map) {
+	public void addResult(Query map) {
 		this.results.add(map);
 	}
 }

@@ -11,36 +11,36 @@ import me.staartvin.statz.database.SQLiteConnector;
  * @author Staartvin
  *
  */
-public class SQLiteTable {
+public abstract class Table {
 
 	public static enum SQLDataType {
-		TEXT, NUM, INT, REAL, NONE
+		TEXT, INT, FLOAT, NONE, DOUBLE
 	}
 
 	private String tableName = "";
 
-	private List<SQLiteEntry> columns = new ArrayList<SQLiteEntry>();
+	private List<Column> columns = new ArrayList<Column>();
 	
-	private List<SQLiteEntry> uniqueMatched = new ArrayList<SQLiteEntry>();
+	private List<Column> uniqueMatched = new ArrayList<Column>();
 
-	public SQLiteTable(final String tableName) {
+	public Table(final String tableName) {
 		this.setTableName(tableName);
 	}
 
-	public List<SQLiteEntry> getColumns() {
+	public List<Column> getColumns() {
 		return columns;
 	}
 
-	public void setColumns(final List<SQLiteEntry> columns) {
+	public void setColumns(final List<Column> columns) {
 		this.columns = columns;
 	}
 
-	public SQLiteTable addColumn(final String columnName, final boolean primaryKey, final SQLDataType type) {
-		columns.add(new SQLiteEntry(columnName, primaryKey, type));
+	public Table addColumn(final String columnName, final boolean primaryKey, final SQLDataType type) {
+		columns.add(new Column(columnName, primaryKey, type));
 		return this; // Return this to allow chaining.
 	}
 
-	public SQLiteTable addColumn(final SQLiteEntry entry) {
+	public Table addColumn(final Column entry) {
 		columns.add(entry);
 		return this;
 	}
@@ -54,7 +54,7 @@ public class SQLiteTable {
 	}
 
 	public String getPrimaryKey() {
-		for (final SQLiteEntry column : columns) {
+		for (final Column column : columns) {
 			if (column.isPrimaryKey())
 				return column.getColumnName();
 		}
@@ -63,31 +63,31 @@ public class SQLiteTable {
 	}
 
 	public void setPrimaryKey(final String primaryKey) {
-		for (final SQLiteEntry column : columns) {
+		for (final Column column : columns) {
 			column.setPrimaryKey(false);
 		}
 
-		for (final SQLiteEntry column : columns) {
+		for (final Column column : columns) {
 			if (column.getColumnName().equalsIgnoreCase(primaryKey)) {
 				column.setPrimaryKey(true);
 			}
 		}
 	}
 
-	public List<SQLiteEntry> getUniqueMatched() {
+	public List<Column> getUniqueMatched() {
 		return uniqueMatched;
 	}
 
-	public void setUniqueMatched(List<SQLiteEntry> uniqueMatched) {
+	public void setUniqueMatched(List<Column> uniqueMatched) {
 		this.uniqueMatched = uniqueMatched;
 	}
 	
-	public void addUniqueMatched(SQLiteEntry entry) {
+	public void addUniqueMatched(Column entry) {
 		this.uniqueMatched.add(entry);
 	}
 	
-	public SQLiteEntry getColumn(String columnName) {
-		for (SQLiteEntry e: columns) {
+	public Column getColumn(String columnName) {
+		for (Column e: columns) {
 			if (e.getColumnName().equalsIgnoreCase(columnName)) {
 				return e;
 			}
@@ -97,7 +97,7 @@ public class SQLiteTable {
 	}
 	
 	public boolean addUniqueMatched(String columnName) {
-		SQLiteEntry entry = this.getColumn(columnName);
+		Column entry = this.getColumn(columnName);
 		
 		// No entry found. -> Return false
 		if (entry == null) {

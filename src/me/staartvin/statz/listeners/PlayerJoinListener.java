@@ -1,7 +1,5 @@
 package me.staartvin.statz.listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -31,18 +30,18 @@ public class PlayerJoinListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Update name in database.
-		plugin.getSqlConnector().setObjects(plugin.getSqlConnector().getSQLiteTable("players"),
+		plugin.getSqlConnector().setObjects(plugin.getSqlConnector().getTable("players"),
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
 
 		// Get player info.
 		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
 
 		// Get current value of stat.
-		int currentValue = 0;
+		double currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			currentValue = Integer.parseInt(info.getResults().get(0).get("value").toString());
+			currentValue = Double.parseDouble(info.getResults().get(0).getValue("value").toString());
 		}
 
 		// Update value to new stat.
@@ -61,13 +60,13 @@ public class PlayerJoinListener implements Listener {
 				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED);
 
 				// Get current value of stat.
-				int currentValue = 0;
+				double currentValue = 0;
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (HashMap<String, String> map : info.getResults()) {
-						if (map.get("world") != null && map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
-							currentValue += Integer.parseInt(map.get("value").toString());
+					for (Query map : info.getResults()) {
+						if (map.getValue("world") != null && map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
+							currentValue += Double.parseDouble(map.getValue("value").toString());
 						}
 					}
 				}

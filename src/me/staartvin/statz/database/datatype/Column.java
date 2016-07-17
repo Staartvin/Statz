@@ -1,21 +1,21 @@
 package me.staartvin.statz.database.datatype;
 
-import me.staartvin.statz.database.datatype.SQLiteTable.SQLDataType;
+import me.staartvin.statz.database.datatype.Table.SQLDataType;
 
-public class SQLiteEntry {
+public class Column {
 
 	private String columnName;
 	private boolean primaryKey = false, notNull = false, isUnique = false, autoIncrement = false;
 	private SQLDataType dataType = SQLDataType.TEXT;
 
-	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType) {
+	public Column(final String columnName, final boolean primaryKey, final SQLDataType dataType) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);
 		this.setDataType(dataType);
 		this.setNotNull(true);
 	}
 
-	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType,
+	public Column(final String columnName, final boolean primaryKey, final SQLDataType dataType,
 			final boolean notNull) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);
@@ -23,7 +23,7 @@ public class SQLiteEntry {
 		this.setNotNull(notNull);
 	}
 	
-	public SQLiteEntry(final String columnName, final boolean primaryKey, final SQLDataType dataType,
+	public Column(final String columnName, final boolean primaryKey, final SQLDataType dataType,
 			final boolean notNull, final boolean isUnique) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);

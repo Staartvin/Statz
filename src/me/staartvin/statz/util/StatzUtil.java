@@ -15,16 +15,20 @@ import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import me.staartvin.statz.database.datatype.Query;
+
 public class StatzUtil {
 
-	public static LinkedHashMap<String, String> makeQuery(final Object... strings) {
+	public static Query makeQuery(final Object... strings) {
 		final LinkedHashMap<String, String> queries = new LinkedHashMap<>();
 
 		for (int i = 0; i < strings.length; i += 2) {
 			queries.put(strings[i].toString(), strings[i + 1].toString());
 		}
+		
+		Query query = new Query(queries);
 
-		return queries;
+		return query;
 	}
 
 	/**
@@ -34,11 +38,11 @@ public class StatzUtil {
 	 * @param queries HashMap containing the conditions
 	 * @return a string that represents the conditions 'in SQL style'.
 	 */
-	public static String convertQuery(final HashMap<String, String> queries) {
+	public static String convertQuery(final Query queries) {
 		// Query exists with key and value.
 		StringBuilder searchQuery = new StringBuilder("");
 
-		for (final Entry<String, String> query : queries.entrySet()) {
+		for (final Entry<String, String> query : queries.getEntrySet()) {
 			searchQuery.append(query.getKey() + "='" + query.getValue() + "' AND ");
 		}
 

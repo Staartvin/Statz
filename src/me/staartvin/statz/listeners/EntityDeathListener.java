@@ -1,7 +1,5 @@
 package me.staartvin.statz.listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
@@ -19,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -63,15 +62,15 @@ public class EntityDeathListener implements Listener {
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (HashMap<String, String> map : info.getResults()) {
-						if (map.get("world") != null
-								&& map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())
-								&& map.get("playerKilled") != null
-										&& map.get("playerKilled").toString().equalsIgnoreCase(murderedPlayer.getName())) {
-							currentValue += Integer.parseInt(map.get("value").toString());
+					for (Query map : info.getResults()) {
+						if (map.getValue("world") != null
+								&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
+								&& map.getValue("playerKilled") != null
+										&& map.getValue("playerKilled").toString().equalsIgnoreCase(murderedPlayer.getName())) {
+							currentValue += Integer.parseInt(map.getValue("value").toString());
 						}
 					}
-					//currentValue = Integer.parseInt(info.getResults().get(0).get("value").toString());
+					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
 				}
 
 				// Update value to new stat.
@@ -130,15 +129,15 @@ public class EntityDeathListener implements Listener {
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (HashMap<String, String> map : info.getResults()) {
-						if (map.get("world") != null
-								&& map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())
-								&& map.get("mob") != null
-										&& map.get("mob").toString().equalsIgnoreCase(mobType)) {
-							currentValue += Integer.parseInt(map.get("value").toString());
+					for (Query map : info.getResults()) {
+						if (map.getValue("world") != null
+								&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
+								&& map.getValue("mob") != null
+										&& map.getValue("mob").toString().equalsIgnoreCase(mobType)) {
+							currentValue += Double.parseDouble(map.getValue("value").toString());
 						}
 					}
-					//currentValue = Integer.parseInt(info.getResults().get(0).get("value").toString());
+					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
 				}
 
 				// Update value to new stat.

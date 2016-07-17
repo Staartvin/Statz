@@ -1,12 +1,12 @@
 package me.staartvin.statz.api;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Statistic;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
@@ -40,22 +40,22 @@ public class API {
 
 		double value = 0;
 
-		List<HashMap<String, String>> results = info.getResults();
+		List<Query> results = info.getResults();
 
 		if (results == null || results.isEmpty())
 			return value;
 
 		if (worldName != null) {
 			// Add every value that is in the proper world
-			for (HashMap<String, String> result : results) {
-				if (result.get("world") != null && result.get("world").toString().equalsIgnoreCase(worldName)) {
-					value += Double.parseDouble(result.get("value").toString());
+			for (Query result : results) {
+				if (result.getValue("world") != null && result.getValue("world").toString().equalsIgnoreCase(worldName)) {
+					value += Double.parseDouble(result.getValue("value").toString());
 				}
 			}
 		} else {
 			// Add every value regardless of the world
-			for (HashMap<String, String> result : results) {
-				value += Double.parseDouble(result.get("value").toString());
+			for (Query result : results) {
+				value += Double.parseDouble(result.getValue("value").toString());
 			}
 		}
 
@@ -84,19 +84,19 @@ public class API {
 
 		double value = 0;
 
-		List<HashMap<String, String>> results = info.getResults();
+		List<Query> results = info.getResults();
 
 		if (results == null || results.isEmpty())
 			return value;
 
-		for (HashMap<String, String> result : results) {
+		for (Query result : results) {
 			boolean isValid = true;
 			
 			for (int i=0;i<conditions.length;i++) {
 				
 				RowRequirement req = conditions[i];
 				// Check if each condition that was given is true.
-				if (result.get(req.getColumnName()) == null || !result.get(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
+				if (result.getValue(req.getColumnName()) == null || !result.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
 					isValid = false;
 					break;
 				}
@@ -104,7 +104,7 @@ public class API {
 			
 			// All conditions were met, so we add this value.
 			if (isValid) {
-				value += Double.parseDouble(result.get("value").toString());
+				value += Double.parseDouble(result.getValue("value").toString());
 			}
 		}
 

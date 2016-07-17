@@ -1,7 +1,5 @@
 package me.staartvin.statz.listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -39,11 +38,11 @@ public class CraftItemListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (HashMap<String, String> map : info.getResults()) {
-				if (map.get("world") != null
-						&& map.get("world").toString().equalsIgnoreCase(player.getWorld().getName())
-						&& map.get("item") != null && map.get("item").toString().equalsIgnoreCase(itemCrafted)) {
-					currentValue += Integer.parseInt(map.get("value").toString());
+			for (Query map : info.getResults()) {
+				if (map.getValue("world") != null
+						&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
+						&& map.getValue("item") != null && map.getValue("item").toString().equalsIgnoreCase(itemCrafted)) {
+					currentValue += Double.parseDouble(map.getValue("value").toString());
 				}
 			}
 		}
