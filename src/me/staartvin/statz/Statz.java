@@ -101,6 +101,10 @@ public class Statz extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		
+		// Send the complete pool.
+		this.getDataPoolManager().forceSendPool();
+		
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
 	}
 
@@ -138,7 +142,7 @@ public class Statz extends JavaPlugin {
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
 
-				System.out.println("Start stresstest");
+				debugMessage("Start stresstest");
 
 				// 38 random players
 				ArrayList<UUID> uuids = new ArrayList<UUID>();
@@ -197,43 +201,39 @@ public class Statz extends JavaPlugin {
 				for (int i = 0; i < 10000; i++) {
 					// Send 100 million updates
 
-					System.out.println("--------------------------");
+					debugMessage("--------------------------");
 					// Get a random UUID
 					Random randomizer = new Random();
 					UUID random = uuids.get(randomizer.nextInt(uuids.size()));
 
-					System.out.println("i: " + i + ", UUID: " + random);
+					debugMessage("i: " + i + ", UUID: " + random);
 
 					final PlayerStat stat = PlayerStat.DISTANCE_TRAVELLED;
 
-					// Get player info.
-					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat);
+					
 					
 					String movementType = move.get(new Random().nextInt(move.size()));
 
 					int distTravelled = new Random().nextInt(5);
 
-					System.out.println("Dist value: " + distTravelled);
+					debugMessage("Dist value: " + distTravelled);
 
 					if (distTravelled == 0) {
 						continue;
 					}
+					
+					// Get player info.
+					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat, StatzUtil.makeQuery("world", "world", "moveType", movementType));
 
 					// Get current value of stat.
 					int currentValue = 0;
 
 					// Check if it is valid!
 					if (info.isValid()) {
-						for (Query map : info.getResults()) {
-							if (map.getValue("world") != null && map.getValue("world").toString().equalsIgnoreCase("world")
-									&& map.getValue("moveType") != null
-									&& map.getValue("moveType").toString().equalsIgnoreCase(movementType)) {
-								currentValue += Double.parseDouble(map.getValue("value").toString());
-							}
-						}
+						currentValue += info.getTotalValue();
 					}
 
-					System.out.println("Current value: " + currentValue);
+					debugMessage("Current value: " + currentValue);
 
 					// Update value to new stat.
 					getDataManager().setPlayerInfo(random, stat, StatzUtil.makeQuery("uuid", random, "value",
@@ -242,8 +242,9 @@ public class Statz extends JavaPlugin {
 
 				long totalTime = System.currentTimeMillis() - startTime;
 
-				System.out.println("Took " + totalTime + " ms");
-				System.out.println("End of stresstest");
+				
+				debugMessage("End of stresstest");
+				debugMessage("Took " + totalTime + " ms");
 				//getDataPoolManager().printPool();
 
 			}

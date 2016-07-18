@@ -478,7 +478,7 @@ public class MySQLConnector extends DatabaseConnector {
 		// ----------------------------------------------------------
 		// How many times did a player vote for this server?
 		newTable = new MySQLTable(PlayerStat.VOTES.getTableName());
-		
+
 		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
 
 		newTable.addColumn(id);
@@ -486,7 +486,7 @@ public class MySQLConnector extends DatabaseConnector {
 		newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player vote.
 
 		newTable.addUniqueMatched(uuid);
-		
+
 		this.addTable(newTable);
 
 	}
@@ -631,91 +631,86 @@ public class MySQLConnector extends DatabaseConnector {
 	@Override
 	public void setBatchObjects(final Table table, final List<Query> queries) {
 		// Run SQLite query async to not disturb the main Server thread
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
-			public void run() {
+		Connection conn = getConnection();
+		Statement stmt = null;
 
-				Connection conn = getConnection();
-				Statement stmt = null;
+		try {
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
 
-				try {
-					conn.setAutoCommit(false);
-					stmt = conn.createStatement();
+			for (Query query : queries) {
+				StringBuilder columnNames = new StringBuilder("(");
 
-					for (Query query : queries) {
-						StringBuilder columnNames = new StringBuilder("(");
+				StringBuilder resultNames = new StringBuilder("(");
 
-						StringBuilder resultNames = new StringBuilder("(");
+				for (final Entry<String, String> result : query.getEntrySet()) {
+					columnNames.append(result.getKey() + ",");
 
-						for (final Entry<String, String> result : query.getEntrySet()) {
-							columnNames.append(result.getKey() + ",");
-
-							try {
-								// Try to check if it is an integer
-								Integer.parseInt(result.getValue());
-								resultNames.append(result.getValue() + ",");
-							} catch (final NumberFormatException e) {
-
-								try {
-									// Try to check if it is an double
-									Double.parseDouble(result.getValue());
-									resultNames.append(result.getValue() + ",");
-								} catch (NumberFormatException ev) {
-									resultNames.append("'" + result.getValue() + "',");
-								}
-							}
-
-						}
-
-						// Remove last comma
-						columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
-						resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
-
-						String update = "INSERT INTO " + table.getTableName() + " " + columnNames.toString()
-								+ " VALUES " + resultNames;
-
-						String onDuplicate = "";
-
-						if (query.hasValue("value")) {
-							onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();
-						} else {
-							onDuplicate = " ON DUPLICATE KEY UPDATE playerName='" + query.getValue("playerName") + "'";
-						}
-
-						update += onDuplicate;
-
-						//System.out.println("UPDATE Query: " + update);
-
-						stmt.addBatch(update);
-					}
-
-					stmt.executeBatch();
-
-					if (!conn.getAutoCommit()) {
-						conn.commit();
-					}
-
-				} catch (BatchUpdateException b) {
-					plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", b);
-				} catch (SQLException ex) {
-					plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
-				} finally {
-					if (stmt != null) {
-						try {
-							stmt.close();
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
 					try {
-						conn.setAutoCommit(true);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						// Try to check if it is an integer
+						Integer.parseInt(result.getValue());
+						resultNames.append(result.getValue() + ",");
+					} catch (final NumberFormatException e) {
+
+						try {
+							// Try to check if it is an double
+							Double.parseDouble(result.getValue());
+							resultNames.append(result.getValue() + ",");
+						} catch (NumberFormatException ev) {
+							resultNames.append("'" + result.getValue() + "',");
+						}
 					}
+
+				}
+
+				// Remove last comma
+				columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
+				resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
+
+				String update = "INSERT INTO " + table.getTableName() + " " + columnNames.toString() + " VALUES "
+						+ resultNames;
+
+				String onDuplicate = "";
+
+				if (query.hasValue("value")) {
+					onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();
+				} else {
+					onDuplicate = " ON DUPLICATE KEY UPDATE playerName='" + query.getValue("playerName") + "'";
+				}
+
+				update += onDuplicate;
+
+				//System.out.println("UPDATE Query: " + update);
+
+				stmt.addBatch(update);
+			}
+
+			stmt.executeBatch();
+
+			if (!conn.getAutoCommit()) {
+				conn.commit();
+			}
+
+		} catch (BatchUpdateException b) {
+			plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", b);
+		} catch (SQLException ex) {
+			plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		});
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
