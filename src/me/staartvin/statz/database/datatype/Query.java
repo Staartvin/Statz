@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+/**
+ * This class represents a query that is sent or retrieved from the database of Statz.
+ * <br>Each query consists of a single row with key-value pairs that hold information.
+ * <br>Each key is the column name in the database and the corresponding value is the value of that column in the database.
+ * @author Staartvin
+ *
+ */
 public class Query {
 
 	private HashMap<String, String> data = new HashMap<String, String>();
@@ -22,10 +29,20 @@ public class Query {
 		this.data = data;
 	}
 	
+	/**
+	 * Get the value of the column name in this query.
+	 * @param columnName Name of the column to get info of.
+	 * @return value of the column of this query. Null if the query does not have this info.
+	 */
 	public Object getValue(String columnName) {
+		if (!hasValue(columnName)) return null;
 		return data.get(columnName);
 	}
 	
+	/**
+	 * Get the value of the 'value' column.
+	 * @return the value of the 'value' colum of this query or -1 if the value was null.
+	 */
 	public double getValue() {
 		String value = data.get("value");
 		
@@ -34,6 +51,11 @@ public class Query {
 		return Double.parseDouble(value);
 	}
 	
+	/**
+	 * Check to see if this query contains a column with the given column name.
+	 * @param columnName Column name to check
+	 * @return true if this query contains the column and the value is not null. False otherwise.
+	 */
 	public boolean hasValue(String columnName) {
 		return data.containsKey(columnName) && data.get(columnName) != null;
 	}
