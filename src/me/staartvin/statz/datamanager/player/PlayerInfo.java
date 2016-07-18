@@ -86,6 +86,10 @@ public class PlayerInfo {
 		this.results.remove(map);
 	}
 
+	/**
+	 * Get the total value of the 'value' column. This method sums up all the values from the 'value' column in each row.
+	 * @return the sum of the values of each row.
+	 */
 	public double getTotalValue() {
 		double value = 0;
 
