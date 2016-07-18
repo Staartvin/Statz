@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import com.vexsoftware.votifier.model.VotifierEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -41,9 +40,7 @@ public class PlayerVoteListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {
-				currentValue += Double.parseDouble(map.getValue("value").toString());
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.

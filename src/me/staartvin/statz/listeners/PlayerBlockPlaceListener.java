@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -37,21 +36,14 @@ public class PlayerBlockPlaceListener implements Listener {
 		String worldName = blockPlaced.getWorld().getName();
 
 		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {
-				if (map.getValue("typeid") != null && map.getValue("typeid").toString().equalsIgnoreCase(typeId + "")
-						&& map.getValue("datavalue") != null
-						&& map.getValue("datavalue").toString().equalsIgnoreCase(dataValue + "") && map.getValue("world") != null
-						&& map.getValue("world").toString().equalsIgnoreCase(worldName)) {
-					currentValue += Double.parseDouble(map.getValue("value").toString());
-				}
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.

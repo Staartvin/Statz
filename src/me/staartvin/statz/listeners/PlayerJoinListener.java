@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -40,7 +39,7 @@ public class PlayerJoinListener implements Listener {
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			currentValue = Double.parseDouble(info.getResults().get(0).getValue("value").toString());
+			currentValue = info.getTotalValue();
 		}
 
 		// Update value to new stat.
@@ -56,18 +55,14 @@ public class PlayerJoinListener implements Listener {
 				}
 				
 				// Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED);
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED, StatzUtil.makeQuery("world", player.getWorld().getName()));
 
 				// Get current value of stat.
 				double currentValue = 0;
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (Query map : info.getResults()) {
-						if (map.getValue("world") != null && map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
-							currentValue += Double.parseDouble(map.getValue("value").toString());
-						}
-					}
+					currentValue += info.getTotalValue();
 				}
 
 				// Update value to new stat.

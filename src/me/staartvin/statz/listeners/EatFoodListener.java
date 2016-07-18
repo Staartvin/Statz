@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -35,20 +34,14 @@ public class EatFoodListener implements Listener {
 			return;
 
 		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("world", player.getWorld().getName(), "foodEaten", foodName));
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {
-				if (map.getValue("world") != null
-						&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
-						&& map.getValue("foodEaten") != null && map.getValue("foodEaten").toString().equalsIgnoreCase(foodName)) {
-					currentValue += Double.parseDouble(map.getValue("value").toString());
-				}
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.

@@ -1,6 +1,8 @@
 package me.staartvin.statz.datamanager;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import me.staartvin.statz.Statz;
@@ -148,15 +150,49 @@ public class DataManager {
 		return info;
 	}
 
-	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
+	/**
+	 * Get Player info like {@link #getPlayerInfo(UUID, PlayerStat)}, but check for additional conditions.
+	 * Let's say you want to get all the player info for a player on world 'world'. You would call this method with the player's UUID, 
+	 * provide the statType and add a Query condition with StatzUtil.makeQuery().
+	 * @param uuid UUID of the player
+	 * @param statType Type of stat to get player info of.
+	 * @param conditions Extra conditions that need to apply.
+	 * @return a {@link PlayerInfo} object.
+	 */
+	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType, Query conditions) {
+		PlayerInfo info = this.getPlayerInfo(uuid, statType);
 
-		//final SQLiteTable table = plugin.getSqlConnector().getSQLiteTable(statType.getTableName());
+		if (info.isValid()) {
+			List<Query> deletedQueries = new ArrayList<>();
+
+			for (Query map : info.getResults()) {
+				for (Entry<String, String> entry : conditions.getEntrySet()) {
+					if (!map.hasValue(entry.getKey())) {
+						deletedQueries.add(map);
+						break;
+					}
+
+					if (!map.getValue(entry.getKey()).equals(entry.getValue())) {
+						deletedQueries.add(map);
+						break;
+					}
+				}
+			}
+
+			// Remove queries that are not relevant.
+			for (Query q : deletedQueries) {
+				info.removeResult(q);
+			}
+		}
+
+		return info;
+	}
+
+	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
 
 		//System.out.println("Add to query: " + results);
 
 		// Add query to the pool.
 		plugin.getDataPoolManager().addQuery(statType, results);
-
-		//plugin.getSqlConnector().setObjects(table, results);
 	}
 }

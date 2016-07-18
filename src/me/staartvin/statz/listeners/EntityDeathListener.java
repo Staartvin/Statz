@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -55,21 +54,14 @@ public class EntityDeathListener implements Listener {
 				Player murderedPlayer = (Player) e;
 				
 				//Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("world", player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
 
 				// Get current value of stat.
 				int currentValue = 0;
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (Query map : info.getResults()) {
-						if (map.getValue("world") != null
-								&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
-								&& map.getValue("playerKilled") != null
-										&& map.getValue("playerKilled").toString().equalsIgnoreCase(murderedPlayer.getName())) {
-							currentValue += Integer.parseInt(map.getValue("value").toString());
-						}
-					}
+					currentValue += info.getTotalValue();
 					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
 				}
 
@@ -122,22 +114,14 @@ public class EntityDeathListener implements Listener {
 				}
 
 				//Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mobType));
 
 				// Get current value of stat.
 				int currentValue = 0;
 
 				// Check if it is valid!
 				if (info.isValid()) {
-					for (Query map : info.getResults()) {
-						if (map.getValue("world") != null
-								&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
-								&& map.getValue("mob") != null
-										&& map.getValue("mob").toString().equalsIgnoreCase(mobType)) {
-							currentValue += Double.parseDouble(map.getValue("value").toString());
-						}
-					}
-					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
+					currentValue += info.getTotalValue();
 				}
 
 				// Update value to new stat.

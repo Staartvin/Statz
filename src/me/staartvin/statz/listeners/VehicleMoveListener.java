@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -58,28 +57,22 @@ public class VehicleMoveListener implements Listener {
 		if (player == null || movementType == null)
 			return;
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
-
 		double distTravelled = event.getFrom().distance(event.getTo());
 
 		if (distTravelled == 0) {
 			return;
 		}
 
+		// Get player info.
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movementType));
+
 		// Get current value of stat.
 		double currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {
-				if (map.getValue("world") != null
-						&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
-						&& map.getValue("moveType") != null
-						&& map.getValue("moveType").toString().equalsIgnoreCase(movementType)) {
-					currentValue += Double.parseDouble(map.getValue("value").toString());
-				}
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.

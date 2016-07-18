@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -62,19 +61,14 @@ public class PlayerFishListener implements Listener {
 		}
 
 		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("caught", materialName, "world", player.getWorld().getName()));
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {				
-				if (map.getValue("caught") != null && map.getValue("caught").toString().equalsIgnoreCase(materialName)
-						&& map.getValue("world") != null && map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())) {
-					currentValue += Double.parseDouble(map.getValue("value").toString());
-				}
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.

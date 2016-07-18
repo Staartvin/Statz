@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
@@ -28,23 +27,18 @@ public class CraftItemListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getWhoClicked();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
-
 		String itemCrafted = event.getCurrentItem().getType().toString();
+
+		// Get player info.
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
 
 		// Get current value of stat.
 		int currentValue = 0;
 
 		// Check if it is valid!
 		if (info.isValid()) {
-			for (Query map : info.getResults()) {
-				if (map.getValue("world") != null
-						&& map.getValue("world").toString().equalsIgnoreCase(player.getWorld().getName())
-						&& map.getValue("item") != null && map.getValue("item").toString().equalsIgnoreCase(itemCrafted)) {
-					currentValue += Double.parseDouble(map.getValue("value").toString());
-				}
-			}
+			currentValue += info.getTotalValue();
 		}
 
 		// Update value to new stat.
