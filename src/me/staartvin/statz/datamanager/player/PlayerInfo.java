@@ -81,4 +81,19 @@ public class PlayerInfo {
 	public void addResult(Query map) {
 		this.results.add(map);
 	}
+
+	public void removeResult(Query map) {
+		this.results.remove(map);
+	}
+
+	public double getTotalValue() {
+		double value = 0;
+
+		for (Query q : results) {
+			value += q.getValue();
+		}
+
+		return value;
+	}
+
 }
