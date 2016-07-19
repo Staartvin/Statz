@@ -65,7 +65,8 @@ public class MySQLConnector extends DatabaseConnector {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-				final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName + "?rewriteBatchedStatements=true";
+				final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
+						+ "?rewriteBatchedStatements=true";
 
 				connection = DriverManager.getConnection(url, username, password);
 			} catch (final SQLException ex) {
@@ -93,7 +94,8 @@ public class MySQLConnector extends DatabaseConnector {
 
 				// Did not properly connect to database
 				if (connection == null) {
-					plugin.debugMessage(ChatColor.RED + "I could not connect to your database! Are your credentials correct?");
+					plugin.debugMessage(
+							ChatColor.RED + "I could not connect to your database! Are your credentials correct?");
 					return;
 				}
 
@@ -689,7 +691,7 @@ public class MySQLConnector extends DatabaseConnector {
 
 				stmt.addBatch(update);
 			}
-			
+
 			stmt.executeBatch();
 
 			if (!conn.getAutoCommit()) {
