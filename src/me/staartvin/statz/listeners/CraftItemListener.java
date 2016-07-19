@@ -27,24 +27,30 @@ public class CraftItemListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getWhoClicked();
 
-		String itemCrafted = event.getCurrentItem().getType().toString();
+		final String itemCrafted = event.getCurrentItem().getType().toString();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				// Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
 
-		// Get current value of stat.
-		int currentValue = 0;
+				// Get current value of stat.
+				int currentValue = 0;
 
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+				}
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "world",
-						player.getWorld().getName(), "item", itemCrafted));
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "world",
+								player.getWorld().getName(), "item", itemCrafted));
+			}
+		});
+		
+		
 
 	}
 }

@@ -29,7 +29,7 @@ public class PlayerMoveListener implements Listener {
 
 		String movementType = StatzUtil.getMovementType(player);
 
-		double distTravelled;
+		final double distTravelled;
 
 		try {
 			distTravelled = event.getFrom().distance(event.getTo());
@@ -42,22 +42,31 @@ public class PlayerMoveListener implements Listener {
 			return;
 		}
 
-		// Get current value of stat.
-		double currentValue = 0;
+		final String movement = movementType;
+		
+		
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				// Get current value of stat.
+				double currentValue = 0;
+				
+				// Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movementType));
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue = info.getTotalValue();
+				}
 
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue = info.getTotalValue();
-		}
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
+								"moveType", movement, "world", player.getWorld().getName()));
+			}
+		});
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
-						"moveType", movementType, "world", player.getWorld().getName()));
+		
 
 	}
 }

@@ -57,28 +57,36 @@ public class VehicleMoveListener implements Listener {
 		if (player == null || movementType == null)
 			return;
 
-		double distTravelled = event.getFrom().distance(event.getTo());
+		final double distTravelled = event.getFrom().distance(event.getTo());
 
 		if (distTravelled == 0) {
 			return;
 		}
+		
+		final String movement = movementType;
+		
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				// Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movementType));
+				// Get current value of stat.
+				double currentValue = 0;
 
-		// Get current value of stat.
-		double currentValue = 0;
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+				}
 
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
+								"moveType", movement, "world", player.getWorld().getName()));
+			}
+		});
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
-						"moveType", movementType, "world", player.getWorld().getName()));
+		
 
 	}
 }

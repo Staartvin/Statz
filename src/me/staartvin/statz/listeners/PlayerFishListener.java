@@ -59,20 +59,28 @@ public class PlayerFishListener implements Listener {
 			// Did not catch anything.
 			return;
 		}
+		
+		final String material = materialName;
+		
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				// Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("caught", materialName, "world", player.getWorld().getName()));
+				// Get current value of stat.
+				int currentValue = 0;
 
-		// Get current value of stat.
-		int currentValue = 0;
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+				}
 
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "caught", material, "world", player.getWorld().getName()));
+			}
+		});
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "caught", materialName, "world", player.getWorld().getName()));
+		
 	}
 }

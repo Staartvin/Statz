@@ -31,25 +31,31 @@ public class PlayerBlockBreakListener implements Listener {
 
 		Block blockBroken = event.getBlock();
 
-		int typeId = blockBroken.getTypeId();
-		int dataValue = blockBroken.getData();
-		String worldName = blockBroken.getWorld().getName();
+		final int typeId = blockBroken.getTypeId();
+		final int dataValue = blockBroken.getData();
+		final String worldName = blockBroken.getWorld().getName();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				// Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
 
-		// Get current value of stat.
-		int currentValue = 0;
+				// Get current value of stat.
+				int currentValue = 0;
 
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+				}
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "typeid",
-						typeId, "datavalue", dataValue, "world", worldName));
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "typeid",
+								typeId, "datavalue", dataValue, "world", worldName));
+			}
+		});
+		
+		
 
 	}
 }

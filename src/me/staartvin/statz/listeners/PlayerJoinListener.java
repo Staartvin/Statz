@@ -28,15 +28,16 @@ public class PlayerJoinListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onJoin(final PlayerJoinEvent event) {
 
+		final PlayerStat stat = PlayerStat.JOINS;
+
+		// Get player
+		final Player player = event.getPlayer();
+		
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
 				long startTime = System.currentTimeMillis();
 
-				final PlayerStat stat = PlayerStat.JOINS;
-
-				// Get player
-				final Player player = event.getPlayer();
 
 				// Update name in database.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.PLAYERS,
