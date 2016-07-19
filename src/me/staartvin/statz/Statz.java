@@ -29,6 +29,7 @@ import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerGainXPListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
 import me.staartvin.statz.listeners.PlayerMoveListener;
+import me.staartvin.statz.listeners.PlayerQuitListener;
 import me.staartvin.statz.listeners.PlayerShearListener;
 import me.staartvin.statz.listeners.PlayerTakeDamageListener;
 import me.staartvin.statz.listeners.PlayerVoteListener;
@@ -131,6 +132,7 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 
 		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
