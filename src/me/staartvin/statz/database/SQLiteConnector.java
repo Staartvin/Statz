@@ -78,22 +78,26 @@ public class SQLiteConnector extends DatabaseConnector {
 	 */
 	@Override
 	public void load() {
-		connection = getConnection();
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				connection = getConnection();
 
-		try {
-			final Statement s = connection.createStatement();
+				try {
+					final Statement s = connection.createStatement();
 
-			// Run all statements to create tables
-			for (final String statement : this.createTablesStatement()) {
-				s.executeUpdate(statement);
+					// Run all statements to create tables
+					for (final String statement : createTablesStatement()) {
+						s.executeUpdate(statement);
+					}
+
+					s.close();
+				} catch (final SQLException e) {
+					e.printStackTrace();
+				}
+
+				initialize();
 			}
-
-			s.close();
-		} catch (final SQLException e) {
-			e.printStackTrace();
-		}
-
-		initialize();
+		});	
 	}
 
 	/**

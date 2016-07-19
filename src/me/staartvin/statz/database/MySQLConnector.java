@@ -87,29 +87,33 @@ public class MySQLConnector extends DatabaseConnector {
 	 */
 	@Override
 	public void load() {
-		connection = getConnection();
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				connection = getConnection();
 
-		// Did not properly connect to database
-		if (connection == null) {
-			plugin.debugMessage(ChatColor.RED + "I could not connect to your database! Are your credentials correct?");
-			return;
-		}
+				// Did not properly connect to database
+				if (connection == null) {
+					plugin.debugMessage(ChatColor.RED + "I could not connect to your database! Are your credentials correct?");
+					return;
+				}
 
-		try {
-			final Statement s = connection.createStatement();
+				try {
+					final Statement s = connection.createStatement();
 
-			// Run all statements to create tables
-			for (final String statement : this.createTablesStatement()) {
-				//System.out.println("Performing " + statement);
-				s.executeUpdate(statement);
+					// Run all statements to create tables
+					for (final String statement : createTablesStatement()) {
+						//System.out.println("Performing " + statement);
+						s.executeUpdate(statement);
+					}
+
+					s.close();
+				} catch (final SQLException e) {
+					e.printStackTrace();
+				}
+
+				initialize();
 			}
-
-			s.close();
-		} catch (final SQLException e) {
-			e.printStackTrace();
-		}
-
-		initialize();
+		});
 	}
 
 	/**
