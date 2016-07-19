@@ -78,7 +78,7 @@ public class PlayerJoinListener implements Listener {
 					}
 				};
 
-				run.runTaskTimer(plugin,
+				run.runTaskTimerAsynchronously(plugin,
 						(currentValue == 0 ? 0
 								: 20 * 60) /*If currentValue is 0, schedule a check immediately, otherwise after a minute*/,
 						20 * 60 /*Every minute*/);
