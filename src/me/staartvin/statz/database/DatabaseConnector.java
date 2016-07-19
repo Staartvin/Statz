@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
+
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
@@ -78,6 +80,8 @@ public abstract class DatabaseConnector {
 		if (connection == null) {
 			plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection!");
 		}
+		
+		plugin.debugMessage(ChatColor.AQUA + "Statz is connected to its database!");
 
 		return;
 	}
