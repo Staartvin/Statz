@@ -1,6 +1,8 @@
 package me.staartvin.statz.database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -79,7 +81,10 @@ public abstract class DatabaseConnector {
 		// Something went wrong
 		if (connection == null) {
 			plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection!");
+			return;
 		}
+		
+		this.refreshConnection();
 		
 		plugin.debugMessage(ChatColor.AQUA + "Statz is connected to its database!");
 
@@ -183,5 +188,35 @@ public abstract class DatabaseConnector {
 	 */
 	public void addTable(final Table table) {
 		tables.add(table);
+	}
+	
+	private void refreshConnection() {
+		// Run this query to refresh the connection.
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			public void run() {
+				Connection conn = null;
+				PreparedStatement ps = null;
+
+				try {
+					conn = getConnection();
+					ps = conn.prepareStatement("SELECT 1");
+					ps.executeQuery();
+
+					return;
+				} catch (final SQLException ex) {
+					plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQL statement:", ex);
+				} finally {
+					try {
+						if (ps != null)
+							ps.close();
+						//if (conn != null)
+						//conn.close();
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Failed to close SQL connection: ", ex);
+					}
+				}
+
+			}
+		});
 	}
 }
