@@ -355,8 +355,15 @@ public class DataPoolManager {
 	 * Print the queries that are in the pool
 	 */
 	public void printPool() {
+
+		if (pool.size() == 0) {
+			System.out.println("POOL IS EMPTY");
+			return;
+		}
+
 		System.out.println("PRINT POOL");
 		System.out.println("------------------------");
+
 		for (PlayerStat stat : PlayerStat.values()) {
 
 			List<Query> queries = this.getStoredQueries(stat);
