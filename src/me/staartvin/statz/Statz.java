@@ -1,6 +1,7 @@
 package me.staartvin.statz;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -85,7 +86,9 @@ public class Statz extends JavaPlugin {
 		// Send pool update every 10 seconds
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
+
 				getDataPoolManager().sendPool();
+
 			}
 		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
 
@@ -196,9 +199,13 @@ public class Statz extends JavaPlugin {
 				move.add("BOAT");
 
 				long startTime = System.currentTimeMillis();
+				
+				List<Long> times = new ArrayList<>();
 
 				// 100 million interations
 				for (int i = 0; i < 10000; i++) {
+					
+					long start = System.currentTimeMillis();
 					// Send 100 million updates
 
 					//debugMessage("--------------------------");
@@ -237,16 +244,32 @@ public class Statz extends JavaPlugin {
 					// Update value to new stat.
 					getDataManager().setPlayerInfo(random, stat, StatzUtil.makeQuery("uuid", random, "value",
 							(currentValue + distTravelled), "moveType", movementType, "world", "world"));
+					
+					long total = System.currentTimeMillis() - start;
+					
+					times.add(total);
 				}
 
 				long totalTime = System.currentTimeMillis() - startTime;
 
 				debugMessage("End of stresstest");
 				debugMessage("Took " + totalTime + " ms");
+				
+				long totalSum = 0;
+				
+				for (Long time: times) {
+					totalSum += time;
+				}
+				
+				double per = (totalSum * 1.0 / times.size() * 1.0);
+				double perSec = 1000.0 / per;
+				
+				debugMessage("Average input took " + per + " ms");
+				debugMessage("Hence, I can perform (on average) " + perSec + " operations per second");
 				//getDataPoolManager().printPool();
 
 			}
-		}, 20 * 10, 20 * 90);
+		}, 20 * 10, 20 * 30);
 	}
 
 	public DatabaseConnector getSqlConnector() {
