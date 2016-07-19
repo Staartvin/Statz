@@ -12,7 +12,6 @@ import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
@@ -89,7 +88,7 @@ public class Statz extends JavaPlugin {
 				getDataPoolManager().sendPool();
 			}
 		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
-		
+
 		// Do performance test
 		//this.doPerformanceTest();
 
@@ -101,10 +100,12 @@ public class Statz extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		
+
+		debugMessage(ChatColor.RED + "Saving updates to database!");
+
 		// Send the complete pool.
 		this.getDataPoolManager().forceSendPool();
-		
+
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
 	}
 
@@ -137,7 +138,7 @@ public class Statz extends JavaPlugin {
 		this.getServer().getConsoleSender()
 				.sendMessage(ChatColor.translateAlternateColorCodes('&', "[Statz debug] " + message));
 	}
-	
+
 	public void doPerformanceTest() {
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
@@ -184,7 +185,7 @@ public class Statz extends JavaPlugin {
 				uuids.add(UUID.fromString("e373fd60-a1fb-41a1-95d0-df9c0ffb77c9"));
 				uuids.add(UUID.fromString("8e1edca1-cc02-4d19-8226-366530ac649b"));
 				uuids.add(UUID.fromString("0d0523ca-89c7-4ac8-94c5-da279091a6a2"));
-				
+
 				ArrayList<String> move = new ArrayList<>();
 				move.add("WALK");
 				move.add("FLY");
@@ -193,7 +194,6 @@ public class Statz extends JavaPlugin {
 				move.add("HORSE IN MINECART");
 				move.add("PIG");
 				move.add("BOAT");
-				
 
 				long startTime = System.currentTimeMillis();
 
@@ -201,29 +201,28 @@ public class Statz extends JavaPlugin {
 				for (int i = 0; i < 10000; i++) {
 					// Send 100 million updates
 
-					debugMessage("--------------------------");
+					//debugMessage("--------------------------");
 					// Get a random UUID
 					Random randomizer = new Random();
 					UUID random = uuids.get(randomizer.nextInt(uuids.size()));
 
-					debugMessage("i: " + i + ", UUID: " + random);
+					//debugMessage("i: " + i + ", UUID: " + random);
 
 					final PlayerStat stat = PlayerStat.DISTANCE_TRAVELLED;
 
-					
-					
 					String movementType = move.get(new Random().nextInt(move.size()));
 
 					int distTravelled = new Random().nextInt(5);
 
-					debugMessage("Dist value: " + distTravelled);
+					//debugMessage("Dist value: " + distTravelled);
 
 					if (distTravelled == 0) {
 						continue;
 					}
-					
+
 					// Get player info.
-					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat, StatzUtil.makeQuery("world", "world", "moveType", movementType));
+					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat,
+							StatzUtil.makeQuery("world", "world", "moveType", movementType));
 
 					// Get current value of stat.
 					int currentValue = 0;
@@ -233,7 +232,7 @@ public class Statz extends JavaPlugin {
 						currentValue += info.getTotalValue();
 					}
 
-					debugMessage("Current value: " + currentValue);
+					//debugMessage("Current value: " + currentValue);
 
 					// Update value to new stat.
 					getDataManager().setPlayerInfo(random, stat, StatzUtil.makeQuery("uuid", random, "value",
@@ -242,13 +241,12 @@ public class Statz extends JavaPlugin {
 
 				long totalTime = System.currentTimeMillis() - startTime;
 
-				
 				debugMessage("End of stresstest");
 				debugMessage("Took " + totalTime + " ms");
 				//getDataPoolManager().printPool();
 
 			}
-		}, 20 * 10, 20 * 30);
+		}, 20 * 10, 20 * 90);
 	}
 
 	public DatabaseConnector getSqlConnector() {
