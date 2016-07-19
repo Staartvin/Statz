@@ -276,9 +276,7 @@ public class DataPoolManager {
 	 * <br>This will do it on the main thread and is only to be used when the server is shutdown.
 	 */
 	public void forceSendPool() {
-
-		printPool();
-
+		
 		if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
 			plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 		}
@@ -290,7 +288,7 @@ public class DataPoolManager {
 
 			Table table = plugin.getSqlConnector().getTable(stat.getTableName());
 
-			if (queries == null || table == null) {
+			if (queries == null || table == null || queries.isEmpty()) {
 				// Pool is empty
 				continue;
 			}
