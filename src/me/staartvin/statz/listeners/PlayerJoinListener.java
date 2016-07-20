@@ -36,9 +36,6 @@ public class PlayerJoinListener implements Listener {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
-				long startTime = System.currentTimeMillis();
-
-
 				// Update name in database.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.PLAYERS,
 						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
@@ -98,8 +95,6 @@ public class PlayerJoinListener implements Listener {
 
 					updateID.put(player.getUniqueId(), task.getTaskId());
 				}
-
-				System.out.println("Took " + (System.currentTimeMillis() - startTime) + " ms to process event");
 			}
 
 		});
