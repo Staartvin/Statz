@@ -93,8 +93,9 @@ public class GriefPreventionHandler implements DependencyHandler {
 	}
 
 	public int getNumberOfClaims(UUID uuid) {
-		if (this.isAvailable())
+		if (!this.isAvailable()) {
 			return -1;
+		}	
 
 		PlayerData data = this.getPlayerData(uuid);
 
@@ -102,7 +103,7 @@ public class GriefPreventionHandler implements DependencyHandler {
 	}
 
 	public int getNumberOfClaimedBlocks(UUID uuid) {
-		if (this.isAvailable())
+		if (!this.isAvailable())
 			return -1;
 
 		PlayerData data = this.getPlayerData(uuid);
@@ -111,7 +112,7 @@ public class GriefPreventionHandler implements DependencyHandler {
 	}
 
 	public int getNumberOfRemainingBlocks(UUID uuid) {
-		if (this.isAvailable())
+		if (!this.isAvailable())
 			return -1;
 
 		PlayerData data = this.getPlayerData(uuid);
@@ -120,7 +121,7 @@ public class GriefPreventionHandler implements DependencyHandler {
 	}
 
 	public int getNumberOfBonusBlocks(UUID uuid) {
-		if (this.isAvailable())
+		if (!this.isAvailable())
 			return -1;
 
 		PlayerData data = this.getPlayerData(uuid);

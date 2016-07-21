@@ -3,4 +3,4 @@ name: Statz
 version: ${project.version}
 authors: [Staartvin]
 description: The one-and-all plugin to record and store stats about any player.
-softdepend: [Vault, Essentials, GroupManager, Stats, WorldEdit, WorldGuard, Factions, mcMMO, RoyalCommands, OnTime, UltimateCore, Statistics, afkTerminator, AcidIsland, ASkyBlock, Votifier]
+softdepend: [Vault, Essentials, GroupManager, Stats, WorldEdit, WorldGuard, Factions, mcMMO, RoyalCommands, OnTime, UltimateCore, Statistics, afkTerminator, AcidIsland, ASkyBlock, Votifier, GriefPrevention]
