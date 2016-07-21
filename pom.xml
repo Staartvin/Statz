@@ -7,7 +7,7 @@
 	<name>Statz</name>
 	<description>Maven project for Spigot plugin Statz
 	</description>
-	<url>Unknown</url>
+	<url>https://www.spigotmc.org/resources/statz.25969/</url>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 
