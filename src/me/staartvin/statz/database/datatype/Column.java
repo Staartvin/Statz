@@ -22,9 +22,9 @@ public class Column {
 		this.setDataType(dataType);
 		this.setNotNull(notNull);
 	}
-	
-	public Column(final String columnName, final boolean primaryKey, final SQLDataType dataType,
-			final boolean notNull, final boolean isUnique) {
+
+	public Column(final String columnName, final boolean primaryKey, final SQLDataType dataType, final boolean notNull,
+			final boolean isUnique) {
 		this.setColumnName(columnName);
 		this.setPrimaryKey(primaryKey);
 		this.setDataType(dataType);

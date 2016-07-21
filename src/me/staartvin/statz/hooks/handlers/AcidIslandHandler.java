@@ -34,7 +34,8 @@ public class AcidIslandHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.ACIDISLAND.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.ACIDISLAND.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof ASkyBlock)) {
@@ -96,7 +97,8 @@ public class AcidIslandHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ACIDISLAND.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ACIDISLAND.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

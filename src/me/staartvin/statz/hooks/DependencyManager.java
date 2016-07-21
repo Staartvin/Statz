@@ -22,7 +22,6 @@ import me.staartvin.statz.hooks.handlers.VotifierHandler;
 import me.staartvin.statz.hooks.handlers.WorldGuardHandler;
 import net.md_5.bungee.api.ChatColor;
 
-
 /**
  * This class is used for loading all the dependencies Statz has. <br>
  * Not all dependencies are required, some are optional.
@@ -58,7 +57,7 @@ public class DependencyManager {
 		handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
 		handlers.put(Dependency.VAULT, new VaultHandler(instance));
 		handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
-		
+
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class DependencyManager {
 		if (!plugin.getConfigHandler().useAFKIntegration()) {
 			return false;
 		}
-
+	
 		if (handlers.get(dependency.ESSENTIALS).isAvailable()) {
 			plugin.debugMessage("Using Essentials for AFK");
 			return ((EssentialsHandler) handlers.get(dependency.ESSENTIALS)).isAFK(player);
@@ -120,39 +119,39 @@ public class DependencyManager {
 	public void loadDependencies() {
 
 		// Make seperate loading bar
-		
-			plugin.debugMessage(ChatColor.YELLOW + "---------------[Statz Dependencies]---------------");
-			plugin.debugMessage(ChatColor.GREEN + "Searching dependencies...");
-		
+
+		plugin.debugMessage(ChatColor.YELLOW + "---------------[Statz Dependencies]---------------");
+		plugin.debugMessage(ChatColor.GREEN + "Searching dependencies...");
 
 		// Load all dependencies
 		for (final DependencyHandler depHandler : handlers.values()) {
 			// Make sure to respect settings
 			boolean succeeded = depHandler.setup(true);
-			
+
 			if (succeeded) {
 				Dependency dependency = this.getDependencyByHandler(depHandler);
-				
-				if (dependency == null) continue;
-				
-				switch(dependency) {
+
+				if (dependency == null)
+					continue;
+
+				switch (dependency) {
 					case VOTIFIER:
 						plugin.debugMessage(ChatColor.GREEN + "Votifier was found and so Statz records votes!");
 						break;
 					default:
-						plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString() + " was found and Statz now tracks its data!");
+						plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
+								+ " was found and Statz now tracks its data!");
 						break;
 				}
 			}
 		}
 
-			// Make seperate stop loading bar
-			plugin.debugMessage(ChatColor.YELLOW + "---------------[Statz Dependencies]---------------");
-		
+		// Make seperate stop loading bar
+		plugin.debugMessage(ChatColor.YELLOW + "---------------[Statz Dependencies]---------------");
 
 		plugin.debugMessage("Loaded libraries and dependencies");
 	}
-	
+
 	/**
 	 * Get the Dependency by the Dependency Handler
 	 * @param depHandler The dependency handler to get the dependency from.
@@ -166,12 +165,13 @@ public class DependencyManager {
 		}
 		return null;
 	}
-	
+
 	public boolean isAvailable(Dependency dep) {
 		DependencyHandler handler = handlers.get(dep);
-		
-		if (handler == null) return false;
-		
+
+		if (handler == null)
+			return false;
+
 		return handler.isAvailable();
 	}
 

@@ -14,5 +14,4 @@ public class SQLiteTable extends Table {
 		super(tableName);
 	}
 
-
 }

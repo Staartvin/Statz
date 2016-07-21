@@ -20,7 +20,7 @@ public abstract class Table {
 	private String tableName = "";
 
 	private List<Column> columns = new ArrayList<Column>();
-	
+
 	private List<Column> uniqueMatched = new ArrayList<Column>();
 
 	public Table(final String tableName) {
@@ -81,29 +81,29 @@ public abstract class Table {
 	public void setUniqueMatched(List<Column> uniqueMatched) {
 		this.uniqueMatched = uniqueMatched;
 	}
-	
+
 	public void addUniqueMatched(Column entry) {
 		this.uniqueMatched.add(entry);
 	}
-	
+
 	public Column getColumn(String columnName) {
-		for (Column e: columns) {
+		for (Column e : columns) {
 			if (e.getColumnName().equalsIgnoreCase(columnName)) {
 				return e;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public boolean addUniqueMatched(String columnName) {
 		Column entry = this.getColumn(columnName);
-		
+
 		// No entry found. -> Return false
 		if (entry == null) {
 			return false;
 		}
-		
+
 		// Found entry, add it to the unique matched.
 		this.addUniqueMatched(entry);
 		return true;

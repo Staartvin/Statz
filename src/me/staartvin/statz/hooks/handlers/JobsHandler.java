@@ -177,7 +177,7 @@ public class JobsHandler implements DependencyHandler {
 
 		if (jobsPlayer == null)
 			return null;
-		
+
 		return jobsPlayer.getJobProgression();
 	}
 }

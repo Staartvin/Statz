@@ -31,7 +31,8 @@ public class AFKTerminatorHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.AFKTERMINATOR.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.AFKTERMINATOR.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof AfkTerminator)) {
@@ -74,7 +75,8 @@ public class AFKTerminatorHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.AFKTERMINATOR.getInternalString() + " has not been found!");
+				plugin.debugMessage(
+						ChatColor.RED + Dependency.AFKTERMINATOR.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
@@ -82,7 +84,8 @@ public class AFKTerminatorHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.AFKTERMINATOR.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.AFKTERMINATOR.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

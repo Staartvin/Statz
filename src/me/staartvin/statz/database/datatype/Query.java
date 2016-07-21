@@ -28,29 +28,31 @@ public class Query {
 	public void setData(HashMap<String, String> data) {
 		this.data = data;
 	}
-	
+
 	/**
 	 * Get the value of the column name in this query.
 	 * @param columnName Name of the column to get info of.
 	 * @return value of the column of this query. Null if the query does not have this info.
 	 */
 	public Object getValue(String columnName) {
-		if (!hasValue(columnName)) return null;
+		if (!hasValue(columnName))
+			return null;
 		return data.get(columnName);
 	}
-	
+
 	/**
 	 * Get the value of the 'value' column.
 	 * @return the value of the 'value' colum of this query or -1 if the value was null.
 	 */
 	public double getValue() {
 		String value = data.get("value");
-		
-		if (value == null) return -1;
-		
+
+		if (value == null)
+			return -1;
+
 		return Double.parseDouble(value);
 	}
-	
+
 	/**
 	 * Check to see if this query contains a column with the given column name.
 	 * @param columnName Column name to check
@@ -59,15 +61,15 @@ public class Query {
 	public boolean hasValue(String columnName) {
 		return data.containsKey(columnName) && data.get(columnName) != null;
 	}
-	
+
 	public Set<Entry<String, String>> getEntrySet() {
 		return data.entrySet();
 	}
-	
+
 	public void setValue(String columnName, Object columnValue) {
 		data.put(columnName, columnValue.toString());
 	}
-	
+
 	/**
 	 * Get queries in the given list of queries that conflict with the given query.
 	 * A query conflicts with another query when they have the same values for the same columns (except for the column 'value').
@@ -83,7 +85,7 @@ public class Query {
 	 */
 	public List<Query> findConflicts(List<Query> queries) {
 		List<Query> conflictingQueries = new ArrayList<>();
-		
+
 		if (queries == null)
 			return null;
 
@@ -132,20 +134,20 @@ public class Query {
 			return conflictingQueries;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		StringBuilder builder = new StringBuilder("{");
-		
+
 		for (Entry<String, String> entry : data.entrySet()) {
 			builder.append(entry.getKey() + ": " + entry.getValue() + ", ");
 		}
-		
+
 		builder.deleteCharAt(builder.length() - 1); // Remove last comma
-		
+
 		builder.append("}");
-		
+
 		return builder.toString();
 	}
 }

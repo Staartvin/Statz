@@ -36,7 +36,8 @@ public class VaultHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.VAULT.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.VAULT.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof Vault)) {
@@ -81,7 +82,8 @@ public class VaultHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VAULT.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.VAULT.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

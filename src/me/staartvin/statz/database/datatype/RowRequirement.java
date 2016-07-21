@@ -16,7 +16,7 @@ package me.staartvin.statz.database.datatype;
 public class RowRequirement {
 
 	private String columnName, columnValue;
-	
+
 	public RowRequirement(String columnName, String columnValue) {
 		this.setColumnName(columnName);
 		this.setColumnValue(columnValue);

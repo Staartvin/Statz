@@ -44,6 +44,7 @@ public class SQLiteConnector extends DatabaseConnector {
 			if (connection != null && !connection.isClosed()) {
 				return connection;
 			}
+
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -62,15 +63,16 @@ public class SQLiteConnector extends DatabaseConnector {
 		}
 
 		try {
-			Class.forName("org.sqlite.JDBC");
+			Class.forName("org.sqlite.JDBC").newInstance();
 			connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile);
 			return connection;
-		} catch (final SQLException ex) {
+		} catch (final Exception ex) {
 			plugin.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
-		} catch (final ClassNotFoundException ex) {
+		} /*catch (final ClassNotFoundException ex) {
 			plugin.getLogger().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
-		}
-		return null;
+			}*/
+
+		return connection;
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +99,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
 				initialize();
 			}
-		});	
+		});
 	}
 
 	/**
@@ -526,7 +528,6 @@ public class SQLiteConnector extends DatabaseConnector {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
-
 				Connection conn = null;
 				PreparedStatement ps = null;
 

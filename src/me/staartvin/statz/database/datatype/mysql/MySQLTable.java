@@ -14,5 +14,4 @@ public class MySQLTable extends Table {
 		super(tableName);
 	}
 
-
 }

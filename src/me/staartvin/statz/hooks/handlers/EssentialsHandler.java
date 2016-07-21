@@ -11,7 +11,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
-
 /**
  * Handles all connections with Essentials
  * <p>
@@ -34,7 +33,8 @@ public class EssentialsHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.ESSENTIALS.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.ESSENTIALS.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof Essentials)) {
@@ -105,7 +105,8 @@ public class EssentialsHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ESSENTIALS.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ESSENTIALS.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

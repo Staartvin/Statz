@@ -27,27 +27,21 @@ public class PlayerShearListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getPlayer();
 
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			public void run() {
-				// Get current value of stat.
-				int currentValue = 0;
-				
-				// Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("world", player.getWorld().getName()));
+		// Get current value of stat.
+		int currentValue = 0;
 
-				// Check if it is valid!
-				if (info.isValid()) {
-					currentValue += info.getTotalValue();
-				}
+		// Get player info.
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("world", player.getWorld().getName()));
 
-				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-						player.getUniqueId().toString(), "value", (currentValue + 1), "world", player.getWorld().getName()));
-			}
-		});
-		
-		
+		// Check if it is valid!
+		if (info.isValid()) {
+			currentValue += info.getTotalValue();
+		}
+
+		// Update value to new stat.
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
+				player.getUniqueId().toString(), "value", (currentValue + 1), "world", player.getWorld().getName()));
 
 	}
 }

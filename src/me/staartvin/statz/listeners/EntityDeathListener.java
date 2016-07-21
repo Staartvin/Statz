@@ -45,40 +45,36 @@ public class EntityDeathListener implements Listener {
 			// Entity died because of Player
 			// Killer
 			final Player player = (Player) nEvent.getDamager();
-			
+
 			if (e instanceof Player) {
 				// Player killed player
-				
+
 				final Player murderedPlayer = (Player) e;
-				
-				plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-					public void run() {
-						//Get player info.
-						final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
 
-						// Get current value of stat.
-						int currentValue = 0;
+				//Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
+						PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(),
+								"playerKilled", murderedPlayer.getName()));
 
-						// Check if it is valid!
-						if (info.isValid()) {
-							currentValue += info.getTotalValue();
-							//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
-						}
+				// Get current value of stat.
+				int currentValue = 0;
 
-						// Update value to new stat.
-						plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS,
-								StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
-										"world", player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
-					}
-				});
-				
-				
-				
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
+				}
+
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
+								"world", player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
+
 			} else {
 				// Player killed mob		
-				
+
 				String mobType = e.getName().toUpperCase();
-				
+
 				if (e instanceof Skeleton) {
 					final Skeleton ske = (Skeleton) e;
 
@@ -116,30 +112,25 @@ public class EntityDeathListener implements Listener {
 						mobType = "ELDER " + mobType;
 					}
 				}
-				
+
 				final String mob = mobType;
-				
-				plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-					public void run() {
-						//Get player info.
-						final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mob));
 
-						// Get current value of stat.
-						int currentValue = 0;
+				//Get player info.
+				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mob));
 
-						// Check if it is valid!
-						if (info.isValid()) {
-							currentValue += info.getTotalValue();
-						}
+				// Get current value of stat.
+				int currentValue = 0;
 
-						// Update value to new stat.
-						plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-								StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
-										"world", player.getWorld().getName(), "mob", mob));
-					}
-				});
+				// Check if it is valid!
+				if (info.isValid()) {
+					currentValue += info.getTotalValue();
+				}
 
-				
+				// Update value to new stat.
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
+								"world", player.getWorld().getName(), "mob", mob));
 
 			}
 		} else {

@@ -19,13 +19,13 @@ public abstract class DatabaseConnector {
 
 	// All tables are stored here.
 	private List<Table> tables = new ArrayList<Table>();
-	
+
 	// Make sure we have distinct tables
 	public static final String prefix = "statz_";
 
 	public static String databaseName = "statz";
 
-	public Connection connection;
+	public static Connection connection;
 
 	public DatabaseConnector(final Statz instance) {
 		plugin = instance;
@@ -83,9 +83,9 @@ public abstract class DatabaseConnector {
 			plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection!");
 			return;
 		}
-		
+
 		this.refreshConnection();
-		
+
 		plugin.debugMessage(ChatColor.AQUA + "Statz is connected to its database!");
 
 		return;
@@ -142,29 +142,29 @@ public abstract class DatabaseConnector {
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
 	 */
 	public abstract void setObjects(final Table table, final Query results);
-	
+
 	/**
 	 * Instead of updating one single row, you can also perform a batch of updates.
 	 * This can drastically improve update time. See {@link #setObjects(Table, Query)} for more info.
 	 */
 	public abstract void setBatchObjects(final Table table, final List<Query> queries);
 
-//	/**
-//	 * Closes sqlite connection.
-//	 * 
-//	 * @param ps PreparedStatement to be closed
-//	 * @param rs ResultSet to be closed
-//	 */
-//	public void close(final PreparedStatement ps, final ResultSet rs) {
-//		try {
-//			if (ps != null)
-//				ps.close();
-//			if (rs != null)
-//				rs.close();
-//		} catch (final SQLException ex) {
-//			plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-//		}
-//	}
+	//	/**
+	//	 * Closes sqlite connection.
+	//	 * 
+	//	 * @param ps PreparedStatement to be closed
+	//	 * @param rs ResultSet to be closed
+	//	 */
+	//	public void close(final PreparedStatement ps, final ResultSet rs) {
+	//		try {
+	//			if (ps != null)
+	//				ps.close();
+	//			if (rs != null)
+	//				rs.close();
+	//		} catch (final SQLException ex) {
+	//			plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+	//		}
+	//	}
 
 	/**
 	 * Get a list of currently loaded tables.
@@ -189,7 +189,7 @@ public abstract class DatabaseConnector {
 	public void addTable(final Table table) {
 		tables.add(table);
 	}
-	
+
 	private void refreshConnection() {
 		// Run this query to refresh the connection.
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {

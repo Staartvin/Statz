@@ -9,7 +9,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
-
 /**
  * Handles all connections with RoyalCommands
  * <p>
@@ -32,7 +31,8 @@ public class RoyalCommandsHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.ROYAL_COMMANDS.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.ROYAL_COMMANDS.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof RoyalCommands)) {
@@ -74,7 +74,8 @@ public class RoyalCommandsHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.ROYAL_COMMANDS.getInternalString() + " has not been found!");
+				plugin.debugMessage(
+						ChatColor.RED + Dependency.ROYAL_COMMANDS.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
@@ -84,7 +85,8 @@ public class RoyalCommandsHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ROYAL_COMMANDS.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ROYAL_COMMANDS.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

@@ -25,7 +25,7 @@ public class StatzUtil {
 		for (int i = 0; i < strings.length; i += 2) {
 			queries.put(strings[i].toString(), strings[i + 1].toString());
 		}
-		
+
 		Query query = new Query(queries);
 
 		return query;
@@ -51,7 +51,7 @@ public class StatzUtil {
 
 		return searchQuery.toString();
 	}
-	
+
 	/**
 	 * Get the name of this food item.
 	 * 
@@ -66,78 +66,78 @@ public class StatzUtil {
 			return null;
 
 		switch (item.getType()) {
-		case APPLE:
-			return "APPLE";
-		case BAKED_POTATO:
-			return "BAKED_POTATO";
-		case BREAD:
-			return "BREAD";
-		case CAKE_BLOCK: // not working atm
-			return "CAKE_BLOCK";
-		case CARROT_ITEM:
-			return "CARROT_ITEM";
-		case COOKED_CHICKEN:
-			return "COOKED_CHICKEN";
-		case COOKED_FISH: {
-			if (item.getDurability() == (short) 1) {
-				return "COOKED_SALMON";
+			case APPLE:
+				return "APPLE";
+			case BAKED_POTATO:
+				return "BAKED_POTATO";
+			case BREAD:
+				return "BREAD";
+			case CAKE_BLOCK: // not working atm
+				return "CAKE_BLOCK";
+			case CARROT_ITEM:
+				return "CARROT_ITEM";
+			case COOKED_CHICKEN:
+				return "COOKED_CHICKEN";
+			case COOKED_FISH: {
+				if (item.getDurability() == (short) 1) {
+					return "COOKED_SALMON";
+				}
+				return "COOKED_FISH";
 			}
-			return "COOKED_FISH";
-		}
-		case COOKED_MUTTON:
-			return "COOKED_MUTTON";
-		case GRILLED_PORK:
-			return "GRILLED_PORK";
-		case COOKED_RABBIT:
-			return "COOKED_RABBIT";
-		case COOKIE:
-			return "COOKIE";
-		case GOLDEN_APPLE: {
-			if (item.getDurability() == (short) 1) {
-				return "ENCHANTED_GOLDEN_APPLE";
+			case COOKED_MUTTON:
+				return "COOKED_MUTTON";
+			case GRILLED_PORK:
+				return "GRILLED_PORK";
+			case COOKED_RABBIT:
+				return "COOKED_RABBIT";
+			case COOKIE:
+				return "COOKIE";
+			case GOLDEN_APPLE: {
+				if (item.getDurability() == (short) 1) {
+					return "ENCHANTED_GOLDEN_APPLE";
+				}
+				return "GOLDEN_APPLE";
 			}
-			return "GOLDEN_APPLE";
-		}
-		case GOLDEN_CARROT:
-			return "GOLDEN_CARROT";
-		case MELON:
-			return "MELON";
-		case MUSHROOM_SOUP:
-			return "MUSHROOM_SOUP";
-		case RABBIT_STEW:
-			return "RABBIT_STEW";
-		case RAW_BEEF:
-			return "RAW_BEEF";
-		case RAW_CHICKEN:
-			return "RAW_CHICKEN";
-		case RAW_FISH: {
-			if (item.getDurability() == (short) 1) {
-				return "RAW_SALMON";
-			} else if (item.getDurability() == (short) 2) {
-				return "CLOWNFISH";
-			} else if (item.getDurability() == (short) 3) {
-				return "PUFFERFISH";
+			case GOLDEN_CARROT:
+				return "GOLDEN_CARROT";
+			case MELON:
+				return "MELON";
+			case MUSHROOM_SOUP:
+				return "MUSHROOM_SOUP";
+			case RABBIT_STEW:
+				return "RABBIT_STEW";
+			case RAW_BEEF:
+				return "RAW_BEEF";
+			case RAW_CHICKEN:
+				return "RAW_CHICKEN";
+			case RAW_FISH: {
+				if (item.getDurability() == (short) 1) {
+					return "RAW_SALMON";
+				} else if (item.getDurability() == (short) 2) {
+					return "CLOWNFISH";
+				} else if (item.getDurability() == (short) 3) {
+					return "PUFFERFISH";
+				}
+				return "RAW_FISH";
 			}
-			return "RAW_FISH";
-		}
-		case POISONOUS_POTATO:
-			return "POISONOUS_POTATO";
-		case POTATO:
-			return "POTATO";
-		case PUMPKIN_PIE:
-			return "PUMPKIN_PIE";
-		case MUTTON:
-			return "MUTTON"; // raw
-		case COOKED_BEEF:
-			return "COOKED_BEEF";
-		case RABBIT:
-			return "RABBIT";
-		case ROTTEN_FLESH:
-			return "ROTTEN_FLESH";
-		case SPIDER_EYE:
-			return "SPIDER_EYE";
-		default:
-			return item.getType().toString().toUpperCase();
+			case POISONOUS_POTATO:
+				return "POISONOUS_POTATO";
+			case POTATO:
+				return "POTATO";
+			case PUMPKIN_PIE:
+				return "PUMPKIN_PIE";
+			case MUTTON:
+				return "MUTTON"; // raw
+			case COOKED_BEEF:
+				return "COOKED_BEEF";
+			case RABBIT:
+				return "RABBIT";
+			case ROTTEN_FLESH:
+				return "ROTTEN_FLESH";
+			case SPIDER_EYE:
+				return "SPIDER_EYE";
+			default:
+				return item.getType().toString().toUpperCase();
 		}
 	}
 
@@ -226,14 +226,14 @@ public class StatzUtil {
 		}
 		if (player.isInsideVehicle()) {
 			Entity vehicle = player.getVehicle();
-			
+
 			if (vehicle instanceof Boat) {
 				return "BOAT";
 			} else if (vehicle instanceof Minecart) {
-				
+
 				if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Player) {
 					return "MINECART";
-				} else if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Pig){
+				} else if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Pig) {
 					return "PIG IN MINECART";
 				} else if (vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Horse) {
 					return "HORSE IN MINECART";
@@ -255,7 +255,6 @@ public class StatzUtil {
 		}
 		return "WALK"; // Default to walking
 	}
-	
 
 	public static String printQuery(HashMap<String, String> query) {
 		StringBuilder builder = new StringBuilder("[");
@@ -263,17 +262,18 @@ public class StatzUtil {
 		for (Entry<String, String> entry : query.entrySet()) {
 			builder.append(entry.getKey() + " - " + entry.getValue() + ", ");
 		}
-		
+
 		builder.append("]");
-		
+
 		return builder.toString();
 	}
-	
-	public static double roundDouble(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
+	public static double roundDouble(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 }

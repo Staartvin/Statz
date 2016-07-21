@@ -8,7 +8,6 @@ import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 import net.md_5.bungee.api.ChatColor;
 
-
 /**
  * Handles all connections with Ultimate Core
  * <p>
@@ -31,7 +30,8 @@ public class UltimateCoreHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.instance.getServer().getPluginManager().getPlugin(Dependency.ULTIMATE_CORE.getInternalString());
+		final Plugin plugin = this.instance.getServer().getPluginManager()
+				.getPlugin(Dependency.ULTIMATE_CORE.getInternalString());
 
 		// UltimateCore may not be loaded
 		try { //Avoid ClassNotFound
@@ -75,7 +75,8 @@ public class UltimateCoreHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				instance.debugMessage(ChatColor.RED + Dependency.ULTIMATE_CORE.getInternalString() + " has not been found!");
+				instance.debugMessage(
+						ChatColor.RED + Dependency.ULTIMATE_CORE.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
@@ -85,7 +86,8 @@ public class UltimateCoreHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					instance.debugMessage(ChatColor.RED + Dependency.ULTIMATE_CORE.getInternalString() + " has been found but cannot be used!");
+					instance.debugMessage(ChatColor.RED + Dependency.ULTIMATE_CORE.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

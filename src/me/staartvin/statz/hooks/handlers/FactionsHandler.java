@@ -11,7 +11,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
-
 /**
  * Handles all connections with Factions
  * <p>
@@ -34,7 +33,8 @@ public class FactionsHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.FACTIONS.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.FACTIONS.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof Factions)) {
@@ -93,7 +93,8 @@ public class FactionsHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

@@ -42,7 +42,8 @@ public class StatsAPIHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.STATS.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.STATS.getInternalString());
 
 		try {
 			// WorldGuard may not be loaded
@@ -50,8 +51,8 @@ public class StatsAPIHandler implements DependencyHandler {
 				return null; // Maybe you want throw an exception instead
 			}
 		} catch (final NoClassDefFoundError exception) {
-			this.plugin.debugMessage(ChatColor.RED + 
-					"Could not find Stats because it's probably disabled! Does Stats properly connect to your MySQL database?");
+			this.plugin.debugMessage(ChatColor.RED
+					+ "Could not find Stats because it's probably disabled! Does Stats properly connect to your MySQL database?");
 			return null;
 		}
 
@@ -342,7 +343,8 @@ public class StatsAPIHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.STATS.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.STATS.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

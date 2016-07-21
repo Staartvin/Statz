@@ -33,7 +33,8 @@ public class GriefPreventionHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.GRIEF_PREVENTION.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.GRIEF_PREVENTION.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof GriefPrevention)) {
@@ -68,7 +69,8 @@ public class GriefPreventionHandler implements DependencyHandler {
 	public boolean setup(final boolean verbose) {
 		if (!isInstalled()) {
 			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString() + " has not been found!");
+				plugin.debugMessage(
+						ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString() + " has not been found!");
 			}
 			return false;
 		} else {
@@ -78,48 +80,52 @@ public class GriefPreventionHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}
 		}
 	}
-	
+
 	private PlayerData getPlayerData(UUID uuid) {
 		return api.dataStore.getPlayerData(uuid);
 	}
-	
+
 	public int getNumberOfClaims(UUID uuid) {
-		if (this.isAvailable()) return -1;
-		
+		if (this.isAvailable())
+			return -1;
+
 		PlayerData data = this.getPlayerData(uuid);
-		
+
 		return data.getClaims().size();
 	}
-	
+
 	public int getNumberOfClaimedBlocks(UUID uuid) {
-		if (this.isAvailable()) return -1;
-		
+		if (this.isAvailable())
+			return -1;
+
 		PlayerData data = this.getPlayerData(uuid);
-		
+
 		return data.getAccruedClaimBlocks();
 	}
-	
+
 	public int getNumberOfRemainingBlocks(UUID uuid) {
-		if (this.isAvailable()) return -1;
-		
+		if (this.isAvailable())
+			return -1;
+
 		PlayerData data = this.getPlayerData(uuid);
-		
+
 		return data.getRemainingClaimBlocks();
 	}
-	
+
 	public int getNumberOfBonusBlocks(UUID uuid) {
-		if (this.isAvailable()) return -1;
-		
+		if (this.isAvailable())
+			return -1;
+
 		PlayerData data = this.getPlayerData(uuid);
-		
+
 		return data.getBonusClaimBlocks();
 	}
-	
-	
+
 }

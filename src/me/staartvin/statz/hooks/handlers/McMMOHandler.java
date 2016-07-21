@@ -11,7 +11,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
-
 /**
  * Handles all connections with McMMO.
  * <p>
@@ -31,7 +30,8 @@ public class McMMOHandler implements DependencyHandler {
 
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.MCMMO.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.MCMMO.getInternalString());
 
 		if (plugin == null || !(plugin instanceof mcMMO)) {
 			return null; // Maybe you want throw an exception instead

@@ -12,7 +12,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
-
 /**
  * Handles all connections with ASkyBlock
  * <p>
@@ -35,7 +34,8 @@ public class ASkyBlockHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.ASKYBLOCK.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.ASKYBLOCK.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (plugin == null || !(plugin instanceof ASkyBlock)) {
@@ -97,7 +97,8 @@ public class ASkyBlockHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.ASKYBLOCK.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.ASKYBLOCK.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

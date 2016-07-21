@@ -36,7 +36,8 @@ public class WorldGuardHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin wgPlugin = plugin.getServer().getPluginManager().getPlugin(Dependency.WORLDGUARD.getInternalString());
+		final Plugin wgPlugin = plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.WORLDGUARD.getInternalString());
 
 		// WorldGuard may not be loaded
 		if (wgPlugin == null || !(wgPlugin instanceof WorldGuardPlugin)) {
@@ -117,7 +118,8 @@ public class WorldGuardHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

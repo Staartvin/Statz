@@ -31,7 +31,8 @@ public class VotifierHandler implements DependencyHandler {
 	 */
 	@Override
 	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.VOTIFIER.getInternalString());
+		final Plugin plugin = this.plugin.getServer().getPluginManager()
+				.getPlugin(Dependency.VOTIFIER.getInternalString());
 
 		// May not be loaded
 		if (plugin == null || !(plugin instanceof Votifier)) {
@@ -76,7 +77,8 @@ public class VotifierHandler implements DependencyHandler {
 				return true;
 			} else {
 				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has been found but cannot be used!");
+					plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString()
+							+ " has been found but cannot be used!");
 				}
 				return false;
 			}

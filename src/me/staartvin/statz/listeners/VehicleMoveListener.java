@@ -62,31 +62,25 @@ public class VehicleMoveListener implements Listener {
 		if (distTravelled == 0) {
 			return;
 		}
-		
+
 		final String movement = movementType;
-		
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			public void run() {
-				// Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
 
-				// Get current value of stat.
-				double currentValue = 0;
+		// Get player info.
+		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
 
-				// Check if it is valid!
-				if (info.isValid()) {
-					currentValue += info.getTotalValue();
-				}
+		// Get current value of stat.
+		double currentValue = 0;
 
-				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
-								"moveType", movement, "world", player.getWorld().getName()));
-			}
-		});
+		// Check if it is valid!
+		if (info.isValid()) {
+			currentValue += info.getTotalValue();
+		}
 
-		
+		// Update value to new stat.
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
+						"moveType", movement, "world", player.getWorld().getName()));
 
 	}
 }

@@ -553,7 +553,6 @@ public class MySQLConnector extends DatabaseConnector {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
-
 				Connection conn = null;
 				PreparedStatement ps = null;
 

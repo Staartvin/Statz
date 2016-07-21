@@ -30,8 +30,7 @@ public class API {
 	 * @param worldName Name of the world to get the info from, can also be null to find the total on all worlds.
 	 * @return the total count of a stat. E.g. the total amount of killed players on a world (or on all worlds).
 	 */
-	public Object getTotalOf(PlayerStat statType, UUID uuid, String worldName) {
-
+	public Object getTotalOf(final PlayerStat statType, final UUID uuid, final String worldName) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
 		if (!info.isValid()) {
@@ -48,7 +47,8 @@ public class API {
 		if (worldName != null) {
 			// Add every value that is in the proper world
 			for (Query result : results) {
-				if (result.getValue("world") != null && result.getValue("world").toString().equalsIgnoreCase(worldName)) {
+				if (result.getValue("world") != null
+						&& result.getValue("world").toString().equalsIgnoreCase(worldName)) {
 					value += Double.parseDouble(result.getValue("value").toString());
 				}
 			}
@@ -60,6 +60,7 @@ public class API {
 		}
 
 		return value;
+
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class API {
 	 * @param conditions Extra conditions that need to be met. If no conditions are given, this method will act the same as {@link #getTotalOf(PlayerStat, UUID, String)}.
 	 * @return the total count taking the given conditions in consideration or null if no data for the given player was found.
 	 */
-	public Object getSpecificData(PlayerStat statType, UUID uuid, RowRequirement... conditions) {
+	public Object getSpecificData(final PlayerStat statType, final UUID uuid, final RowRequirement... conditions) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
 		if (!info.isValid()) {
@@ -91,17 +92,18 @@ public class API {
 
 		for (Query result : results) {
 			boolean isValid = true;
-			
-			for (int i=0;i<conditions.length;i++) {
-				
+
+			for (int i = 0; i < conditions.length; i++) {
+
 				RowRequirement req = conditions[i];
 				// Check if each condition that was given is true.
-				if (result.getValue(req.getColumnName()) == null || !result.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
+				if (result.getValue(req.getColumnName()) == null
+						|| !result.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
 					isValid = false;
 					break;
 				}
 			}
-			
+
 			// All conditions were met, so we add this value.
 			if (isValid) {
 				value += Double.parseDouble(result.getValue("value").toString());
@@ -110,7 +112,7 @@ public class API {
 
 		return value;
 	}
-	
+
 	/**
 	 * Get a dependency handler of Statz. Since Statz also 'tracks' data of other plugins (in reality it provides a way to connect to other plugins,
 	 * but does not actually store the information in its database). 
@@ -120,7 +122,7 @@ public class API {
 	public DependencyHandler getDependencyHandler(Dependency dep) {
 		return plugin.getDependencyManager().getDependency(dep);
 	}
-	
+
 	/**
 	 * Get a value for a statistic that is stored by vanilla Minecraft.
 	 * @param uuid UUID of the player to get the Statistic for.

@@ -19,24 +19,16 @@ public class PlayerQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onQuit(final PlayerQuitEvent event) {
 
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		// Get player
+		final Player player = event.getPlayer();
 
-			public void run() {
+		// Check if player already has a checker running.
+		if (PlayerJoinListener.updateID.containsKey(player.getUniqueId())) {
+			// Cancel task of player
+			plugin.getServer().getScheduler().cancelTask(PlayerJoinListener.updateID.get(player.getUniqueId()));
 
-				// Get player
-				final Player player = event.getPlayer();
-
-				// Check if player already has a checker running.
-				if (PlayerJoinListener.updateID.containsKey(player.getUniqueId())) {
-					// Cancel task of player
-					plugin.getServer().getScheduler().cancelTask(PlayerJoinListener.updateID.get(player.getUniqueId()));
-
-					PlayerJoinListener.updateID.remove(player.getUniqueId());
-				}
-			}
-
-		});
+			PlayerJoinListener.updateID.remove(player.getUniqueId());
+		}
 	}
-	
-	
+
 }

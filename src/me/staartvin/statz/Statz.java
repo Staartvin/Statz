@@ -85,7 +85,7 @@ public class Statz extends JavaPlugin {
 		this.setStatzAPI(new API(this));
 
 		// Send pool update every 10 seconds
-		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
 			public void run() {
 
 				getDataPoolManager().sendPool();
@@ -201,12 +201,12 @@ public class Statz extends JavaPlugin {
 				move.add("BOAT");
 
 				long startTime = System.currentTimeMillis();
-				
+
 				List<Long> times = new ArrayList<>();
 
 				// 100 million interations
 				for (int i = 0; i < 10000; i++) {
-					
+
 					long start = System.currentTimeMillis();
 					// Send 100 million updates
 
@@ -246,9 +246,9 @@ public class Statz extends JavaPlugin {
 					// Update value to new stat.
 					getDataManager().setPlayerInfo(random, stat, StatzUtil.makeQuery("uuid", random, "value",
 							(currentValue + distTravelled), "moveType", movementType, "world", "world"));
-					
+
 					long total = System.currentTimeMillis() - start;
-					
+
 					times.add(total);
 				}
 
@@ -256,16 +256,16 @@ public class Statz extends JavaPlugin {
 
 				debugMessage("End of stresstest");
 				debugMessage("Took " + totalTime + " ms");
-				
+
 				long totalSum = 0;
-				
-				for (Long time: times) {
+
+				for (Long time : times) {
 					totalSum += time;
 				}
-				
+
 				double per = (totalSum * 1.0 / times.size() * 1.0);
 				double perSec = 1000.0 / per;
-				
+
 				debugMessage("Average input took " + per + " ms");
 				debugMessage("Hence, I can perform (on average) " + perSec + " operations per second");
 				//getDataPoolManager().printPool();
