@@ -39,5 +39,6 @@
 	<classpathentry kind="lib" path="lib/Vault.jar"/>
 	<classpathentry kind="lib" path="lib/EssentialsX-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/GriefPrevention.jar"/>
+	<classpathentry kind="lib" path="lib/RPGme.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

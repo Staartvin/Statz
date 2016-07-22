@@ -13,6 +13,7 @@ import me.staartvin.statz.hooks.handlers.GriefPreventionHandler;
 import me.staartvin.statz.hooks.handlers.JobsHandler;
 import me.staartvin.statz.hooks.handlers.McMMOHandler;
 import me.staartvin.statz.hooks.handlers.OnTimeHandler;
+import me.staartvin.statz.hooks.handlers.RPGmeHandler;
 import me.staartvin.statz.hooks.handlers.RoyalCommandsHandler;
 import me.staartvin.statz.hooks.handlers.StatisticsAPIHandler;
 import me.staartvin.statz.hooks.handlers.StatsAPIHandler;
@@ -57,6 +58,7 @@ public class DependencyManager {
 		handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
 		handlers.put(Dependency.VAULT, new VaultHandler(instance));
 		handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
+		handlers.put(Dependency.RPGME, new RPGmeHandler(instance));
 
 	}
 
