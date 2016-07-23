@@ -73,7 +73,8 @@ public class EntityDeathListener implements Listener {
 			} else {
 				// Player killed mob		
 
-				String mobType = e.getName().toUpperCase();
+				@SuppressWarnings("deprecation")
+				String mobType = e.getType().getName().toUpperCase();
 
 				if (e instanceof Skeleton) {
 					final Skeleton ske = (Skeleton) e;
