@@ -62,6 +62,9 @@ public class DataPoolManager {
 	public synchronized boolean addQuery(PlayerStat stat, Query query) {
 
 		List<Query> queries = this.getStoredQueries(stat);
+		
+		System.out.println("------------------");
+		//System.out.println("Query: " + query);
 
 		if (queries == null) {
 			queries = new ArrayList<>();
@@ -72,7 +75,7 @@ public class DataPoolManager {
 			queries.add(query);
 			pool.put(stat, queries);
 
-			//System.out.println("Add to pool (because empty): " + query);
+			System.out.println("Add to pool (because empty): " + query);
 			return true;
 		}
 
@@ -82,8 +85,22 @@ public class DataPoolManager {
 		if (conflictsQuery == null || conflictsQuery.isEmpty()) {
 			queries.add(query);
 			pool.put(stat, queries);
-			//System.out.println("Add to pool (because no conflict): " + query);
+			System.out.println("Add to pool (because no conflict): " + query);
 			return true;
+		}
+		
+		for (Query conflict : conflictsQuery) {
+			System.out.println("Conflicting query: " + conflict);
+			
+			if (!conflict.hasValue("value")) {
+				continue;
+			}
+			
+			System.out.println("Add " + conflict.getValue() + " to " + query.getValue());
+			
+			query.addValue("value", conflict.getValue());
+			
+			System.out.println("Updated value: " + query.getValue());		
 		}
 
 		// Shit, we found a conflicting query. Remove conflicting ones and add a new query.
@@ -164,73 +181,6 @@ public class DataPoolManager {
 		return conflicts;
 	}
 
-	//	/**
-	//	 * Get queries in the given list of queries that conflict with the given queryCompare.
-	//	 * A query conflicts with another query when they have the same values for the same columns (except for the column 'value').
-	//	 * <br>
-	//	 * <br>Let's assume there are three queries: A, B and C.
-	//	 * Query A consists of {uuid: Staartvin, mob: COW, world: testWorld}. Query B is made of {uuid: Staartvin, mob:COW, world: noTestWorld}.
-	//	 * Lastly, Query C is made of {uuid: BuilderGuy, mob:COW, world: testWorld}. None of these queries conflict with each other.
-	//	 * <br><br>Query A does not conflict with B, as the world columns do not have the same values. Query A does also not conflict with C,
-	//	 * since the UUIDs don't match. Lastly, query B does not conflict with query C, since both the UUID and world columns do not match.
-	//	 *
-	//	 * @param queryCompare Query to compare to other queries
-	//	 * @param queries A list of queries to check whether they conflict with the given queryCompare. 
-	//	 * @return a list of queries (from the given queries list) that conflict with queryCompare or null if no conflicts were found.
-	//	 */
-	//	public List<HashMap<String, String>> findConflicts(HashMap<String, String> queryCompare,
-	//			List<HashMap<String, String>> queries) {
-	//		List<HashMap<String, String>> conflictingQueries = new ArrayList<>();
-	//
-	//		if (queries == null)
-	//			return null;
-	//
-	//		// Do reverse traversal
-	//		for (int i = queries.size() - 1; i >= 0; i--) {
-	//
-	//			HashMap<String, String> comparedQuery = queries.get(i);
-	//
-	//			boolean isSame = true;
-	//
-	//			for (Entry<String, String> entry : queryCompare.entrySet()) {
-	//				String columnName = entry.getKey();
-	//				String columnValue = entry.getValue();
-	//
-	//				if (columnName.equalsIgnoreCase("value"))
-	//					continue;
-	//
-	//				// Stored query does not have value that the given query has -> this cannot conflict
-	//				if (comparedQuery.get(columnName) == null) {
-	//					isSame = false;
-	//					break;
-	//				}
-	//
-	//				// If value of condition in stored query is not the same as the given query, they cannot conflict. 
-	//				if (!comparedQuery.get(columnName).equalsIgnoreCase(columnValue)) {
-	//					isSame = false;
-	//					break;
-	//				}
-	//			}
-	//
-	//			if (!comparedQuery.get("uuid").equalsIgnoreCase(queryCompare.get("uuid"))) {
-	//				isSame = false;
-	//			}
-	//
-	//			// We have found a conflicting query
-	//			if (isSame) {
-	//				conflictingQueries.add(comparedQuery);
-	//			}
-	//		}
-	//
-	//		// No conflicting query found
-	//		if (conflictingQueries.isEmpty()) {
-	//			return null;
-	//		} else {
-	//			return conflictingQueries;
-	//		}
-	//
-	//	}
-
 	/**
 	 * Get the queries that are currently in the pool (and have not been set to the database yet).
 	 * @param stat Queries of what stat type?
@@ -294,7 +244,7 @@ public class DataPoolManager {
 			}
 
 			//Update in batch.
-			plugin.getSqlConnector().setBatchObjects(table, queries);
+			plugin.getSqlConnector().setBatchObjects(table, queries, 2);
 
 			//System.out.println("In pool: " + queries.size() + " for stat " + stat.getTableName());
 

@@ -548,7 +548,7 @@ public class MySQLConnector extends DatabaseConnector {
 	}
 
 	@Override
-	public void setObjects(final Table table, final Query results) {
+	public void setObjects(final Table table, final Query results, final int mode) {
 		// Run SQLite query async to not disturb the main Server thread
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
@@ -590,7 +590,14 @@ public class MySQLConnector extends DatabaseConnector {
 				String onDuplicate = "";
 
 				if (results.hasValue("value")) {
-					onDuplicate = " ON DUPLICATE KEY UPDATE value=" + results.getValue();
+					if (mode == 1) {
+						// Override current value
+						onDuplicate = " ON DUPLICATE KEY UPDATE value=" + results.getValue();
+					} else {
+						// Add to current value
+						onDuplicate = " ON DUPLICATE KEY UPDATE value=value+" + results.getValue();
+					}
+					
 				} else {
 					onDuplicate = " ON DUPLICATE KEY UPDATE playerName='" + results.getValue("playerName") + "'";
 				}
@@ -634,7 +641,7 @@ public class MySQLConnector extends DatabaseConnector {
 	}
 
 	@Override
-	public void setBatchObjects(final Table table, final List<Query> queries) {
+	public void setBatchObjects(final Table table, final List<Query> queries, int mode) {
 		// Run SQLite query async to not disturb the main Server thread
 
 		Connection conn = getConnection();
@@ -648,7 +655,7 @@ public class MySQLConnector extends DatabaseConnector {
 				StringBuilder columnNames = new StringBuilder("(");
 
 				StringBuilder resultNames = new StringBuilder("(");
-
+			
 				for (final Entry<String, String> result : query.getEntrySet()) {
 					columnNames.append(result.getKey() + ",");
 
@@ -679,7 +686,13 @@ public class MySQLConnector extends DatabaseConnector {
 				String onDuplicate = "";
 
 				if (query.hasValue("value")) {
-					onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();
+					if (mode == 1) {
+						// Override current value
+						onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();
+					} else {
+						// Add to current value
+						onDuplicate = " ON DUPLICATE KEY UPDATE value=value+" + query.getValue();
+					}
 				} else {
 					onDuplicate = " ON DUPLICATE KEY UPDATE playerName='" + query.getValue("playerName") + "'";
 				}

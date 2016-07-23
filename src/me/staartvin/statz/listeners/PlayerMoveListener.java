@@ -44,21 +44,21 @@ public class PlayerMoveListener implements Listener {
 
 		final String movement = movementType;
 
-		// Get current value of stat.
-		double currentValue = 0;
-
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue = info.getTotalValue();
-		}
+//		// Get current value of stat.
+//		double currentValue = 0;
+//
+//		// Get player info.
+//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+//				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
+//
+//		// Check if it is valid!
+//		if (info.isValid()) {
+//			currentValue = info.getTotalValue();
+//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (distTravelled),
 						"moveType", movement, "world", player.getWorld().getName()));
 
 	}

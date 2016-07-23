@@ -523,10 +523,11 @@ public class SQLiteConnector extends DatabaseConnector {
 	}
 
 	@Override
-	public void setObjects(final Table table, final Query results) {
+	public void setObjects(final Table table, final Query results, final int mode) {
 		// Run SQLite query async to not disturb the main Server thread
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
+			@SuppressWarnings("resource")
 			public void run() {
 				Connection conn = null;
 				PreparedStatement ps = null;
@@ -535,15 +536,31 @@ public class SQLiteConnector extends DatabaseConnector {
 
 				StringBuilder resultNames = new StringBuilder("(");
 
+				StringBuilder updateWhere = new StringBuilder("");
+
 				for (final Entry<String, String> result : results.getEntrySet()) {
 					columnNames.append(result.getKey() + ",");
+
+					// DO NOT add for value column
+					if (!result.getKey().equalsIgnoreCase("value")) {
+						updateWhere.append(result.getKey() + "=");
+					}
 
 					try {
 						// Try to check if it is an integer
 						Integer.parseInt(result.getValue());
 						resultNames.append(result.getValue() + ",");
+
+						if (!result.getKey().equalsIgnoreCase("value")) {
+							updateWhere.append(result.getValue() + " AND ");
+						}
+
 					} catch (final NumberFormatException e) {
 						resultNames.append("'" + result.getValue() + "',");
+
+						if (!result.getKey().equalsIgnoreCase("value")) {
+							updateWhere.append("'" + result.getValue() + "' AND ");
+						}
 					}
 
 				}
@@ -551,14 +568,35 @@ public class SQLiteConnector extends DatabaseConnector {
 				// Remove last comma
 				columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
 				resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
+				updateWhere = new StringBuilder(updateWhere.substring(0, updateWhere.lastIndexOf("AND")));
 
-				String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
-						+ " VALUES " + resultNames;
+				String update;
+				String updateTwo = null;
+
+				if (mode == 1 || !results.hasValue("value")) {
+					// Override value
+					update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
+							+ " VALUES " + resultNames;
+				} else {
+					// Add value
+					update = "UPDATE " + table.getTableName() + " SET value=value + " + results.getValue() + " WHERE "
+							+ updateWhere.toString() + ";";
+					updateTwo = "INSERT OR IGNORE INTO " + table.getTableName() + " " + columnNames.toString()
+							+ " VALUES " + resultNames + ";";
+				}
+
+				//System.out.println("UPDATE Query: " + update);
+				//System.out.println("Update query two: " + updateTwo);
 
 				try {
 					conn = getConnection();
 					ps = conn.prepareStatement(update);
 					ps.executeUpdate();
+
+					if (updateTwo != null) {
+						ps = conn.prepareStatement(updateTwo);
+						ps.executeUpdate();
+					}
 
 					return;
 				} catch (final SQLException ex) {
@@ -578,7 +616,7 @@ public class SQLiteConnector extends DatabaseConnector {
 	}
 
 	@Override
-	public void setBatchObjects(final Table table, final List<Query> queries) {
+	public void setBatchObjects(final Table table, final List<Query> queries, int mode) {
 		// Run SQLite query async to not disturb the main Server thread
 
 		Connection conn = getConnection();
@@ -593,15 +631,30 @@ public class SQLiteConnector extends DatabaseConnector {
 
 				StringBuilder resultNames = new StringBuilder("(");
 
+				StringBuilder updateWhere = new StringBuilder("");
+
 				for (final Entry<String, String> result : query.getEntrySet()) {
 					columnNames.append(result.getKey() + ",");
+
+					// DO NOT add for value column
+					if (!result.getKey().equalsIgnoreCase("value")) {
+						updateWhere.append(result.getKey() + "=");
+					}
 
 					try {
 						// Try to check if it is an integer
 						Double.parseDouble(result.getValue());
 						resultNames.append(result.getValue() + ",");
+
+						if (!result.getKey().equalsIgnoreCase("value")) {
+							updateWhere.append(result.getValue() + " AND ");
+						}
 					} catch (final NumberFormatException e) {
 						resultNames.append("'" + result.getValue() + "',");
+
+						if (!result.getKey().equalsIgnoreCase("value")) {
+							updateWhere.append("'" + result.getValue() + "' AND ");
+						}
 					}
 
 				}
@@ -609,13 +662,30 @@ public class SQLiteConnector extends DatabaseConnector {
 				// Remove last comma
 				columnNames = new StringBuilder(columnNames.substring(0, columnNames.lastIndexOf(",")) + ")");
 				resultNames = new StringBuilder(resultNames.substring(0, resultNames.lastIndexOf(",")) + ")");
+				updateWhere = new StringBuilder(updateWhere.substring(0, updateWhere.lastIndexOf("AND")));
 
-				String update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
-						+ " VALUES " + resultNames;
+				String update;
+				String updateTwo = null;
+
+				if (mode == 1 || !query.hasValue("value")) {
+					// Override value
+					update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
+							+ " VALUES " + resultNames;
+				} else {
+					// Add value
+					update = "UPDATE " + table.getTableName() + " SET value=value + " + query.getValue() + " WHERE "
+							+ updateWhere.toString() + ";";
+					updateTwo = "INSERT OR IGNORE INTO " + table.getTableName() + " " + columnNames.toString()
+							+ " VALUES " + resultNames + ";";
+				}
 
 				//System.out.println("UPDATE Query: " + update);
+				//System.out.println("Update query two: " + updateTwo);
 
 				stmt.addBatch(update);
+				if (updateTwo != null) {
+					stmt.addBatch(updateTwo);
+				}
 			}
 
 			@SuppressWarnings("unused")

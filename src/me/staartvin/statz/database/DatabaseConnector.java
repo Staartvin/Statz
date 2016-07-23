@@ -140,14 +140,15 @@ public abstract class DatabaseConnector {
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
 	 *            that we set the value of <i>uuid</i> to
 	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
+	 * @param mode What mode should the update run in? '1' means 'override current value in database', '2' means 'add the value to current value in database'
 	 */
-	public abstract void setObjects(final Table table, final Query results);
+	public abstract void setObjects(final Table table, final Query results, int mode);
 
 	/**
 	 * Instead of updating one single row, you can also perform a batch of updates.
 	 * This can drastically improve update time. See {@link #setObjects(Table, Query)} for more info.
 	 */
-	public abstract void setBatchObjects(final Table table, final List<Query> queries);
+	public abstract void setBatchObjects(final Table table, final List<Query> queries, int mode);
 
 	//	/**
 	//	 * Closes sqlite connection.
