@@ -150,14 +150,15 @@ public class Query {
 
 		return builder.toString();
 	}
-	
+
 	public void addValue(String columnName, Object value) {
-		if (!this.hasValue(columnName)) return;
-		
+		if (!this.hasValue(columnName))
+			return;
+
 		Double oldValue = Double.parseDouble(this.getValue("value").toString());
-		
+
 		Double updateValue = Double.parseDouble(value.toString());
-		
+
 		this.setValue(columnName, oldValue + updateValue);
 	}
 }

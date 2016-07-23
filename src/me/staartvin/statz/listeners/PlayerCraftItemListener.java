@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerCraftItemListener implements Listener {
@@ -29,21 +28,21 @@ public class PlayerCraftItemListener implements Listener {
 
 		final String itemCrafted = event.getCurrentItem().getType().toString();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
-
-		// Get current value of stat.
-		int currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
+		//
+		//		// Get current value of stat.
+		//		int currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "world",
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
 						player.getWorld().getName(), "item", itemCrafted));
 
 	}

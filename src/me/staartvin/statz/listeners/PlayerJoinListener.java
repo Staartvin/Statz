@@ -38,19 +38,19 @@ public class PlayerJoinListener implements Listener {
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
 
 		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
-
-		// Get current value of stat.
-		double currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue = info.getTotalValue();
-		}
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		//
+		//		// Get current value of stat.
+		//		double currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue = info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1)));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1));
 
 		// Check if player already has a checker running.
 		if (!updateID.containsKey(player.getUniqueId())) {
@@ -84,8 +84,7 @@ public class PlayerJoinListener implements Listener {
 			};
 
 			BukkitTask task = run.runTaskTimerAsynchronously(plugin,
-					(currentValue == 0 ? 0
-							: 20 * 60) /*If currentValue is 0, schedule a check immediately, otherwise after a minute*/,
+					20 * 60 /*If currentValue is 0, schedule a check immediately, otherwise after a minute*/,
 					20 * 60 /*Every minute*/);
 
 			updateID.put(player.getUniqueId(), task.getTaskId());

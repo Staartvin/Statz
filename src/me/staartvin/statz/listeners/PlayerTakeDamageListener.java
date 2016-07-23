@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerTakeDamageListener implements Listener {
@@ -32,23 +31,22 @@ public class PlayerTakeDamageListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getEntity();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "cause", event.getCause().toString()));
-
-		// Get current value of stat.
-		int currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "cause", event.getCause().toString()));
+		//
+		//		// Get current value of stat.
+		//		int currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value",
-						(currentValue + event.getDamage()), "cause", event.getCause().toString(), "world",
-						player.getWorld().getName()));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", event.getDamage(), "cause",
+						event.getCause().toString(), "world", player.getWorld().getName()));
 
 	}
 }

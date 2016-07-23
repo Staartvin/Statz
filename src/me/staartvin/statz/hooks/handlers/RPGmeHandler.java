@@ -116,59 +116,61 @@ public class RPGmeHandler implements DependencyHandler {
 
 		if (type == null)
 			return -1;
-		
-		
 
 		return RPGme.getAPI().getExp(player, type);
 	}
-	
+
 	public int getTotalLevel(Player player) {
 		if (!this.isAvailable())
 			return -1;
-		
+
 		RPGPlayer RPGPlayer = RPGme.getAPI().get(player);
-		
-		if (RPGPlayer == null) return -1;
-		
+
+		if (RPGPlayer == null)
+			return -1;
+
 		return RPGPlayer.getSkillSet().getTotalLevel();
 	}
-	
+
 	public int getCombatLevel(Player player) {
 		if (!this.isAvailable())
 			return -1;
-		
+
 		RPGPlayer RPGPlayer = RPGme.getAPI().get(player);
-		
-		if (RPGPlayer == null) return -1;
-		
+
+		if (RPGPlayer == null)
+			return -1;
+
 		return RPGPlayer.getSkillSet().getCombatLevel();
 	}
-	
+
 	public int getAverageLevel(Player player) {
 		if (!this.isAvailable())
 			return -1;
-		
+
 		RPGPlayer RPGPlayer = RPGme.getAPI().get(player);
-		
-		if (RPGPlayer == null) return -1;
-		
+
+		if (RPGPlayer == null)
+			return -1;
+
 		return RPGPlayer.getSkillSet().getAverageLevel();
 	}
-	
+
 	public List<UUID> getPlayersInParty(Player player) {
 		List<UUID> uuids = new ArrayList<>();
-		
+
 		if (!this.isAvailable())
 			return uuids;
-		
+
 		RPGPlayer RPGPlayer = RPGme.getAPI().get(player);
-		
-		if (RPGPlayer == null) return uuids;
-		
+
+		if (RPGPlayer == null)
+			return uuids;
+
 		for (RPGPlayer rPlayer : RPGPlayer.getParty()) {
 			uuids.add(rPlayer.getPlayerID());
 		}
-		
+
 		return uuids;
 	}
 

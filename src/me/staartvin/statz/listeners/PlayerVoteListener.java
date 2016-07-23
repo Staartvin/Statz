@@ -9,7 +9,6 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerVoteListener implements Listener {
@@ -32,20 +31,20 @@ public class PlayerVoteListener implements Listener {
 		if (player == null)
 			return;
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
-
-		// Get current value of stat.
-		int currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
+		//
+		//		// Get current value of stat.
+		//		int currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1)));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1));
 
 	}
 }

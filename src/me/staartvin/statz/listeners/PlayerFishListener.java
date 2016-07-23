@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerFishListener implements Listener {
@@ -62,22 +61,21 @@ public class PlayerFishListener implements Listener {
 
 		final String material = materialName;
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
-
-		// Get current value of stat.
-		int currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
+		//
+		//		// Get current value of stat.
+		//		int currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "caught",
-						material, "world", player.getWorld().getName()));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
+				player.getUniqueId().toString(), "value", 1, "caught", material, "world", player.getWorld().getName()));
 
 	}
 }

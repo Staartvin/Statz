@@ -18,7 +18,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class EntityDeathListener implements Listener {
@@ -51,24 +50,24 @@ public class EntityDeathListener implements Listener {
 
 				final Player murderedPlayer = (Player) e;
 
-				//Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-						PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(),
-								"playerKilled", murderedPlayer.getName()));
-
-				// Get current value of stat.
-				int currentValue = 0;
-
-				// Check if it is valid!
-				if (info.isValid()) {
-					currentValue += info.getTotalValue();
-					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
-				}
+				//				//Get player info.
+				//				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
+				//						PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(),
+				//								"playerKilled", murderedPlayer.getName()));
+				//
+				//				// Get current value of stat.
+				//				int currentValue = 0;
+				//
+				//				// Check if it is valid!
+				//				if (info.isValid()) {
+				//					currentValue += info.getTotalValue();
+				//					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
+				//				}
 
 				// Update value to new stat.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS,
-						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
-								"world", player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+								player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
 
 			} else {
 				// Player killed mob		
@@ -116,22 +115,21 @@ public class EntityDeathListener implements Listener {
 
 				final String mob = mobType;
 
-				//Get player info.
-				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mob));
-
-				// Get current value of stat.
-				int currentValue = 0;
-
-				// Check if it is valid!
-				if (info.isValid()) {
-					currentValue += info.getTotalValue();
-				}
+				//				//Get player info.
+				//				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+				//						StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mob));
+				//
+				//				// Get current value of stat.
+				//				int currentValue = 0;
+				//
+				//				// Check if it is valid!
+				//				if (info.isValid()) {
+				//					currentValue += info.getTotalValue();
+				//				}
 
 				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
-								"world", player.getWorld().getName(), "mob", mob));
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
+						player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName(), "mob", mob));
 
 			}
 		} else {

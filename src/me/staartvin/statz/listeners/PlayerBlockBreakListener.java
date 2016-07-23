@@ -9,7 +9,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerBlockBreakListener implements Listener {
@@ -35,22 +34,22 @@ public class PlayerBlockBreakListener implements Listener {
 		final int dataValue = blockBroken.getData();
 		final String worldName = blockBroken.getWorld().getName();
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
-
-		// Get current value of stat.
-		int currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+		//				StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
+		//
+		//		// Get current value of stat.
+		//		int currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "typeid",
-						typeId, "datavalue", dataValue, "world", worldName));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "typeid", typeId, "datavalue",
+						dataValue, "world", worldName));
 
 	}
 }

@@ -597,7 +597,7 @@ public class MySQLConnector extends DatabaseConnector {
 						// Add to current value
 						onDuplicate = " ON DUPLICATE KEY UPDATE value=value+" + results.getValue();
 					}
-					
+
 				} else {
 					onDuplicate = " ON DUPLICATE KEY UPDATE playerName='" + results.getValue("playerName") + "'";
 				}
@@ -655,7 +655,7 @@ public class MySQLConnector extends DatabaseConnector {
 				StringBuilder columnNames = new StringBuilder("(");
 
 				StringBuilder resultNames = new StringBuilder("(");
-			
+
 				for (final Entry<String, String> result : query.getEntrySet()) {
 					columnNames.append(result.getKey() + ",");
 

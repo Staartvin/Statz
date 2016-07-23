@@ -9,7 +9,6 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class VehicleMoveListener implements Listener {
@@ -65,22 +64,22 @@ public class VehicleMoveListener implements Listener {
 
 		final String movement = movementType;
 
-		// Get player info.
-		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
-
-		// Get current value of stat.
-		double currentValue = 0;
-
-		// Check if it is valid!
-		if (info.isValid()) {
-			currentValue += info.getTotalValue();
-		}
+		//		// Get player info.
+		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
+		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
+		//
+		//		// Get current value of stat.
+		//		double currentValue = 0;
+		//
+		//		// Check if it is valid!
+		//		if (info.isValid()) {
+		//			currentValue += info.getTotalValue();
+		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + distTravelled),
-						"moveType", movement, "world", player.getWorld().getName()));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", distTravelled, "moveType",
+						movement, "world", player.getWorld().getName()));
 
 	}
 }

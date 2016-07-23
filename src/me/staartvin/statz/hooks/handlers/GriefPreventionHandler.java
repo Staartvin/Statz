@@ -95,7 +95,7 @@ public class GriefPreventionHandler implements DependencyHandler {
 	public int getNumberOfClaims(UUID uuid) {
 		if (!this.isAvailable()) {
 			return -1;
-		}	
+		}
 
 		PlayerData data = this.getPlayerData(uuid);
 

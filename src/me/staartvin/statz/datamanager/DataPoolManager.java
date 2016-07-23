@@ -62,8 +62,8 @@ public class DataPoolManager {
 	public synchronized boolean addQuery(PlayerStat stat, Query query) {
 
 		List<Query> queries = this.getStoredQueries(stat);
-		
-		System.out.println("------------------");
+
+		//System.out.println("------------------");
 		//System.out.println("Query: " + query);
 
 		if (queries == null) {
@@ -75,7 +75,7 @@ public class DataPoolManager {
 			queries.add(query);
 			pool.put(stat, queries);
 
-			System.out.println("Add to pool (because empty): " + query);
+			//System.out.println("Add to pool (because empty): " + query);
 			return true;
 		}
 
@@ -85,22 +85,22 @@ public class DataPoolManager {
 		if (conflictsQuery == null || conflictsQuery.isEmpty()) {
 			queries.add(query);
 			pool.put(stat, queries);
-			System.out.println("Add to pool (because no conflict): " + query);
+			//System.out.println("Add to pool (because no conflict): " + query);
 			return true;
 		}
-		
+
 		for (Query conflict : conflictsQuery) {
-			System.out.println("Conflicting query: " + conflict);
-			
+			//System.out.println("Conflicting query: " + conflict);
+
 			if (!conflict.hasValue("value")) {
 				continue;
 			}
-			
-			System.out.println("Add " + conflict.getValue() + " to " + query.getValue());
-			
+
+			//System.out.println("Add " + conflict.getValue() + " to " + query.getValue());
+
 			query.addValue("value", conflict.getValue());
-			
-			System.out.println("Updated value: " + query.getValue());		
+
+			//System.out.println("Updated value: " + query.getValue());		
 		}
 
 		// Shit, we found a conflicting query. Remove conflicting ones and add a new query.
