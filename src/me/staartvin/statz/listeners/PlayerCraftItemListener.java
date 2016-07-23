@@ -4,37 +4,34 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
-public class EatFoodListener implements Listener {
+public class PlayerCraftItemListener implements Listener {
 
 	private final Statz plugin;
 
-	public EatFoodListener(final Statz plugin) {
+	public PlayerCraftItemListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onEat(final PlayerItemConsumeEvent event) {
+	public void onCraft(final CraftItemEvent event) {
 
-		final PlayerStat stat = PlayerStat.FOOD_EATEN;
+		final PlayerStat stat = PlayerStat.ITEMS_CRAFTED;
 
 		// Get player
-		final Player player = event.getPlayer();
+		final Player player = (Player) event.getWhoClicked();
 
-		final String foodName = StatzUtil.getFoodName(event.getItem());
-
-		if (foodName == null)
-			return;
+		final String itemCrafted = event.getCurrentItem().getType().toString();
 
 		// Get player info.
 		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("world", player.getWorld().getName(), "foodEaten", foodName));
+				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
 
 		// Get current value of stat.
 		int currentValue = 0;
@@ -46,8 +43,8 @@ public class EatFoodListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "foodEaten",
-						foodName, "world", player.getWorld().getName()));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1), "world",
+						player.getWorld().getName(), "item", itemCrafted));
 
 	}
 }

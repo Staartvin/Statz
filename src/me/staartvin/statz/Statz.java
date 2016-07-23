@@ -19,8 +19,8 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
-import me.staartvin.statz.listeners.CraftItemListener;
-import me.staartvin.statz.listeners.EatFoodListener;
+import me.staartvin.statz.listeners.PlayerCraftItemListener;
+import me.staartvin.statz.listeners.PlayerEatFoodListener;
 import me.staartvin.statz.listeners.EntityDeathListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
@@ -125,12 +125,12 @@ public class Statz extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new PlayerBlockPlaceListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerBlockBreakListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new EatFoodListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerEatFoodListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerTakeDamageListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerShearListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new CraftItemListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerCraftItemListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 
