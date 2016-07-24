@@ -1,15 +1,7 @@
 package me.staartvin.statz.listeners;
 
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Rabbit.Type;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Spider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,7 +23,7 @@ public class PlayerKillsPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDie(final EntityDeathEvent event) {
 
-		final PlayerStat stat = PlayerStat.KILLS_MOBS;
+		final PlayerStat stat = PlayerStat.KILLS_PLAYERS;
 
 		Entity e = event.getEntity();
 
@@ -65,7 +57,7 @@ public class PlayerKillsPlayerListener implements Listener {
 				//				}
 
 				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS,
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
 						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
 								player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
 
