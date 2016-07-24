@@ -20,11 +20,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class EntityDeathListener implements Listener {
+public class PlayerKillsMobListener implements Listener {
 
 	private final Statz plugin;
 
-	public EntityDeathListener(final Statz plugin) {
+	public PlayerKillsMobListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
@@ -47,28 +47,7 @@ public class EntityDeathListener implements Listener {
 
 			if (e instanceof Player) {
 				// Player killed player
-
-				final Player murderedPlayer = (Player) e;
-
-				//				//Get player info.
-				//				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-				//						PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(),
-				//								"playerKilled", murderedPlayer.getName()));
-				//
-				//				// Get current value of stat.
-				//				int currentValue = 0;
-				//
-				//				// Check if it is valid!
-				//				if (info.isValid()) {
-				//					currentValue += info.getTotalValue();
-				//					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
-				//				}
-
-				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.KILLS_PLAYERS,
-						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
-								player.getWorld().getName(), "playerKilled", murderedPlayer.getName()));
-
+				// Handled by other listener
 			} else {
 				// Player killed mob		
 
