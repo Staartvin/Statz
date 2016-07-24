@@ -2,8 +2,10 @@ package me.staartvin.statz.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Material;
@@ -18,6 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import me.staartvin.statz.database.datatype.Query;
 
 public class StatzUtil {
+	
+	public static enum Time {
+		DAYS, HOURS, MINUTES, SECONDS
+	}
 
 	public static Query makeQuery(final Object... strings) {
 		final LinkedHashMap<String, String> queries = new LinkedHashMap<>();
@@ -270,10 +276,187 @@ public class StatzUtil {
 
 	public static double roundDouble(double value, int places) {
 		if (places < 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException();		
 
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		
 		return bd.doubleValue();
+	}
+	
+	/**
+	 * Create a string that shows all elements of the given list <br>
+	 * The end divider is the last word used for the second last element. <br>
+	 * Example: a list with {1,2,3,4,5,6,7,8,9,0} and end divider 'or'. <br>
+	 * Would show: 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.
+	 * 
+	 * @param c Array to get the elements from.
+	 * @param endDivider Last word used for dividing the second last and last
+	 *            word.
+	 * @return string with all elements.
+	 */
+	public static String seperateList(final Collection<?> c, final String endDivider) {
+		final Object[] array = c.toArray();
+		if (array.length == 1)
+			return array[0].toString();
+
+		if (array.length == 0)
+			return null;
+
+		final StringBuilder string = new StringBuilder("");
+
+		for (int i = 0; i < array.length; i++) {
+
+			if (i == (array.length - 1)) {
+				string.append(array[i]);
+			} else if (i == (array.length - 2)) {
+				// Second last
+				string.append(array[i] + " " + endDivider + " ");
+			} else {
+				string.append(array[i] + ", ");
+			}
+		}
+
+		return string.toString();
+	}
+	
+	public static String findClosestSuggestion(String input, List<String> list) {
+		int lowestDistance = Integer.MAX_VALUE;
+		String bestSuggestion = null;
+		
+		for (String possibility : list) {
+			int dist = editDistance(input, possibility);
+			
+			if (dist < lowestDistance) {
+				lowestDistance = dist;
+				bestSuggestion = possibility;
+			}
+		}
+		
+		return bestSuggestion + ";" + lowestDistance;
+	}
+	
+	/**
+	 * Calculates the edit distance of two strings (Levenshtein distance)
+	 * @param a First string to compare
+	 * @param b Second string to compate
+	 * @return Levenshtein distance of two strings.
+	 */
+	public static int editDistance(String a, String b) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        // i == 0
+        int [] costs = new int [b.length() + 1];
+        for (int j = 0; j < costs.length; j++)
+            costs[j] = j;
+        for (int i = 1; i <= a.length(); i++) {
+            // j == 0; nw = lev(i - 1, j)
+            costs[0] = i;
+            int nw = i - 1;
+            for (int j = 1; j <= b.length(); j++) {
+                int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]), a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
+                nw = costs[j];
+                costs[j] = cj;
+            }
+        }
+        return costs[b.length()];
+    }
+	
+	/**
+	 * Convert an integer to a string. <br>
+	 * Format of the returned string: <b>x days, y hours, z minutes and r
+	 * seconds</b>
+	 * 
+	 * @param count the value to convert
+	 * @param time the type of time of the value given (DAYS, HOURS, MINUTES,
+	 *            SECONDS)
+	 * @return string in given format
+	 */
+	public static String timeToString(int count, final Time time) {
+		final StringBuilder b = new StringBuilder();
+
+		int days = 0, hours = 0, minutes = 0, seconds = 0;
+
+		if (time.equals(Time.DAYS)) {
+			days = count;
+		} else if (time.equals(Time.HOURS)) {
+			days = count / 24;
+
+			hours = count - (days * 24);
+		} else if (time.equals(Time.MINUTES)) {
+			days = count / 1440;
+
+			count = count - (days * 1440);
+
+			hours = count / 60;
+
+			minutes = count - (hours * 60);
+		} else if (time.equals(Time.SECONDS)) {
+			days = count / 86400;
+
+			count = count - (days * 86400);
+
+			hours = count / 3600;
+
+			count = count - (hours * 3600);
+
+			minutes = count / 60;
+
+			seconds = count - (minutes * 60);
+		}
+
+		if (days != 0) {
+			b.append(days);
+			b.append(" ");
+			if (days != 1)
+				b.append("days");
+			else
+				b.append("day");
+
+			if (hours != 0 || minutes != 0)
+				b.append(", ");
+		}
+
+		if (hours != 0) {
+			b.append(hours);
+			b.append(" ");
+			if (hours != 1)
+				b.append("hours");
+			else
+				b.append("hour");
+
+			if (minutes != 0)
+				b.append(", ");
+		}
+
+		if (minutes != 0 || (hours == 0 && days == 0)) {
+			b.append(minutes);
+			b.append(" ");
+			if (minutes != 1)
+				b.append("minutes");
+			else
+				b.append("minute");
+
+			if (seconds != 0)
+				b.append(", ");
+		}
+
+		if (seconds != 0) {
+			b.append(seconds);
+			b.append(" ");
+			if (seconds != 1)
+				b.append("seconds");
+			else
+				b.append("second");
+		}
+
+		// Replace last comma with an and if needed.
+		final int index = b.lastIndexOf(",");
+
+		if (index != -1) {
+			b.replace(index, index + 1, " " + "and");
+		}
+
+		return b.toString();
 	}
 }

@@ -4,3 +4,12 @@ version: ${project.version}
 authors: [Staartvin]
 description: The one-and-all plugin to record and store stats about any player.
 softdepend: [Vault, Essentials, GroupManager, Stats, WorldEdit, WorldGuard, Factions, mcMMO, RoyalCommands, OnTime, UltimateCore, Statistics, afkTerminator, AcidIsland, ASkyBlock, Votifier, GriefPrevention, RPGme]
+commands:
+    statz:
+        description: Master command of Statz
+        usage: Statz is disabled. Check your server.log!
+        aliases: [stat]
+permissions:
+    statz.help:
+        description: Allows checking the help pages
+        default: true

@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.api.API;
+import me.staartvin.statz.commands.manager.CommandsManager;
 import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.MySQLConnector;
@@ -44,6 +45,7 @@ public class Statz extends JavaPlugin {
 	private DataPoolManager dataPoolManager;
 	private DependencyManager depManager;
 	private ConfigHandler configHandler;
+	private CommandsManager commandsManager;
 
 	@Override
 	public void onEnable() {
@@ -98,6 +100,11 @@ public class Statz extends JavaPlugin {
 
 		// Do a check on all present hooks
 		this.getDependencyManager().loadDependencies();
+		
+		this.setCommandsManager(new CommandsManager(this));
+		
+		// Register command
+		getCommand("statz").setExecutor(getCommandsManager());
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -320,5 +327,13 @@ public class Statz extends JavaPlugin {
 
 	public void setConfigHandler(ConfigHandler configHandler) {
 		this.configHandler = configHandler;
+	}
+
+	public CommandsManager getCommandsManager() {
+		return commandsManager;
+	}
+
+	public void setCommandsManager(CommandsManager commandsManager) {
+		this.commandsManager = commandsManager;
 	}
 }
