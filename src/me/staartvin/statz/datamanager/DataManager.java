@@ -59,9 +59,12 @@ public class DataManager {
 		List<Query> results = plugin.getSqlConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 
-		//		for (HashMap<String, String> map : results) {
-		//			System.out.println("RESULT: " + map);
-		//		}
+//		System.out.println("--------------");
+//		System.out.println("Table: " + statType);
+//		
+//		for (Query map : results) {
+//			System.out.println("RESULT: " + map);
+//		}
 
 		// Get a list of queries currently in the pool
 		List<Query> pooledQueries = plugin.getDataPoolManager().getStoredQueries(statType);
@@ -88,8 +91,6 @@ public class DataManager {
 					continue;
 				}
 
-				//System.out.println("Stored query: " + StatzUtil.printQuery(storedQuery));
-
 				// Get the queries of the pool that conflict with the 'old' database results.
 				List<Query> conflictingQueries = pooledQuery.findConflicts(results);
 
@@ -103,37 +104,18 @@ public class DataManager {
 
 				// We found conflicting queries.
 				for (Query conflictingQuery : conflictingQueries) {
-					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery) + " conflicts with "
-					//							+ StatzUtil.printQuery(conflictingQuery));
+					//System.out.println("Stored query " + pooledQuery + " conflicts with " + conflictingQuery);
 					// Remove old data from results and add new (more updated data) to the results pool.
-					results.remove(conflictingQuery);
-					results.add(pooledQuery);
+					//results.remove(conflictingQuery);
+					//results.add(pooledQuery);
+					conflictingQuery.addValue("value", pooledQuery.getValue());
+					
 				}
 
 			}
 
 		} else {
 			// No queries in the pool
-
-			// IF query is null, it could be due to a 'just-update', so we look at the last written query to find the most recent data.
-			List<Query> lastQueries = plugin.getDataPoolManager().getLatestQueries(statType);
-
-			// We found old queries that were performed on the database, check if they are of any use.
-			if (lastQueries != null) {
-				for (Query lastQuery : lastQueries) {
-					// By checking for conflicts, we can search for old queries that are useful to use now.
-					List<Query> conflicts = lastQuery.findConflicts(results);
-
-					// We found old queries that are useful, yeah!
-					if (conflicts != null && !conflicts.isEmpty()) {
-						// Use last written query if one conflicts
-						for (Query conflict : conflicts) {
-							// Use last written value as old value
-							conflict.setValue("value", lastQuery.getValue());
-						}
-					}
-				}
-			}
 		}
 
 		// Result is not null, so this is a valid player info.
@@ -143,9 +125,9 @@ public class DataManager {
 			info.setResults(results);
 		}
 		//		
-		//		for (HashMap<String, String> map : results) {
-		//			System.out.println("END RESULT: " + map);
-		//		}
+		//				for (Query map : results) {
+		//					System.out.println("END RESULT: " + map);
+		//				}
 
 		return info;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.util.StatzUtil;
 
 /**
  * Statistics about a player recorded by Statz
@@ -98,6 +99,17 @@ public class PlayerInfo {
 		}
 
 		return value;
+	}
+	
+	/**
+	 * Get the total value but round to given decimal places.
+	 * @param roundedDecimals How many decimal places to round to.
+	 * @return the same as {@link #getTotalValue()}, but rounded to given decimal places.
+	 */
+	public double getTotalValue(int roundedDecimals) {
+		double value = getTotalValue();
+		
+		return StatzUtil.roundDouble(value, roundedDecimals);
 	}
 
 }
