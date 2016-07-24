@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 
 public class PlayerJoinListener implements Listener {
