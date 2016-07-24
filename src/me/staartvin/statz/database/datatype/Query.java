@@ -161,4 +161,16 @@ public class Query {
 
 		this.setValue(columnName, oldValue + updateValue);
 	}
+	
+	/**
+	 * Gets the message for the log file.
+	 * @return a message for the log file.
+	 */
+	public String getLogString() {
+		if (!this.hasValue("value")) {
+			return "Set playerName of " + this.getValue("uuid") + " to '" + this.getValue("playerName") + "'."; 
+		}
+		
+		return "Set value of " + this.getValue("uuid") + " to " + this.getValue() + " with query " + data;
+	}
 }

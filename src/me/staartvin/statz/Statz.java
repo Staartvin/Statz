@@ -36,6 +36,7 @@ import me.staartvin.statz.listeners.PlayerShearListener;
 import me.staartvin.statz.listeners.PlayerTakeDamageListener;
 import me.staartvin.statz.listeners.PlayerVoteListener;
 import me.staartvin.statz.listeners.VehicleMoveListener;
+import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.util.StatzUtil;
 
 public class Statz extends JavaPlugin {
@@ -47,6 +48,7 @@ public class Statz extends JavaPlugin {
 	private DependencyManager depManager;
 	private ConfigHandler configHandler;
 	private CommandsManager commandsManager;
+	private LogManager logsManager;
 
 	@Override
 	public void onEnable() {
@@ -106,6 +108,11 @@ public class Statz extends JavaPlugin {
 
 		// Register command
 		getCommand("statz").setExecutor(getCommandsManager());
+		
+		this.setLogsManager(new LogManager(this));
+		
+		// Create log file
+		this.getLogsManager().createLogFile();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 	}
@@ -380,5 +387,13 @@ public class Statz extends JavaPlugin {
 
 	public void setCommandsManager(CommandsManager commandsManager) {
 		this.commandsManager = commandsManager;
+	}
+
+	public LogManager getLogsManager() {
+		return logsManager;
+	}
+
+	public void setLogsManager(LogManager logsManager) {
+		this.logsManager = logsManager;
 	}
 }

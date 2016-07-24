@@ -279,6 +279,9 @@ public class DataPoolManager {
 
 			lastWrittenQueries.put(stat, lastWritten);
 
+			// Log written changes
+			plugin.getLogsManager().writeToLogFile(queries, stat);
+			
 			try {
 				// Remove sent queries from pool
 				//queries.removeAll(deletedQueries);
