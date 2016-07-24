@@ -1,6 +1,11 @@
 package me.staartvin.statz.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
 
 public class ConfigHandler {
 
@@ -32,6 +37,8 @@ public class ConfigHandler {
 		plugin.getConfig().addDefault("mysql.database", "Statz");
 
 		plugin.getConfig().addDefault("periodic save time", 10);
+		
+		plugin.getConfig().addDefault("disabled statistics", Arrays.asList("DISABLED_STAT_NAME_HERE", "OTHER_DISABLED_STAT_NAME"));
 
 		plugin.getConfig().options().copyDefaults(true);
 
@@ -86,5 +93,30 @@ public class ConfigHandler {
 
 	public int getPeriodicSaveTime() {
 		return plugin.getConfig().getInt("periodic save time", 10);
+	}
+	
+	public List<PlayerStat> getDisabledStats() {
+		List<String> disabledStatsString = plugin.getConfig().getStringList("disabled statistics");
+		List<PlayerStat> disabledStats = new ArrayList<>();
+		
+		for (String disabledStatString: disabledStatsString) {
+			PlayerStat stat = null;
+			try {
+				stat = PlayerStat.valueOf(disabledStatString.toUpperCase().replace(" ", "_"));
+			} catch (IllegalArgumentException e) {
+				
+			}
+			
+			
+			if (stat == null) continue;
+			
+			disabledStats.add(stat);
+		}
+		
+		return disabledStats;
+	}
+	
+	public boolean isStatDisabled(PlayerStat stat) {
+		return this.getDisabledStats().contains(stat);
 	}
 }

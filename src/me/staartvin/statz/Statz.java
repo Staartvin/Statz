@@ -20,7 +20,6 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
-import me.staartvin.statz.listeners.EntityDeathListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
 import me.staartvin.statz.listeners.PlayerCraftItemListener;
@@ -29,6 +28,8 @@ import me.staartvin.statz.listeners.PlayerEatFoodListener;
 import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerGainXPListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
+import me.staartvin.statz.listeners.PlayerKillsMobListener;
+import me.staartvin.statz.listeners.PlayerKillsPlayerListener;
 import me.staartvin.statz.listeners.PlayerMoveListener;
 import me.staartvin.statz.listeners.PlayerQuitListener;
 import me.staartvin.statz.listeners.PlayerShearListener;
@@ -100,9 +101,9 @@ public class Statz extends JavaPlugin {
 
 		// Do a check on all present hooks
 		this.getDependencyManager().loadDependencies();
-		
+
 		this.setCommandsManager(new CommandsManager(this));
-		
+
 		// Register command
 		getCommand("statz").setExecutor(getCommandsManager());
 
@@ -126,23 +127,67 @@ public class Statz extends JavaPlugin {
 			return; // We don't track stats, so we don't register listeners
 		}
 
-		this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerBlockPlaceListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerBlockBreakListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerEatFoodListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerTakeDamageListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerShearListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerCraftItemListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DEATHS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.JOINS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CAUGHT)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BLOCKS_PLACED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerBlockPlaceListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BLOCKS_BROKEN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerBlockBreakListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_MOBS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerKillsMobListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_PLAYERS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerKillsPlayerListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.FOOD_EATEN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerEatFoodListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DAMAGE_TAKEN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerTakeDamageListener(this), this);
+		}
+
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_SHORN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerShearListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DISTANCE_TRAVELLED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CRAFTED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerCraftItemListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.XP_GAINED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
+		}
+
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 
 		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
+		}
+		
+		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
+			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
 	}
 
