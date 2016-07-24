@@ -26,6 +26,9 @@ public class PlayerVoteListener implements Listener {
 
 		// Get player
 		final Player player = (Player) plugin.getServer().getPlayer(event.getVote().getUsername());
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		// Unknown player
 		if (player == null)

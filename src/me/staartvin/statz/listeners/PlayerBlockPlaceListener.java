@@ -28,6 +28,10 @@ public class PlayerBlockPlaceListener implements Listener {
 		// Get player
 		final Player player = event.getPlayer();
 
+		// Do general check
+		if (!plugin.doGeneralCheck(player))
+			return;
+
 		Block blockPlaced = event.getBlockPlaced();
 
 		final int typeId = blockPlaced.getTypeId();

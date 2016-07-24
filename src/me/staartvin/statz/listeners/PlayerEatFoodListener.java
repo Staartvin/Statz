@@ -25,6 +25,9 @@ public class PlayerEatFoodListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		final String foodName = StatzUtil.getFoodName(event.getItem());
 

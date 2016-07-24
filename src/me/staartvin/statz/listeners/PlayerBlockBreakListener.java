@@ -22,11 +22,14 @@ public class PlayerBlockBreakListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event) {
-
+		
 		final PlayerStat stat = PlayerStat.BLOCKS_BROKEN;
 
 		// Get player
 		final Player player = event.getPlayer();
+		
+		// Do general check
+		if (!plugin.doGeneralCheck(player)) return;
 
 		Block blockBroken = event.getBlock();
 

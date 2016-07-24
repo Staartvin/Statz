@@ -25,7 +25,9 @@ public class ConfigHandler {
 				+ "\nThe 'show database save message' option allows you to toggle the visibility of the 'Save message'. Every few minutes, the database of Statz is saved. If you"
 				+ "set this option to false, Statz will still save the database, but won't show the message."
 				+ "\nThe 'periodic save time' value represents the time (in seconds) after an update is sent to the database. The default is 10 seconds and I don't recommend changing it."
-				+ "\nYou can experiment with it and see whether it improves performance for your server. A lower value means the database is updated more often, resulting in a decrement of performance.");
+				+ "\nYou can experiment with it and see whether it improves performance for your server. A lower value means the database is updated more often, resulting in a decrement of performance."
+				+ "\nDisabled statistics option can be used to disable a statistic. A list of statistics you can disable is provided here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L20"
+				+ "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode.");
 
 		plugin.getConfig().addDefault("track stats", true);
 		plugin.getConfig().addDefault("show database save message", true);
@@ -39,6 +41,8 @@ public class ConfigHandler {
 		plugin.getConfig().addDefault("periodic save time", 10);
 		
 		plugin.getConfig().addDefault("disabled statistics", Arrays.asList("DISABLED_STAT_NAME_HERE", "OTHER_DISABLED_STAT_NAME"));
+		
+		plugin.getConfig().addDefault("ignore creative", false);
 
 		plugin.getConfig().options().copyDefaults(true);
 
@@ -118,5 +122,9 @@ public class ConfigHandler {
 	
 	public boolean isStatDisabled(PlayerStat stat) {
 		return this.getDisabledStats().contains(stat);
+	}
+	
+	public boolean shouldIgnoreCreative() {
+		return plugin.getConfig().getBoolean("ignore creative", false);
 	}
 }

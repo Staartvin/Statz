@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.staartvin.statz.api.API;
@@ -201,6 +203,20 @@ public class Statz extends JavaPlugin {
 	public void debugMessage(String message) {
 		this.getServer().getConsoleSender()
 				.sendMessage(ChatColor.translateAlternateColorCodes('&', "[Statz debug] " + message));
+	}
+	
+	/**
+	 * This method does a general check for all events.
+	 * <br>Currently, it checks if a player is in creative mode and if we should ignore creative mode
+	 * @param player Player to check
+	 * @return true if we should track the stat, false otherwise.
+	 */
+	public boolean doGeneralCheck(Player player) {
+		if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	public void doPerformanceTest() {

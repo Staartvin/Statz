@@ -31,6 +31,9 @@ public class PlayerJoinListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		// Update name in database.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.PLAYERS,

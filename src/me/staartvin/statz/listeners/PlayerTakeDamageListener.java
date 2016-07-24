@@ -31,6 +31,9 @@ public class PlayerTakeDamageListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getEntity();
 
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
+		
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
 		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "cause", event.getCause().toString()));

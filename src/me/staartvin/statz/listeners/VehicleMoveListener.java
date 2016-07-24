@@ -56,6 +56,10 @@ public class VehicleMoveListener implements Listener {
 		if (player == null || movementType == null)
 			return;
 
+		// Do general check
+		if (!plugin.doGeneralCheck(player))
+			return;
+
 		final double distTravelled = event.getFrom().distance(event.getTo());
 
 		if (distTravelled == 0) {

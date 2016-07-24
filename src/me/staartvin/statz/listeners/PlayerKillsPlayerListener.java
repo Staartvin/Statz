@@ -36,6 +36,9 @@ public class PlayerKillsPlayerListener implements Listener {
 			// Entity died because of Player
 			// Killer
 			final Player player = (Player) nEvent.getDamager();
+			
+			// Do general check
+			if (!plugin.doGeneralCheck(player)) return;
 
 			if (e instanceof Player) {
 				// Player killed player

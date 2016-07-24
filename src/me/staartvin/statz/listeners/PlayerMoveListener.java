@@ -25,6 +25,9 @@ public class PlayerMoveListener implements Listener {
 
 		// Get player
 		final Player player = (Player) event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		String movementType = StatzUtil.getMovementType(player);
 

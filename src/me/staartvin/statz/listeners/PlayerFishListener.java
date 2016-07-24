@@ -29,6 +29,9 @@ public class PlayerFishListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		Entity entity;
 		ItemStack item;

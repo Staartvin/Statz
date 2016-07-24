@@ -25,6 +25,9 @@ public class PlayerShearListener implements Listener {
 
 		// Get player
 		final Player player = (Player) event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		//		// Get current value of stat.
 		//		int currentValue = 0;

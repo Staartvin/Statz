@@ -26,6 +26,10 @@ public class PlayerCraftItemListener implements Listener {
 		// Get player
 		final Player player = (Player) event.getWhoClicked();
 
+		// Do general check
+		if (!plugin.doGeneralCheck(player))
+			return;
+
 		final String itemCrafted = event.getCurrentItem().getType().toString();
 
 		//		// Get player info.

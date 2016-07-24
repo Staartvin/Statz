@@ -25,6 +25,9 @@ public class PlayerDeathListener implements Listener {
 
 		// Get player
 		final Player player = event.getEntity();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,

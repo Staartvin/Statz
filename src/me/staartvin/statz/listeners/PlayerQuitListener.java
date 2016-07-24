@@ -21,6 +21,9 @@ public class PlayerQuitListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
+		
+		// Do general check
+				if (!plugin.doGeneralCheck(player)) return;
 
 		// Check if player already has a checker running.
 		if (PlayerJoinListener.updateID.containsKey(player.getUniqueId())) {
