@@ -63,21 +63,21 @@ public class PlayerJoinListener implements Listener {
 						return;
 					}
 
-					// Get player info.
-					final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-							PlayerStat.TIME_PLAYED, StatzUtil.makeQuery("world", player.getWorld().getName()));
-
-					// Get current value of stat.
-					double currentValue = 0;
-
-					// Check if it is valid!
-					if (info.isValid()) {
-						currentValue += info.getTotalValue();
-					}
+//					// Get player info.
+//					final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
+//							PlayerStat.TIME_PLAYED, StatzUtil.makeQuery("world", player.getWorld().getName()));
+//
+//					// Get current value of stat.
+//					double currentValue = 0;
+//
+//					// Check if it is valid!
+//					if (info.isValid()) {
+//						currentValue += info.getTotalValue();
+//					}
 
 					// Update value to new stat.
 					plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED,
-							StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", (currentValue + 1),
+							StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1,
 									"world", player.getWorld().getName()));
 
 				}
