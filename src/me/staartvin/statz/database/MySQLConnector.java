@@ -63,8 +63,6 @@ public class MySQLConnector extends DatabaseConnector {
 			}
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-
 				final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
 						+ "?rewriteBatchedStatements=true";
 

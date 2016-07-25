@@ -63,7 +63,7 @@ public class SQLiteConnector extends DatabaseConnector {
 		}
 
 		try {
-			Class.forName("org.sqlite.JDBC").newInstance();
+			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile);
 			return connection;
 		} catch (final Exception ex) {
