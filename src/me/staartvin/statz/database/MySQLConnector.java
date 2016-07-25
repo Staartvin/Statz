@@ -493,6 +493,102 @@ public class MySQLConnector extends DatabaseConnector {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
+		// How many arrows did a player shoot?
+		newTable = new MySQLTable(PlayerStat.ARROWS_SHOT.getTableName());
+
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+		typeID = new Column("force", false, SQLDataType.DOUBLE, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched(typeID);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player enter a bed?
+		newTable = new MySQLTable(PlayerStat.ENTERED_BEDS.getTableName());
+
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player perform a command?
+		newTable = new MySQLTable(PlayerStat.COMMANDS_PERFORMED.getTableName());
+
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("command", false, SQLDataType.TEXT, true);
+		newTable.addColumn("arguments", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("command");
+		newTable.addUniqueMatched("arguments");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player get kicked?
+		newTable = new MySQLTable(PlayerStat.TIMES_KICKED.getTableName());
+
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("reason", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("reason");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many tools did a player break?
+		newTable = new MySQLTable(PlayerStat.TOOLS_BROKEN.getTableName());
+
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("item", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("item");
+
+		this.addTable(newTable);
+
 	}
 
 	@Override
@@ -572,7 +668,7 @@ public class MySQLConnector extends DatabaseConnector {
 							Double.parseDouble(result.getValue());
 							resultNames.append(result.getValue() + ",");
 						} catch (NumberFormatException ev) {
-							resultNames.append("'" + result.getValue() + "',");
+							resultNames.append("'" + result.getValue().replace("'", "''") + "',");
 						}
 					}
 
@@ -668,7 +764,7 @@ public class MySQLConnector extends DatabaseConnector {
 							Double.parseDouble(result.getValue());
 							resultNames.append(result.getValue() + ",");
 						} catch (NumberFormatException ev) {
-							resultNames.append("'" + result.getValue() + "',");
+							resultNames.append("'" + result.getValue().replace("'", "''") + "',");
 						}
 					}
 

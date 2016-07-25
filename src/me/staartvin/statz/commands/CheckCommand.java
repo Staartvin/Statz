@@ -137,6 +137,21 @@ public class CheckCommand extends StatzCommand {
 						case VOTES:
 							messages.add(firstPart + " has voted " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " times");
 							break;
+						case ARROWS_SHOT:
+							messages.add(firstPart + " has fired " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " arrows");
+							break;
+						case ENTERED_BEDS:
+							messages.add(firstPart + " went sleepy sleepy in " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " beds");
+							break;
+						case COMMANDS_PERFORMED:
+							messages.add(firstPart + " has performed " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " commands");
+							break;
+						case TIMES_KICKED:
+							messages.add(firstPart + " has been kicked " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " times");
+							break;
+						case TOOLS_BROKEN:
+							messages.add(firstPart + " has broken " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " tools");
+							break;
 						default:
 							messages.add("Unknown stat '" + statType + "'.");
 							break;

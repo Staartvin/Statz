@@ -474,6 +474,107 @@ public class SQLiteConnector extends DatabaseConnector {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
+		// How many arrows did a player shoot?
+		newTable = new SQLiteTable(PlayerStat.ARROWS_SHOT.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+		typeID = new Column("force", false, SQLDataType.DOUBLE, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched(typeID);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player enter a bed?
+		newTable = new SQLiteTable(PlayerStat.ENTERED_BEDS.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player perform a command?
+		newTable = new SQLiteTable(PlayerStat.COMMANDS_PERFORMED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("command", false, SQLDataType.TEXT, true);
+		newTable.addColumn("arguments", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("command");
+		newTable.addUniqueMatched("arguments");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player get kicked?
+		newTable = new SQLiteTable(PlayerStat.TIMES_KICKED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("reason", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("reason");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many tools did a player break?
+		newTable = new SQLiteTable(PlayerStat.TOOLS_BROKEN.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("item", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("item");
+
+		this.addTable(newTable);
+
 	}
 
 	@Override
@@ -556,10 +657,10 @@ public class SQLiteConnector extends DatabaseConnector {
 						}
 
 					} catch (final NumberFormatException e) {
-						resultNames.append("'" + result.getValue() + "',");
+						resultNames.append("'" + result.getValue().replace("'", "''") + "',");
 
 						if (!result.getKey().equalsIgnoreCase("value")) {
-							updateWhere.append("'" + result.getValue() + "' AND ");
+							updateWhere.append("'" + result.getValue().replace("'", "''") + "' AND ");
 						}
 					}
 
@@ -650,10 +751,10 @@ public class SQLiteConnector extends DatabaseConnector {
 							updateWhere.append(result.getValue() + " AND ");
 						}
 					} catch (final NumberFormatException e) {
-						resultNames.append("'" + result.getValue() + "',");
+						resultNames.append("'" + result.getValue().replace("'", "''") + "',");
 
 						if (!result.getKey().equalsIgnoreCase("value")) {
-							updateWhere.append("'" + result.getValue() + "' AND ");
+							updateWhere.append("'" + result.getValue().replace("'", "''") + "' AND ");
 						}
 					}
 

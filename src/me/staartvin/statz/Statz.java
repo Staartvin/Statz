@@ -24,17 +24,22 @@ import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
+import me.staartvin.statz.listeners.PlayerBreakToolListener;
 import me.staartvin.statz.listeners.PlayerCraftItemListener;
 import me.staartvin.statz.listeners.PlayerDeathListener;
 import me.staartvin.statz.listeners.PlayerEatFoodListener;
+import me.staartvin.statz.listeners.PlayerEnterBedListener;
 import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerGainXPListener;
+import me.staartvin.statz.listeners.PlayerGetKickedListener;
 import me.staartvin.statz.listeners.PlayerJoinListener;
 import me.staartvin.statz.listeners.PlayerKillsMobListener;
 import me.staartvin.statz.listeners.PlayerKillsPlayerListener;
 import me.staartvin.statz.listeners.PlayerMoveListener;
+import me.staartvin.statz.listeners.PlayerPerformCommandListener;
 import me.staartvin.statz.listeners.PlayerQuitListener;
 import me.staartvin.statz.listeners.PlayerShearListener;
+import me.staartvin.statz.listeners.PlayerShootArrowListener;
 import me.staartvin.statz.listeners.PlayerTakeDamageListener;
 import me.staartvin.statz.listeners.PlayerVoteListener;
 import me.staartvin.statz.listeners.VehicleMoveListener;
@@ -193,6 +198,26 @@ public class Statz extends JavaPlugin {
 
 		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER) || this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ARROWS_SHOT)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerShootArrowListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ENTERED_BEDS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerEnterBedListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.COMMANDS_PERFORMED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerPerformCommandListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_KICKED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerGetKickedListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TOOLS_BROKEN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerBreakToolListener(this), this);
 		}
 		
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {

@@ -230,6 +230,8 @@ public class DataPoolManager {
 		if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
 			plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 		}
+		
+		this.printPool();
 
 		for (PlayerStat stat : PlayerStat.values()) {
 

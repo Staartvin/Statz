@@ -39,6 +39,11 @@ public abstract class Table {
 		columns.add(new Column(columnName, primaryKey, type));
 		return this; // Return this to allow chaining.
 	}
+	
+	public Table addColumn(final String columnName, final boolean primaryKey, final SQLDataType type, final boolean notNull) {
+		columns.add(new Column(columnName, primaryKey, type, notNull));
+		return this; // Return this to allow chaining.
+	}
 
 	public Table addColumn(final Column entry) {
 		columns.add(entry);

@@ -12,6 +12,10 @@ package me.staartvin.statz.datamanager;
  * @author Staartvin
  *
  */
+/**
+ * @author Staartvin
+ *
+ */
 public enum PlayerStat {
 
 	/**
@@ -89,7 +93,32 @@ public enum PlayerStat {
 	/**
 	 * What are the names of corresponding UUIDs (internal database)
 	 */
-	PLAYERS("players"),;
+	PLAYERS("players"),
+	
+	/**
+	 * How many arrows did a player shoot and on what world?
+	 */
+	ARROWS_SHOT("arrows_shot"),
+	
+	/**
+	 * How many times did a player enter a bed and on what world?
+	 */
+	ENTERED_BEDS("entered_beds"),
+	
+	/**
+	 * What commands did a player perform and on what world?
+	 */
+	COMMANDS_PERFORMED("commands_performed"),
+	
+	/**
+	 * How many times has a player been kicked?
+	 */
+	TIMES_KICKED("times_kicked"),
+	
+	/**
+	 * How many tools did a player break?
+	 */
+	TOOLS_BROKEN("tools_broken");
 
 	private String tableName;
 
