@@ -40,5 +40,6 @@
 	<classpathentry kind="lib" path="lib/EssentialsX-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/GriefPrevention.jar"/>
 	<classpathentry kind="lib" path="lib/RPGme.jar"/>
+	<classpathentry kind="lib" path="lib/nuvotifier-universal-2.3.2.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

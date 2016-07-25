@@ -191,7 +191,7 @@ public class Statz extends JavaPlugin {
 
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 
-		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)) {
+		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER) || this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
 		}
 		

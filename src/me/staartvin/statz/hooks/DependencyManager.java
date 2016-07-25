@@ -12,6 +12,7 @@ import me.staartvin.statz.hooks.handlers.FactionsHandler;
 import me.staartvin.statz.hooks.handlers.GriefPreventionHandler;
 import me.staartvin.statz.hooks.handlers.JobsHandler;
 import me.staartvin.statz.hooks.handlers.McMMOHandler;
+import me.staartvin.statz.hooks.handlers.NuVotifierHandler;
 import me.staartvin.statz.hooks.handlers.OnTimeHandler;
 import me.staartvin.statz.hooks.handlers.RPGmeHandler;
 import me.staartvin.statz.hooks.handlers.RoyalCommandsHandler;
@@ -59,7 +60,7 @@ public class DependencyManager {
 		handlers.put(Dependency.VAULT, new VaultHandler(instance));
 		handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
 		handlers.put(Dependency.RPGME, new RPGmeHandler(instance));
-
+		handlers.put(Dependency.NUVOTIFIER, new NuVotifierHandler(instance));
 	}
 
 	/**
@@ -136,15 +137,17 @@ public class DependencyManager {
 				if (dependency == null)
 					continue;
 
-				switch (dependency) {
-					case VOTIFIER:
-						plugin.debugMessage(ChatColor.GREEN + "Votifier was found and so Statz records votes!");
-						break;
-					default:
-						plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
-								+ " was found and Statz now tracks its data!");
-						break;
+				// NuVotifier has the same internal name, and hence cannot be distinguished from Votifier. 
+				// That's why we provide a special case.
+				if (dependency == Dependency.NUVOTIFIER) {
+					plugin.debugMessage(
+							ChatColor.GREEN + "NuVotifier was found and Statz now tracks its data!");
+				} else {
+					plugin.debugMessage(
+							ChatColor.GREEN + dependency.getInternalString() + " was found and Statz now tracks its data!");
 				}
+				
+				
 			}
 		}
 

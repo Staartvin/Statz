@@ -6,7 +6,7 @@ public enum Dependency {
 			"WorldGuard"), ROYAL_COMMANDS("RoyalCommands"), ON_TIME("OnTime"), AFKTERMINATOR(
 					"afkTerminator"), ESSENTIALS("Essentials"), FACTIONS("Factions"), STATISTICS("Statistics"), STATS(
 							"Stats"), ULTIMATE_CORE("UltimateCore"), VAULT(
-									"Vault"), GRIEF_PREVENTION("GriefPrevention"), RPGME("RPGme");
+									"Vault"), GRIEF_PREVENTION("GriefPrevention"), RPGME("RPGme"), NUVOTIFIER("Votifier");
 
 	Dependency(String internalName) {
 		this.internalName = internalName;
