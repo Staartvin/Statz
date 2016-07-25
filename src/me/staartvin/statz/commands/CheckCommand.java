@@ -114,7 +114,7 @@ public class CheckCommand extends StatzCommand {
 							messages.add(firstPart + " has killed " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " players");
 							break;
 						case TIME_PLAYED:
-							messages.add(firstPart + " has played for " + ChatColor.GREEN + StatzUtil.timeToString((int) info.getTotalValue(), Time.MINUTES) + ChatColor.DARK_AQUA + " on this server");
+							messages.add(firstPart + " has played for " + ChatColor.GREEN + StatzUtil.timeToString((int) info.getTotalValue(), Time.MINUTES));
 							break;
 						case FOOD_EATEN:
 							messages.add(firstPart + " has eaten " + ChatColor.GREEN + (int) info.getTotalValue() + ChatColor.DARK_AQUA + " times");
