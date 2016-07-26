@@ -27,8 +27,11 @@ import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
 import me.staartvin.statz.listeners.PlayerBreakToolListener;
 import me.staartvin.statz.listeners.PlayerCraftItemListener;
 import me.staartvin.statz.listeners.PlayerDeathListener;
+import me.staartvin.statz.listeners.PlayerDropItemListener;
 import me.staartvin.statz.listeners.PlayerEatFoodListener;
+import me.staartvin.statz.listeners.PlayerEmptyBucketListener;
 import me.staartvin.statz.listeners.PlayerEnterBedListener;
+import me.staartvin.statz.listeners.PlayerFillBucketListener;
 import me.staartvin.statz.listeners.PlayerFishListener;
 import me.staartvin.statz.listeners.PlayerGainXPListener;
 import me.staartvin.statz.listeners.PlayerGetKickedListener;
@@ -37,10 +40,15 @@ import me.staartvin.statz.listeners.PlayerKillsMobListener;
 import me.staartvin.statz.listeners.PlayerKillsPlayerListener;
 import me.staartvin.statz.listeners.PlayerMoveListener;
 import me.staartvin.statz.listeners.PlayerPerformCommandListener;
+import me.staartvin.statz.listeners.PlayerPickUpItemListener;
 import me.staartvin.statz.listeners.PlayerQuitListener;
 import me.staartvin.statz.listeners.PlayerShearListener;
 import me.staartvin.statz.listeners.PlayerShootArrowListener;
+import me.staartvin.statz.listeners.PlayerSwitchWorldListener;
 import me.staartvin.statz.listeners.PlayerTakeDamageListener;
+import me.staartvin.statz.listeners.PlayerTeleportListener;
+import me.staartvin.statz.listeners.PlayerThrowEggListener;
+import me.staartvin.statz.listeners.PlayerTradeVillagerListener;
 import me.staartvin.statz.listeners.PlayerVoteListener;
 import me.staartvin.statz.listeners.VehicleMoveListener;
 import me.staartvin.statz.logger.LogManager;
@@ -218,6 +226,38 @@ public class Statz extends JavaPlugin {
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TOOLS_BROKEN)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerBreakToolListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.EGGS_THROWN)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerThrowEggListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.WORLDS_CHANGED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerSwitchWorldListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_FILLED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerFillBucketListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_EMPTIED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerEmptyBucketListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_PICKED_UP)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerPickUpItemListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_DROPPED)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TELEPORTS)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerTeleportListener(this), this);
+		}
+		
+		if (!this.getConfigHandler().isStatDisabled(PlayerStat.VILLAGER_TRADES)) {
+			this.getServer().getPluginManager().registerEvents(new PlayerTradeVillagerListener(this), this);
 		}
 		
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {

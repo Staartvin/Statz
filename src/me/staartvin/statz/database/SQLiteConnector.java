@@ -575,6 +575,165 @@ public class SQLiteConnector extends DatabaseConnector {
 
 		this.addTable(newTable);
 
+		// ----------------------------------------------------------
+		// How many eggs did a player throw?
+		newTable = new SQLiteTable(PlayerStat.EGGS_THROWN.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player switch worlds?
+		newTable = new SQLiteTable(PlayerStat.WORLDS_CHANGED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("destWorld", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("destWorld");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player fill a bucket?
+		newTable = new SQLiteTable(PlayerStat.BUCKETS_FILLED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player fill a bucket?
+		newTable = new SQLiteTable(PlayerStat.BUCKETS_EMPTIED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many items did a player drop?
+		newTable = new SQLiteTable(PlayerStat.ITEMS_DROPPED.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+		typeID = new Column("item", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched(typeID);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many items did a player pick up?
+		newTable = new SQLiteTable(PlayerStat.ITEMS_PICKED_UP.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+		typeID = new Column("item", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn(typeID);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched(typeID);
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player teleport?
+		newTable = new SQLiteTable(PlayerStat.TELEPORTS.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("destWorld", false, SQLDataType.TEXT, true);
+		newTable.addColumn("cause", false, SQLDataType.TEXT, true);
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("destWorld");
+		newTable.addUniqueMatched("cause");
+
+		this.addTable(newTable);
+
+		// ----------------------------------------------------------
+		// How many times did a player trade with villagers?
+		newTable = new SQLiteTable(PlayerStat.VILLAGER_TRADES.getTableName());
+
+		id = new Column("id", true, SQLDataType.INT, true);
+		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
+		world = new Column("world", false, SQLDataType.TEXT, true);
+
+		newTable.addColumn(id);
+		newTable.addColumn(uuid); // UUID of the player
+		newTable.addColumn("value", false, SQLDataType.INT, true);
+		newTable.addColumn(world);
+		newTable.addColumn("trade", false, SQLDataType.TEXT, true);
+
+
+		newTable.addUniqueMatched(uuid);
+		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched("trade");
+
+		this.addTable(newTable);
+
 	}
 
 	@Override
