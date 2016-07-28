@@ -13,3 +13,9 @@ permissions:
     statz.help:
         description: Allows checking the help pages
         default: true
+    statz.check:
+        description: Allows a player to check its statistics
+        default: true
+    statz.info:
+        description: Allows a player to check a specific stat
+        default: true

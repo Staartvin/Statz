@@ -151,7 +151,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -173,7 +173,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -195,7 +195,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -217,7 +217,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -239,7 +239,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -261,7 +261,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -283,7 +283,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -305,7 +305,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -327,7 +327,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -341,7 +341,7 @@ public class CheckCommand extends StatzCommand {
 								TextComponent message = new TextComponent(playerName + " has taken ");
 								message.setColor(ChatColor.DARK_AQUA);
 								
-								TextComponent partTwo = new TextComponent(info.getTotalValue() + "");
+								TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
 								partTwo.setColor(ChatColor.GREEN);
 								
 								TextComponent partThree = new TextComponent(" points of damage");
@@ -349,7 +349,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -371,7 +371,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -385,7 +385,7 @@ public class CheckCommand extends StatzCommand {
 								TextComponent message = new TextComponent(playerName + " has travelled ");
 								message.setColor(ChatColor.DARK_AQUA);
 								
-								TextComponent partTwo = new TextComponent(info.getTotalValue() + "");
+								TextComponent partTwo = new TextComponent(info.getTotalValue(2) + "");
 								partTwo.setColor(ChatColor.GREEN);
 								
 								TextComponent partThree = new TextComponent(" blocks");
@@ -393,7 +393,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -415,7 +415,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -437,7 +437,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -459,7 +459,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -481,7 +481,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -503,7 +503,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -525,7 +525,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -547,7 +547,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -569,7 +569,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -591,7 +591,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -613,7 +613,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -635,7 +635,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -657,7 +657,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -679,7 +679,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -701,7 +701,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -723,7 +723,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -745,7 +745,7 @@ public class CheckCommand extends StatzCommand {
 								
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
-								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "statz info " + playerName + " " + statType.toString()));
+								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
 								
 								messagesSpigot.add(message);
 							} else {

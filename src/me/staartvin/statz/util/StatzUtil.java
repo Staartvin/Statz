@@ -18,9 +18,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.datamanager.PlayerStat;
+import net.md_5.bungee.api.ChatColor;
 
 public class StatzUtil {
-	
+
 	public static enum Time {
 		DAYS, HOURS, MINUTES, SECONDS
 	}
@@ -276,14 +278,14 @@ public class StatzUtil {
 
 	public static double roundDouble(double value, int places) {
 		if (places < 0)
-			throw new IllegalArgumentException();		
+			throw new IllegalArgumentException();
 
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		
+
 		return bd.doubleValue();
 	}
-	
+
 	/**
 	 * Create a string that shows all elements of the given list <br>
 	 * The end divider is the last word used for the second last element. <br>
@@ -319,23 +321,23 @@ public class StatzUtil {
 
 		return string.toString();
 	}
-	
+
 	public static String findClosestSuggestion(String input, List<String> list) {
 		int lowestDistance = Integer.MAX_VALUE;
 		String bestSuggestion = null;
-		
+
 		for (String possibility : list) {
 			int dist = editDistance(input, possibility);
-			
+
 			if (dist < lowestDistance) {
 				lowestDistance = dist;
 				bestSuggestion = possibility;
 			}
 		}
-		
+
 		return bestSuggestion + ";" + lowestDistance;
 	}
-	
+
 	/**
 	 * Calculates the edit distance of two strings (Levenshtein distance)
 	 * @param a First string to compare
@@ -343,25 +345,26 @@ public class StatzUtil {
 	 * @return Levenshtein distance of two strings.
 	 */
 	public static int editDistance(String a, String b) {
-        a = a.toLowerCase();
-        b = b.toLowerCase();
-        // i == 0
-        int [] costs = new int [b.length() + 1];
-        for (int j = 0; j < costs.length; j++)
-            costs[j] = j;
-        for (int i = 1; i <= a.length(); i++) {
-            // j == 0; nw = lev(i - 1, j)
-            costs[0] = i;
-            int nw = i - 1;
-            for (int j = 1; j <= b.length(); j++) {
-                int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]), a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
-                nw = costs[j];
-                costs[j] = cj;
-            }
-        }
-        return costs[b.length()];
-    }
-	
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		// i == 0
+		int[] costs = new int[b.length() + 1];
+		for (int j = 0; j < costs.length; j++)
+			costs[j] = j;
+		for (int i = 1; i <= a.length(); i++) {
+			// j == 0; nw = lev(i - 1, j)
+			costs[0] = i;
+			int nw = i - 1;
+			for (int j = 1; j <= b.length(); j++) {
+				int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]),
+						a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
+				nw = costs[j];
+				costs[j] = cj;
+			}
+		}
+		return costs[b.length()];
+	}
+
 	/**
 	 * Convert an integer to a string. <br>
 	 * Format of the returned string: <b>x days, y hours, z minutes and r
@@ -458,5 +461,108 @@ public class StatzUtil {
 		}
 
 		return b.toString();
+	}
+
+	public static String getInfoString(Query query, PlayerStat statType, String playerName) {
+		StringBuilder builder = new StringBuilder(ChatColor.GOLD + playerName + ChatColor.DARK_AQUA + " ");
+
+		if (statType.equals(PlayerStat.ARROWS_SHOT)) {
+			builder.append(createStringWithParams("shot {0} arrows with a force of {1} on world '{2}'",
+					(int) query.getValue(), roundDouble(Double.parseDouble(query.getValue("force").toString()), 2),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.BLOCKS_BROKEN)) {
+			builder.append(createStringWithParams("broke {0} blocks of item id {1} and damage value {2} on world '{3}'",
+					(int) query.getValue(), query.getIntValue("typeid"), query.getIntValue("datavalue"),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.BLOCKS_PLACED)) {
+			builder.append(createStringWithParams(
+					"placed {0} blocks of item id {1} and damage value {2} on world '{3}'", (int) query.getValue(),
+					query.getIntValue("typeid"), query.getIntValue("datavalue"), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.BUCKETS_EMPTIED)) {
+			builder.append(createStringWithParams("emptied {0} buckets on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.BUCKETS_FILLED)) {
+			builder.append(createStringWithParams("filled {0} buckets on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.COMMANDS_PERFORMED)) {
+			builder.append(createStringWithParams("performed " + ChatColor.GREEN + "{0}" + ChatColor.DARK_AQUA + " {1} times on world '{2}'",
+					query.getValue("command").toString() + " " + query.getValue("arguments").toString(),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.DAMAGE_TAKEN)) {
+			builder.append(createStringWithParams("took {0} points of damage by {1} on world '{2}'",
+					(int) query.getValue(), query.getValue("cause").toString(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.DEATHS)) {
+			builder.append(createStringWithParams("died {0} times on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.DISTANCE_TRAVELLED)) {
+			builder.append(createStringWithParams("travelled {0} blocks on world '{1}' by {2}",
+					roundDouble(query.getValue(), 2), query.getValue("world"), query.getValue("moveType")));
+		} else if (statType.equals(PlayerStat.EGGS_THROWN)) {
+			builder.append(createStringWithParams("has thrown {0} eggs on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.ENTERED_BEDS)) {
+			builder.append(createStringWithParams("has slept {0} times in a bed on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.FOOD_EATEN)) {
+			builder.append(createStringWithParams("has eaten {0} {1} times on world '{2}'", query.getValue("foodEaten"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.ITEMS_CAUGHT)) {
+			builder.append(createStringWithParams("has caught {0} {1} times on world '{2}'", query.getValue("caught"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.ITEMS_CRAFTED)) {
+			builder.append(createStringWithParams("has crafted {0} {1} times on world '{2}'", query.getValue("item"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.ITEMS_DROPPED)) {
+			builder.append(createStringWithParams("has dropped {0} {1} times on world '{2}'", query.getValue("item"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.ITEMS_PICKED_UP)) {
+			builder.append(createStringWithParams("has picked up {0} {1} times on world '{2}'", query.getValue("item"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.JOINS)) {
+			builder.append(createStringWithParams("has joined the server {0} times", (int) query.getValue()));
+		} else if (statType.equals(PlayerStat.KILLS_MOBS)) {
+			builder.append(createStringWithParams("has killed {0}s {1} times on world '{2}'", query.getValue("mob"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.KILLS_PLAYERS)) {
+			builder.append(createStringWithParams("has killed {0} {1} times on world '{2}'",
+					query.getValue("playerKilled"), (int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.TELEPORTS)) {
+			builder.append(createStringWithParams("has teleported from {0} to {1} {2} times because of {3}",
+					query.getValue("world"), query.getValue("destWorld"), (int) query.getValue(),
+					query.getValue("cause")));
+		} else if (statType.equals(PlayerStat.TIME_PLAYED)) {
+			builder.append(createStringWithParams("has played for {0} on world '{1}'",
+					StatzUtil.timeToString((int) query.getValue(), Time.MINUTES), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.TIMES_KICKED)) {
+			builder.append(createStringWithParams("has been kicked {0} times on world '{1}' with reason '{2}'",
+					(int) query.getValue(), query.getValue("world"), query.getValue("reason")));
+		} else if (statType.equals(PlayerStat.TIMES_SHORN)) {
+			builder.append(createStringWithParams("has shorn {0} sheep on world '{2}'", (int) query.getValue(),
+					query.getValue("world")));
+		} else if (statType.equals(PlayerStat.TOOLS_BROKEN)) {
+			builder.append(createStringWithParams("has broken {0} {1} times on world '{2}'", query.getValue("item"),
+					(int) query.getValue(), query.getValue("world")));
+		} else if (statType.equals(PlayerStat.VILLAGER_TRADES)) {
+			builder.append(createStringWithParams("has traded with {0} villagers on world '{1}' for item {2}",
+					(int) query.getValue(), query.getValue("world"), query.getValue("trade")));
+		} else if (statType.equals(PlayerStat.VOTES)) {
+			builder.append(createStringWithParams("has voted {0} times", (int) query.getValue()));
+		} else if (statType.equals(PlayerStat.WORLDS_CHANGED)) {
+			builder.append(createStringWithParams("has changed from {0} to {1} {2} times", query.getValue("world"),
+					query.getValue("destWorld"), (int) query.getValue()));
+		} else if (statType.equals(PlayerStat.XP_GAINED)) {
+			builder.append(createStringWithParams("has gained {0} points of xp on world '{1}'", (int) query.getValue(),
+					query.getValue("world")));
+		}
+
+		return builder.toString();
+	}
+
+	public static String createStringWithParams(String fullString, Object... objects) {
+		for (int i = 0; i < objects.length; i++) {
+			fullString = fullString.replace("{" + i + "}", objects[i].toString());
+		}
+
+		return fullString;
 	}
 }

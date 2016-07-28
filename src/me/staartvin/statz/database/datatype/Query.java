@@ -39,6 +39,22 @@ public class Query {
 			return null;
 		return data.get(columnName);
 	}
+	
+	public int getIntValue(String columnName) {
+		Object value = getValue(columnName);
+		
+		if (value == null) return -1;
+		
+		return Integer.parseInt(value.toString());
+	}
+	
+	public Double getDoubleValue(String columnName) {
+		Object value = getValue(columnName);
+		
+		if (value == null) return -1.0;
+		
+		return Double.parseDouble(value.toString());
+	}
 
 	/**
 	 * Get the value of the 'value' column.
