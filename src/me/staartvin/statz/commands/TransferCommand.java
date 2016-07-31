@@ -191,6 +191,7 @@ public class TransferCommand extends StatzCommand {
 					// When using null as queries parameter, it will get all data in the table.
 					List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName(), null);
 
+					// Remove ID column because SQLite automatically assigns id's to its tables.
 					for (Query q: storedMySQLQueries) {
 						if (q.hasValue("id")) {
 							q.removeColumn("id");
