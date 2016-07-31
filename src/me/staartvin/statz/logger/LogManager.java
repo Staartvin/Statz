@@ -16,7 +16,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class LogManager {
 
-	private final static DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+	private final static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+	private final static DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 	private final static DateFormat humanDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private String dateFormatSave;
 
@@ -36,7 +37,7 @@ public class LogManager {
 	 */
 	public String createLogFile() {
 		dateFormatSave = dateFormat.format(new Date());
-		
+
 		// Creates a new file
 		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
 
@@ -97,9 +98,81 @@ public class LogManager {
 		try {
 
 			for (Query query : queries) {
-				out.write("[PLAYERSTAT: " + stat + "] " + query.getLogString());
+				out.write("[" + timeFormat.format(new Date()) + "] [PLAYERSTAT: " + stat + "] " + query.getLogString());
 				out.newLine();
 			}
+
+		} catch (Exception e) {
+			plugin.debugMessage(ChatColor.RED + "Error when writing to log file!");
+		}
+
+		//close
+		try {
+			out.close();
+			return;
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	public void writeToLogFile(String message) {
+
+		// Creates a new file
+		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
+
+		//Create our writer
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new FileWriter(logFile, true));
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+
+		try {
+
+			out.write("[" + timeFormat.format(new Date()) + "] " + message);
+			out.newLine();
+
+		} catch (Exception e) {
+			plugin.debugMessage(ChatColor.RED + "Error when writing to log file!");
+		}
+
+		//close
+		try {
+			out.close();
+			return;
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public void writeToLogFile(List<String> messages) {
+
+		// Creates a new file
+		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
+
+		//Create our writer
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new FileWriter(logFile, true));
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+
+		try {
+
+			for (String message: messages){
+				out.write("[" + timeFormat.format(new Date()) + "] " + message);
+				out.newLine();
+			}	
 
 		} catch (Exception e) {
 			plugin.debugMessage(ChatColor.RED + "Error when writing to log file!");

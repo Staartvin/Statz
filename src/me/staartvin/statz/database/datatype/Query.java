@@ -192,7 +192,7 @@ public class Query {
 			return "Set playerName of " + this.getValue("uuid") + " to '" + this.getValue("playerName") + "'."; 
 		}
 		
-		return "Set value of " + this.getValue("uuid") + " to " + this.getValue() + " with query " + data;
+		return "Add value of " + this.getValue("uuid") + " with " + this.getValue() + " and query conditions " + data;
 	}
 	
 	/**

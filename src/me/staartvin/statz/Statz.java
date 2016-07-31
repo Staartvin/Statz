@@ -131,6 +131,8 @@ public class Statz extends JavaPlugin {
 		this.getLogsManager().createLogFile();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
+		
+		this.getLogsManager().writeToLogFile("Enabled Statz!");
 	}
 
 	@Override
@@ -142,6 +144,8 @@ public class Statz extends JavaPlugin {
 		this.getDataPoolManager().forceSendPool();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
+		
+		this.getLogsManager().writeToLogFile("Disabled Statz!");
 	}
 
 	private void registerListeners() {

@@ -156,17 +156,24 @@ public class TransferCommand extends StatzCommand {
 				SQLiteConnector.load();
 
 				int updateCount = 0;
+				
+				plugin.getLogsManager().writeToLogFile("Starting tranfer from SQLite to MySQL database!");
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					// When using null as queries parameter, it will get all data in the table.
 					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
 
 					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
-
+					
+					// Write transferred items to log
+					plugin.getLogsManager().writeToLogFile(storedSQLiteQueries, stat);
+					
 					plugin.getSqlConnector().setBatchObjects(table, storedSQLiteQueries, 2);
 
 					updateCount += storedSQLiteQueries.size();
 				}
+				
+				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring SQLite to MySQL database");
 
 				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
 						+ " database records from SQLite to MySQL!");
@@ -192,6 +199,8 @@ public class TransferCommand extends StatzCommand {
 				MySQLConnector.load();
 
 				int updateCount = 0;
+				
+				plugin.getLogsManager().writeToLogFile("Starting tranfer from MySQL to SQLite database!");
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					// When using null as queries parameter, it will get all data in the table.
@@ -204,12 +213,17 @@ public class TransferCommand extends StatzCommand {
 						}
 					}
 					
+					// Write transferred items to log
+					plugin.getLogsManager().writeToLogFile(storedMySQLQueries, stat);
+					
 					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
 
 					plugin.getSqlConnector().setBatchObjects(table, storedMySQLQueries, 2);
 
 					updateCount += storedMySQLQueries.size();
 				}
+				
+				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring MySQL to SQLite database");
 
 				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
 						+ " database records from MySQL to SQLite!");
