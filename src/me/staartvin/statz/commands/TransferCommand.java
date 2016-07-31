@@ -145,6 +145,10 @@ public class TransferCommand extends StatzCommand {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
+				confirmTransferSQLite.remove(sender.getName());
+				
+				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
+				
 				// Load SQLiteConnector
 				SQLiteConnector = new SQLiteConnector(plugin);
 
@@ -166,8 +170,6 @@ public class TransferCommand extends StatzCommand {
 
 				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
 						+ " database records from SQLite to MySQL!");
-
-				confirmTransferSQLite.remove(sender.getName());
 			}
 		});
 
@@ -179,6 +181,10 @@ public class TransferCommand extends StatzCommand {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
 			public void run() {
+				confirmTransferMySQL.remove(sender.getName());
+				
+				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
+				
 				// Load SQLiteConnector
 				MySQLConnector = new MySQLConnector(plugin);
 
@@ -208,7 +214,7 @@ public class TransferCommand extends StatzCommand {
 				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
 						+ " database records from MySQL to SQLite!");
 
-				confirmTransferMySQL.remove(sender.getName());
+				
 			}
 		});
 
