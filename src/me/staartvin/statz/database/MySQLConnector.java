@@ -143,6 +143,8 @@ public class MySQLConnector extends DatabaseConnector {
 					statement.append("" + column.getColumnName() + " BIGINT");
 				} else if (column.getDataType().equals(SQLDataType.TEXT)) {
 					statement.append("" + column.getColumnName() + " VARCHAR(255)");
+				} else if (column.getDataType().equals(SQLDataType.DOUBLE)) {
+					statement.append("" + column.getColumnName() + " DECIMAL(65,10)");
 				} else {
 					statement.append("" + column.getColumnName() + " " + column.getDataType().toString());
 				}
@@ -499,7 +501,7 @@ public class MySQLConnector extends DatabaseConnector {
 
 		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
 		world = new Column("world", false, SQLDataType.TEXT, true);
-		typeID = new Column("force", false, SQLDataType.DOUBLE, true);
+		typeID = new Column("forceShot", false, SQLDataType.DOUBLE, true);
 
 		newTable.addColumn(id);
 		newTable.addColumn(uuid); // UUID of the player

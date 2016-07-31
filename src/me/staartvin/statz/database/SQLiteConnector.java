@@ -481,7 +481,7 @@ public class SQLiteConnector extends DatabaseConnector {
 		id = new Column("id", true, SQLDataType.INT, true);
 		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
 		world = new Column("world", false, SQLDataType.TEXT, true);
-		typeID = new Column("force", false, SQLDataType.DOUBLE, true);
+		typeID = new Column("forceShot", false, SQLDataType.DOUBLE, true);
 
 		newTable.addColumn(id);
 		newTable.addColumn(uuid); // UUID of the player

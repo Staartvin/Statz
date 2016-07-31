@@ -14,7 +14,10 @@ import me.staartvin.statz.database.SQLiteConnector;
 public abstract class Table {
 
 	public static enum SQLDataType {
-		TEXT, INT, FLOAT, NONE, DOUBLE
+		TEXT, INT, FLOAT, NONE, /**
+		 * Double is actually a DECIMAL in MySQL
+		 */
+		DOUBLE
 	}
 
 	private String tableName = "";
