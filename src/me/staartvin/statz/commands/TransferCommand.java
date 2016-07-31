@@ -1,0 +1,124 @@
+package me.staartvin.statz.commands;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.commands.manager.StatzCommand;
+import me.staartvin.statz.database.DatabaseConnector;
+import me.staartvin.statz.database.SQLiteConnector;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.Table;
+import me.staartvin.statz.datamanager.PlayerStat;
+
+public class TransferCommand extends StatzCommand {
+
+	private static Statz plugin;
+	private static DatabaseConnector SQLiteConnector;
+
+	public TransferCommand(final Statz instance) {
+		this.setUsage("/statz transfer");
+		this.setDesc("Transfer Statz's SQLite database to MySQL database");
+		this.setPermission("statz.transfer.sqlite");
+
+		plugin = instance;
+	}
+	
+	public static List<String> confirmTransferSQLite = new ArrayList<>();
+
+	@Override
+	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
+
+		if (confirmTransferSQLite.contains(sender.getName())) {
+			sender.sendMessage(ChatColor.GREEN + "Please confirm this command with typing '" + ChatColor.GRAY + "yes" + ChatColor.GREEN + "'!");
+			return true;
+		}
+		
+		// Check if MySQL is enabled.
+		if (!plugin.getConfigHandler().isMySQLEnabled()) {
+			sender.sendMessage(ChatColor.RED + "MySQL should be enabled before running transfering!");
+			return true;
+		}
+		
+		sender.sendMessage(ChatColor.YELLOW + "Performing this command will transfer your SQLite database to your MySQL database.");
+		
+		// If sender is not a player, don't ask for confirmation
+		if (!(sender instanceof Player)) {
+			// Don't ask for confirmation
+			confirmTransfer(sender);
+			return true;
+		}
+		
+		sender.sendMessage(ChatColor.DARK_AQUA + "Are you sure you want to do this? Type " + ChatColor.GOLD + "yes" + ChatColor.DARK_AQUA + " to confirm this command.");
+		
+		confirmTransferSQLite.add(sender.getName());
+		
+		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+				// Player already confirmed or it was removed from the list
+				if (!confirmTransferSQLite.contains(sender.getName())) return;
+				
+				confirmTransferSQLite.remove(sender.getName());
+				
+				
+				sender.sendMessage(ChatColor.RED + "Confirmation of " + ChatColor.GRAY + "/statz transfer" + ChatColor.RED + " command expired!");
+			}
+			
+		}, 20 * 10);
+		
+		return true;
+	}
+	
+	public static void confirmTransfer(final CommandSender sender) {
+		// Run after a player has confirmed the command.
+		
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			
+			public void run() {
+				// Load SQLiteConnector
+			    SQLiteConnector = new SQLiteConnector(plugin);
+				
+				SQLiteConnector.loadTables();
+				SQLiteConnector.load();
+				
+				int updateCount = 0;
+				
+				for (PlayerStat stat: PlayerStat.values()) {
+					// When using null as queries parameter, it will get all data in the table.
+					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
+					
+					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
+					
+					plugin.getSqlConnector().setBatchObjects(table, storedSQLiteQueries, 2);
+					
+					updateCount += storedSQLiteQueries.size();
+				}
+				
+				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN + " database records from SQLite to MySQL!");
+				
+				confirmTransferSQLite.remove(sender.getName());
+			}
+		});
+		
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see me.staartvin.statz.commands.manager.StatzCommand#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
+	@Override
+	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
+			final String[] args) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

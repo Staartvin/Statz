@@ -25,8 +25,6 @@ public abstract class DatabaseConnector {
 
 	public static String databaseName = "statz";
 
-	public static Connection connection;
-
 	public DatabaseConnector(final Statz instance) {
 		plugin = instance;
 	}
@@ -76,7 +74,7 @@ public abstract class DatabaseConnector {
 	 * Will spit errors in the console when it could not properly connect.
 	 */
 	public void initialize() {
-		connection = getConnection();
+		Connection connection = getConnection();
 
 		// Something went wrong
 		if (connection == null) {
@@ -146,7 +144,7 @@ public abstract class DatabaseConnector {
 
 	/**
 	 * Instead of updating one single row, you can also perform a batch of updates.
-	 * This can drastically improve update time. See {@link #setObjects(Table, Query)} for more info.
+	 * This can drastically improve update time. See {@link #setObjects(Table, Query, int)} for more info.
 	 */
 	public abstract void setBatchObjects(final Table table, final List<Query> queries, int mode);
 

@@ -27,6 +27,7 @@ import me.staartvin.statz.util.StatzUtil;
 public class MySQLConnector extends DatabaseConnector {
 
 	private final Statz plugin;
+	private Connection connection;
 
 	public MySQLConnector(final Statz instance) {
 		super(instance);
@@ -757,8 +758,12 @@ public class MySQLConnector extends DatabaseConnector {
 
 		try {
 			connection = getConnection();
-			ps = connection.prepareStatement(
-					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+			if (queries != null) {
+				ps = connection.prepareStatement(
+						"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+			} else {
+				ps = connection.prepareStatement("SELECT * FROM " + table.getTableName());
+			}
 
 			rs = ps.executeQuery();
 			while (rs.next()) {

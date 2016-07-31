@@ -22,6 +22,7 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
+import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
 import me.staartvin.statz.listeners.PlayerBreakToolListener;
@@ -263,6 +264,9 @@ public class Statz extends JavaPlugin {
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
 			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
+		
+		// Register confirm command
+		this.getServer().getPluginManager().registerEvents(new ConfirmTransferCommandListener(this), this);
 	}
 
 	public void debugMessage(String message) {

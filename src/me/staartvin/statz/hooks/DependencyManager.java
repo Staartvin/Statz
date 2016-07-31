@@ -1,6 +1,8 @@
 package me.staartvin.statz.hooks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import me.staartvin.statz.Statz;
@@ -178,6 +180,18 @@ public class DependencyManager {
 			return false;
 
 		return handler.isAvailable();
+	}
+	
+	public List<Dependency> getAvailableDependencies() {
+		List<Dependency> dependencies = new ArrayList<>();
+		
+		for (Dependency d: Dependency.values()) {
+			if (this.isAvailable(d)) {
+				dependencies.add(d);
+			}
+		}
+		
+		return dependencies;
 	}
 
 }

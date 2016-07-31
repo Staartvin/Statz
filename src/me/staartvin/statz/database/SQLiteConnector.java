@@ -29,6 +29,7 @@ import me.staartvin.statz.util.StatzUtil;
 public class SQLiteConnector extends DatabaseConnector {
 
 	private final Statz plugin;
+	private Connection connection;
 
 	public SQLiteConnector(final Statz instance) {
 		super(instance);
@@ -746,8 +747,12 @@ public class SQLiteConnector extends DatabaseConnector {
 
 		try {
 			conn = getConnection();
-			ps = conn.prepareStatement(
-					"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+			if (queries != null) {
+				ps = conn.prepareStatement(
+						"SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
+			} else {
+				ps = conn.prepareStatement("SELECT * FROM " + table.getTableName());
+			}
 
 			rs = ps.executeQuery();
 			while (rs.next()) {

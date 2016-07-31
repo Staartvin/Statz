@@ -19,3 +19,9 @@ permissions:
     statz.info:
         description: Allows a player to check a specific stat
         default: true
+    statz.hooks:
+        description: Allows a player to check what plugins Statz is currently connected with
+        default: op
+    statz.transfer.sqlite:
+        description: Allows a player to start the transferring of data from SQLite to MySQL.
+        default: op
