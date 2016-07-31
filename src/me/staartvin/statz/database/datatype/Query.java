@@ -167,6 +167,11 @@ public class Query {
 		return builder.toString();
 	}
 
+	/**
+	 * Add a value to the current value of the column (assuming it's a number).
+	 * @param columnName Name of the column
+	 * @param value Value to add to the current value of the column
+	 */
 	public void addValue(String columnName, Object value) {
 		if (!this.hasValue(columnName))
 			return;
@@ -188,5 +193,13 @@ public class Query {
 		}
 		
 		return "Set value of " + this.getValue("uuid") + " to " + this.getValue() + " with query " + data;
+	}
+	
+	/**
+	 * Remove a column from the query
+	 * @param columnName Name of the column to remove
+	 */
+	public void removeColumn(String columnName) {
+		data.remove(columnName);
 	}
 }

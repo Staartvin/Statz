@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.database.DatabaseConnector;
+import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
@@ -19,7 +20,7 @@ import me.staartvin.statz.datamanager.PlayerStat;
 public class TransferCommand extends StatzCommand {
 
 	private static Statz plugin;
-	private static DatabaseConnector SQLiteConnector;
+	private static DatabaseConnector SQLiteConnector, MySQLConnector;
 
 	public TransferCommand(final Statz instance) {
 		this.setUsage("/statz transfer");
@@ -28,88 +29,190 @@ public class TransferCommand extends StatzCommand {
 
 		plugin = instance;
 	}
-	
+
+	// Transfer from SQLite to MySQL
 	public static List<String> confirmTransferSQLite = new ArrayList<>();
+
+	// Transfer from MySQL to SQLite
+	public static List<String> confirmTransferMySQL = new ArrayList<>();
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
-		if (confirmTransferSQLite.contains(sender.getName())) {
-			sender.sendMessage(ChatColor.GREEN + "Please confirm this command with typing '" + ChatColor.GRAY + "yes" + ChatColor.GREEN + "'!");
-			return true;
-		}
-		
-		// Check if MySQL is enabled.
-		if (!plugin.getConfigHandler().isMySQLEnabled()) {
-			sender.sendMessage(ChatColor.RED + "MySQL should be enabled before running transfering!");
-			return true;
-		}
-		
-		sender.sendMessage(ChatColor.YELLOW + "Performing this command will transfer your SQLite database to your MySQL database.");
-		
-		// If sender is not a player, don't ask for confirmation
-		if (!(sender instanceof Player)) {
-			// Don't ask for confirmation
-			confirmTransfer(sender);
-			return true;
-		}
-		
-		sender.sendMessage(ChatColor.DARK_AQUA + "Are you sure you want to do this? Type " + ChatColor.GOLD + "yes" + ChatColor.DARK_AQUA + " to confirm this command.");
-		
-		confirmTransferSQLite.add(sender.getName());
-		
-		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+		if (args.length > 1 && args[1].equalsIgnoreCase("reverse")) {
+			// Run MySQL -> SQLite conversion
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-				// Player already confirmed or it was removed from the list
-				if (!confirmTransferSQLite.contains(sender.getName())) return;
-				
-				confirmTransferSQLite.remove(sender.getName());
-				
-				
-				sender.sendMessage(ChatColor.RED + "Confirmation of " + ChatColor.GRAY + "/statz transfer" + ChatColor.RED + " command expired!");
+			if (confirmTransferMySQL.contains(sender.getName())) {
+				sender.sendMessage(ChatColor.GREEN + "Please confirm this command with typing '" + ChatColor.GRAY
+						+ "yes" + ChatColor.GREEN + "'!");
+				return true;
 			}
-			
-		}, 20 * 10);
-		
+
+			// Check if SQLite is enabled.
+			if (plugin.getConfigHandler().isMySQLEnabled()) {
+				sender.sendMessage(ChatColor.RED + "SQLite should be enabled before running transfering!");
+				return true;
+			}
+
+			sender.sendMessage(ChatColor.YELLOW
+					+ "Performing this command will transfer your MySQL database to your SQLite database.");
+
+			// If sender is not a player, don't ask for confirmation
+			if (!(sender instanceof Player)) {
+				// Don't ask for confirmation
+				confirmReverseTransfer(sender);
+				return true;
+			}
+
+			sender.sendMessage(ChatColor.DARK_AQUA + "Are you sure you want to do this? Type " + ChatColor.GOLD + "yes"
+					+ ChatColor.DARK_AQUA + " to confirm this command.");
+
+			confirmTransferMySQL.add(sender.getName());
+
+			plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+
+					// Player already confirmed or it was removed from the list
+					if (!confirmTransferMySQL.contains(sender.getName()))
+						return;
+
+					confirmTransferMySQL.remove(sender.getName());
+
+					sender.sendMessage(ChatColor.RED + "Confirmation of " + ChatColor.GRAY + "/statz transfer reverse"
+							+ ChatColor.RED + " command expired!");
+				}
+
+			}, 20 * 10);
+
+		} else {
+			// Run SQLite -> MySQL conversion
+
+			if (confirmTransferSQLite.contains(sender.getName())) {
+				sender.sendMessage(ChatColor.GREEN + "Please confirm this command with typing '" + ChatColor.GRAY
+						+ "yes" + ChatColor.GREEN + "'!");
+				return true;
+			}
+
+			// Check if MySQL is enabled.
+			if (!plugin.getConfigHandler().isMySQLEnabled()) {
+				sender.sendMessage(ChatColor.RED + "MySQL should be enabled before running transfering!");
+				return true;
+			}
+
+			sender.sendMessage(ChatColor.YELLOW
+					+ "Performing this command will transfer your SQLite database to your MySQL database.");
+
+			// If sender is not a player, don't ask for confirmation
+			if (!(sender instanceof Player)) {
+				// Don't ask for confirmation
+				confirmTransfer(sender);
+				return true;
+			}
+
+			sender.sendMessage(ChatColor.DARK_AQUA + "Are you sure you want to do this? Type " + ChatColor.GOLD + "yes"
+					+ ChatColor.DARK_AQUA + " to confirm this command.");
+
+			confirmTransferSQLite.add(sender.getName());
+
+			plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+
+					// Player already confirmed or it was removed from the list
+					if (!confirmTransferSQLite.contains(sender.getName()))
+						return;
+
+					confirmTransferSQLite.remove(sender.getName());
+
+					sender.sendMessage(ChatColor.RED + "Confirmation of " + ChatColor.GRAY + "/statz transfer"
+							+ ChatColor.RED + " command expired!");
+				}
+
+			}, 20 * 10);
+		}
+
 		return true;
 	}
-	
+
 	public static void confirmTransfer(final CommandSender sender) {
 		// Run after a player has confirmed the command.
-		
+
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			
+
 			public void run() {
 				// Load SQLiteConnector
-			    SQLiteConnector = new SQLiteConnector(plugin);
-				
+				SQLiteConnector = new SQLiteConnector(plugin);
+
 				SQLiteConnector.loadTables();
 				SQLiteConnector.load();
-				
+
 				int updateCount = 0;
-				
-				for (PlayerStat stat: PlayerStat.values()) {
+
+				for (PlayerStat stat : PlayerStat.values()) {
 					// When using null as queries parameter, it will get all data in the table.
 					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
-					
+
 					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
-					
+
 					plugin.getSqlConnector().setBatchObjects(table, storedSQLiteQueries, 2);
-					
+
 					updateCount += storedSQLiteQueries.size();
 				}
-				
-				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN + " database records from SQLite to MySQL!");
-				
+
+				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
+						+ " database records from SQLite to MySQL!");
+
 				confirmTransferSQLite.remove(sender.getName());
 			}
 		});
-		
-		
+
+	}
+
+	public static void confirmReverseTransfer(final CommandSender sender) {
+		// Run after a player has confirmed the command.
+
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+				// Load SQLiteConnector
+				MySQLConnector = new MySQLConnector(plugin);
+
+				MySQLConnector.loadTables();
+				MySQLConnector.load();
+
+				int updateCount = 0;
+
+				for (PlayerStat stat : PlayerStat.values()) {
+					// When using null as queries parameter, it will get all data in the table.
+					List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName(), null);
+
+					for (Query q: storedMySQLQueries) {
+						if (q.hasValue("id")) {
+							q.removeColumn("id");
+						}
+						
+						System.out.println(q);
+					}
+					
+					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
+
+					plugin.getSqlConnector().setBatchObjects(table, storedMySQLQueries, 2);
+
+					updateCount += storedMySQLQueries.size();
+				}
+
+				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
+						+ " database records from MySQL to SQLite!");
+
+				confirmTransferMySQL.remove(sender.getName());
+			}
+		});
+
 	}
 
 	/* (non-Javadoc)
