@@ -195,8 +195,6 @@ public class TransferCommand extends StatzCommand {
 						if (q.hasValue("id")) {
 							q.removeColumn("id");
 						}
-						
-						System.out.println(q);
 					}
 					
 					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
