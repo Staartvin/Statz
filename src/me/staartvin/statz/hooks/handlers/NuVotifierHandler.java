@@ -41,7 +41,7 @@ public class NuVotifierHandler implements DependencyHandler {
 			}
 		} catch (NoClassDefFoundError e) {
 			// Votifier was not found, maybe try NuVotifier
-			e.printStackTrace();
+			return null;
 		}
 		
 
