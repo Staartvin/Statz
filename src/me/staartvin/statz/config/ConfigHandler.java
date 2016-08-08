@@ -27,7 +27,8 @@ public class ConfigHandler {
 				+ "\nThe 'periodic save time' value represents the time (in seconds) after an update is sent to the database. The default is 10 seconds and I don't recommend changing it."
 				+ "\nYou can experiment with it and see whether it improves performance for your server. A lower value means the database is updated more often, resulting in a decrement of performance."
 				+ "\nDisabled statistics option can be used to disable a statistic. A list of statistics you can disable is provided here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L20"
-				+ "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode.");
+				+ "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode."
+				+ "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any.");
 
 		plugin.getConfig().addDefault("track stats", true);
 		plugin.getConfig().addDefault("show database save message", true);
@@ -39,10 +40,13 @@ public class ConfigHandler {
 		plugin.getConfig().addDefault("mysql.database", "Statz");
 
 		plugin.getConfig().addDefault("periodic save time", 10);
-		
-		plugin.getConfig().addDefault("disabled statistics", Arrays.asList("DISABLED_STAT_NAME_HERE", "OTHER_DISABLED_STAT_NAME"));
-		
+
+		plugin.getConfig().addDefault("disabled statistics",
+				Arrays.asList("DISABLED_STAT_NAME_HERE", "OTHER_DISABLED_STAT_NAME"));
+
 		plugin.getConfig().addDefault("ignore creative", false);
+
+		plugin.getConfig().addDefault("enable debug output", true);
 
 		plugin.getConfig().options().copyDefaults(true);
 
@@ -98,33 +102,38 @@ public class ConfigHandler {
 	public int getPeriodicSaveTime() {
 		return plugin.getConfig().getInt("periodic save time", 10);
 	}
-	
+
 	public List<PlayerStat> getDisabledStats() {
 		List<String> disabledStatsString = plugin.getConfig().getStringList("disabled statistics");
 		List<PlayerStat> disabledStats = new ArrayList<>();
-		
-		for (String disabledStatString: disabledStatsString) {
+
+		for (String disabledStatString : disabledStatsString) {
 			PlayerStat stat = null;
 			try {
 				stat = PlayerStat.valueOf(disabledStatString.toUpperCase().replace(" ", "_"));
 			} catch (IllegalArgumentException e) {
-				
+
 			}
-			
-			
-			if (stat == null) continue;
-			
+
+			if (stat == null)
+				continue;
+
 			disabledStats.add(stat);
 		}
-		
+
 		return disabledStats;
 	}
-	
+
 	public boolean isStatDisabled(PlayerStat stat) {
 		return this.getDisabledStats().contains(stat);
 	}
-	
+
 	public boolean shouldIgnoreCreative() {
 		return plugin.getConfig().getBoolean("ignore creative", false);
 	}
+
+	public boolean isDebugEnabled() {
+		return plugin.getConfig().getBoolean("enable debug output", true);
+	}
+
 }

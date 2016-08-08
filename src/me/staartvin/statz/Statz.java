@@ -274,6 +274,9 @@ public class Statz extends JavaPlugin {
 	}
 
 	public void debugMessage(String message) {
+		// Check if debug is enabled
+		if (!this.getConfigHandler().isDebugEnabled()) return;
+		
 		this.getServer().getConsoleSender()
 				.sendMessage(ChatColor.translateAlternateColorCodes('&', "[Statz debug] " + message));
 	}
