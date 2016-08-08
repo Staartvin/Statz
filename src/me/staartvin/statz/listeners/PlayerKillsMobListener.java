@@ -54,8 +54,7 @@ public class PlayerKillsMobListener implements Listener {
 			} else {
 				// Player killed mob		
 
-				@SuppressWarnings("deprecation")
-				String mobType = e.getType().getName().toUpperCase();
+				String mobType = e.getType().toString();
 
 				if (e instanceof Skeleton) {
 					final Skeleton ske = (Skeleton) e;
@@ -79,7 +78,7 @@ public class PlayerKillsMobListener implements Listener {
 					final Rabbit mob = (Rabbit) e;
 
 					if (mob.getRabbitType() == Type.THE_KILLER_BUNNY) {
-						//mobType = "KILLER " + mobType;
+						mobType = "KILLER " + mobType;
 					}
 				} else if (e instanceof Spider) {
 					final Spider mob = (Spider) e;
