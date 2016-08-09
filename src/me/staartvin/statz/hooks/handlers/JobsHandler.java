@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.gamingmesh.jobs.Jobs;
-import com.gamingmesh.jobs.JobsPlugin;
 import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import com.gamingmesh.jobs.container.JobsPlayer;
@@ -20,7 +20,7 @@ import me.staartvin.statz.hooks.DependencyHandler;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
- * Handles all connections with Jobs
+ * Handles all connections with Jobs - only supports 3.5.7+
  * <p>
  * Date created: 21:02:20 15 mrt. 2014
  * 
@@ -30,7 +30,7 @@ import me.staartvin.statz.util.StatzUtil;
 public class JobsHandler implements DependencyHandler {
 
 	private final Statz plugin;
-	private JobsPlugin api;
+	private Jobs api;
 
 	public JobsHandler(final Statz instance) {
 		plugin = instance;
@@ -44,7 +44,7 @@ public class JobsHandler implements DependencyHandler {
 		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.JOBS.getInternalString());
 
 		// May not be loaded
-		if (plugin == null || !(plugin instanceof JobsPlugin)) {
+		if (plugin == null || !(plugin instanceof Jobs)) {
 			return null; // Maybe you want throw an exception instead
 		}
 
@@ -64,7 +64,7 @@ public class JobsHandler implements DependencyHandler {
 	 */
 	@Override
 	public boolean isInstalled() {
-		final JobsPlugin plugin = (JobsPlugin) get();
+		final Plugin plugin = get();
 
 		return plugin != null && plugin.isEnabled();
 	}
@@ -80,7 +80,7 @@ public class JobsHandler implements DependencyHandler {
 			}
 			return false;
 		} else {
-			api = (JobsPlugin) get();
+			api = (Jobs) get();
 
 			if (api != null) {
 				return true;
