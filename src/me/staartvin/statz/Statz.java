@@ -132,7 +132,7 @@ public class Statz extends JavaPlugin {
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 		
-		this.getLogsManager().writeToLogFile("Enabled Statz!");
+		this.getLogsManager().writeToLogFile("Enabled Statz!");		
 	}
 
 	@Override

@@ -74,7 +74,7 @@ public class PlayerKillsMobListener implements Listener {
 					if (mob.getPassenger() != null) {
 						mobType = mobType + " JOCKEY";
 					}
-				} else if (e instanceof Rabbit) {
+				} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Rabbit) {
 					final Rabbit mob = (Rabbit) e;
 
 					if (mob.getRabbitType() == Type.THE_KILLER_BUNNY) {
@@ -86,7 +86,7 @@ public class PlayerKillsMobListener implements Listener {
 					if (mob.getPassenger() != null) {
 						mobType = mobType + " JOCKEY";
 					}
-				} else if (e instanceof Guardian) {
+				} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Guardian) {
 					final Guardian mob = (Guardian) e;
 
 					if (mob.isElder()) {

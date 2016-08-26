@@ -2,12 +2,15 @@ package me.staartvin.statz.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
@@ -485,7 +488,8 @@ public class StatzUtil {
 			builder.append(createStringWithParams("filled {0} buckets on world '{1}'", (int) query.getValue(),
 					query.getValue("world")));
 		} else if (statType.equals(PlayerStat.COMMANDS_PERFORMED)) {
-			builder.append(createStringWithParams("performed " + ChatColor.GREEN + "{0}" + ChatColor.DARK_AQUA + " {1} times on world '{2}'",
+			builder.append(createStringWithParams(
+					"performed " + ChatColor.GREEN + "{0}" + ChatColor.DARK_AQUA + " {1} times on world '{2}'",
 					query.getValue("command").toString() + " " + query.getValue("arguments").toString(),
 					(int) query.getValue(), query.getValue("world")));
 		} else if (statType.equals(PlayerStat.DAMAGE_TAKEN)) {
@@ -564,5 +568,70 @@ public class StatzUtil {
 		}
 
 		return fullString;
+	}
+
+	public static String getMinecraftVersion() {
+		String version = Bukkit.getVersion();
+
+		int index = version.indexOf("(");
+
+		if (index < 0) {
+			return "Unknown";
+		}
+
+		version = version.substring(index).replace("(", "").replace(")", "").replace("MC:", "").trim();
+
+		return version;
+	}
+
+	/**
+	 * Checks whether the current version is higher than the given version
+	 * @param versionCheck Version to check 
+	 * @return true if the current version on this server is higher than the given version
+	 */
+	public static boolean isHigherVersion(String versionCheck) {
+		String currentVersion = getMinecraftVersion();
+
+		if (currentVersion.equalsIgnoreCase("Unknown") || !currentVersion.contains(".") || versionCheck == null
+				|| !versionCheck.contains("."))
+			return false;
+
+		List<String> splitCur = new ArrayList<>();
+		Collections.addAll(splitCur, currentVersion.split("\\."));
+
+		List<String> splitCheck = new ArrayList<>();
+		Collections.addAll(splitCheck, versionCheck.split("\\."));
+
+		if (splitCur.size() < 1 || splitCheck.size() < 1) {
+			return false;
+		}
+
+		if (Integer.parseInt(splitCheck.get(0)) > Integer.parseInt(splitCur.get(0))) {
+			return false;
+		}
+
+		if (splitCur.size() == 1) {
+			splitCur.add("0");
+			splitCur.add("0");
+		} else if (splitCur.size() == 2) {
+			splitCur.add("0");
+		}
+
+		if (splitCheck.size() == 1) {
+			splitCheck.add("0");
+			splitCheck.add("0");
+		} else if (splitCheck.size() == 2) {
+			splitCheck.add("0");
+		}
+
+		if (Integer.parseInt(splitCheck.get(1)) > Integer.parseInt(splitCur.get(1))) {
+			return false;
+		}
+
+		if (Integer.parseInt(splitCheck.get(2)) > Integer.parseInt(splitCur.get(2))) {
+			return false;
+		}
+
+		return true;
 	}
 }
