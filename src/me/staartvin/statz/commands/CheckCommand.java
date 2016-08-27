@@ -19,6 +19,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class CheckCommand extends StatzCommand {
@@ -152,6 +153,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -174,6 +176,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -196,6 +199,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -218,6 +222,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -240,6 +245,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -262,6 +268,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -284,6 +291,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -306,6 +314,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -328,6 +337,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -350,6 +360,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -372,6 +383,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -394,6 +406,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -416,6 +429,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -438,6 +452,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -460,6 +475,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -482,6 +498,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -504,6 +521,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -526,6 +544,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -548,6 +567,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -570,6 +590,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -592,6 +613,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -614,6 +636,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -636,6 +659,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -658,6 +682,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -680,6 +705,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -702,6 +728,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -724,6 +751,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
@@ -746,6 +774,7 @@ public class CheckCommand extends StatzCommand {
 								message.addExtra(partTwo);
 								message.addExtra(partThree);
 								message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statz info " + statType.toString() + " " +  playerName));
+								message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click on me for more info about ").append(statType.toString()).color(ChatColor.GOLD).create()));
 								
 								messagesSpigot.add(message);
 							} else {
