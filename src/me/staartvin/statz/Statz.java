@@ -96,9 +96,6 @@ public class Statz extends JavaPlugin {
 		// Create and load database
 		this.getSqlConnector().load();
 
-		// Register listeners
-		this.registerListeners();
-
 		// Load data manager as database is loaded!
 		this.setDataManager(new DataManager(this));
 
@@ -126,6 +123,9 @@ public class Statz extends JavaPlugin {
 		getCommand("statz").setExecutor(getCommandsManager());
 		
 		this.setLogsManager(new LogManager(this));
+		
+		// Register listeners
+		this.registerListeners();
 		
 		// Create log file
 		this.getLogsManager().createLogFile();
@@ -208,7 +208,7 @@ public class Statz extends JavaPlugin {
 		}
 
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
-
+		
 		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER) || this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)) {
 			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
 		}

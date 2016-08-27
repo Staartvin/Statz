@@ -1,5 +1,8 @@
 package me.staartvin.statz.listeners;
 
+import java.util.UUID;
+
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,15 +27,32 @@ public class PlayerVoteListener implements Listener {
 
 		final PlayerStat stat = PlayerStat.VOTES;
 
-		// Get player
-		final Player player = (Player) plugin.getServer().getPlayer(event.getVote().getUsername());
-		
-		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
+		String userName = event.getVote().getUsername();
 
-		// Unknown player
-		if (player == null)
-			return;
+		// Get player
+		final Player player = (Player) plugin.getServer().getPlayer(userName);
+
+		UUID uuid = null;
+
+		// Player is not online, so 
+		if (player == null) {
+		} else {
+			uuid = player.getUniqueId();
+			userName = player.getName();
+		}
+
+		if (player != null) {
+			// Do general check
+			if (!plugin.doGeneralCheck(player))
+				return;
+		}
+
+		if (uuid == null) {
+			@SuppressWarnings("deprecation")
+			OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(userName);
+
+			uuid = offlinePlayer.getUniqueId();
+		}
 
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
@@ -46,8 +66,8 @@ public class PlayerVoteListener implements Listener {
 		//		}
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1));
+		plugin.getDataManager().setPlayerInfo(uuid, stat,
+				StatzUtil.makeQuery("uuid", uuid.toString(), "value", 1));
 
 	}
 }
