@@ -28,7 +28,9 @@ public class ConfigHandler {
 				+ "\nYou can experiment with it and see whether it improves performance for your server. A lower value means the database is updated more often, resulting in a decrement of performance."
 				+ "\nDisabled statistics option can be used to disable a statistic. A list of statistics you can disable is provided here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L20"
 				+ "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode."
-				+ "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any.");
+				+ "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any."
+				+ "\nIf 'use custom statz list' is set to true, the /statz command will show a list of statistics for a player. The statistics that get displayed can be altered by changing the 'custom statz list' variable."
+				+ "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19");
 
 		plugin.getConfig().addDefault("track stats", true);
 		plugin.getConfig().addDefault("show database save message", true);
@@ -47,6 +49,10 @@ public class ConfigHandler {
 		plugin.getConfig().addDefault("ignore creative", false);
 
 		plugin.getConfig().addDefault("enable debug output", true);
+		
+		plugin.getConfig().addDefault("use custom statz list", false);
+		
+		plugin.getConfig().addDefault("custom statz list", Arrays.asList("JOINS", "FOOD_EATEN", "KILLS_PLAYERS"));
 
 		plugin.getConfig().options().copyDefaults(true);
 
@@ -134,6 +140,24 @@ public class ConfigHandler {
 
 	public boolean isDebugEnabled() {
 		return plugin.getConfig().getBoolean("enable debug output", true);
+	}
+	
+	public boolean useCustomList() {
+		return plugin.getConfig().getBoolean("use custom statz list", false);
+	}
+	
+	public List<PlayerStat> getCustomList() {
+		List<PlayerStat> customList = new ArrayList<PlayerStat>();
+		
+		for (String customListEntry : plugin.getConfig().getStringList("custom statz list")) {
+			for (PlayerStat stat : PlayerStat.values()) {
+				if (stat.getTableName().equalsIgnoreCase(customListEntry)) {
+					customList.add(stat);
+				}
+			}
+		}
+		
+		return customList;
 	}
 
 }

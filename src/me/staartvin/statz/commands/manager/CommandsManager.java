@@ -13,10 +13,11 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.HelpCommand;
 import me.staartvin.statz.commands.HooksCommand;
+import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.TransferCommand;
+import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -80,11 +81,26 @@ public class CommandsManager implements TabExecutor {
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.BLUE + "-----------------------------------------------------");
-			sender.sendMessage(
-					ChatColor.GOLD + "Developed by: " + ChatColor.GRAY + plugin.getDescription().getAuthors());
-			sender.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.GRAY + plugin.getDescription().getVersion());
-			sender.sendMessage(ChatColor.YELLOW + "Type /statz help for a list of commands.");
+			if (plugin.getConfigHandler().useCustomList()) {
+				
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ChatColor.RED + "You can only run this command if you're a player.");
+					return true;
+				}
+				
+				Player player = (Player) sender;
+				
+				List<PlayerStat> stats = plugin.getConfigHandler().getCustomList();
+				
+				plugin.getDataManager().sendStatisticsList(sender, player.getName(), player.getUniqueId(), 1, stats);				
+			} else {
+				sender.sendMessage(ChatColor.BLUE + "-----------------------------------------------------");
+				sender.sendMessage(
+						ChatColor.GOLD + "Developed by: " + ChatColor.GRAY + plugin.getDescription().getAuthors());
+				sender.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.GRAY + plugin.getDescription().getVersion());
+				sender.sendMessage(ChatColor.YELLOW + "Type /statz help for a list of commands.");
+			}
+
 			return true;
 		}
 
