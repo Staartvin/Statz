@@ -16,9 +16,6 @@ permissions:
     statz.list:
         description: Allows a player to check its statistics
         default: true
-    statz.info:
-        description: Allows a player to check a specific stat
-        default: true
     statz.hooks:
         description: Allows a player to check what plugins Statz is currently connected with
         default: op
