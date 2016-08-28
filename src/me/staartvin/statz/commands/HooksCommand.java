@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.language.Lang;
 
 public class HooksCommand extends StatzCommand {
 
@@ -25,7 +26,7 @@ public class HooksCommand extends StatzCommand {
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
-		sender.sendMessage(ChatColor.YELLOW + "Statz is currently hooked and listening to the following plugins:");
+		sender.sendMessage(Lang.STATZ_HOOKED_AND_LISTENING.getConfigValue());
 		
 		for (Dependency d: plugin.getDependencyManager().getAvailableDependencies()) {
 			sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.GREEN + d.getInternalString());

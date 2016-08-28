@@ -16,6 +16,7 @@ import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
 
@@ -56,7 +57,7 @@ public class ListCommand extends StatzCommand {
 					pageNumber = Integer.parseInt(args[2]);
 				} catch (NumberFormatException e) {
 					// Third argument was not a number, so give an error
-					sender.sendMessage(ChatColor.RED + "You did not provide a correct page number!");
+					sender.sendMessage(Lang.INCORRECT_PAGE_NUMBER.getConfigValue());
 					return true;
 				}
 			} else {
@@ -73,7 +74,7 @@ public class ListCommand extends StatzCommand {
 					pageNumber = Integer.parseInt(args[1]);
 				} catch (NumberFormatException e) {
 					// [1] argument was not a number, so give an error
-					sender.sendMessage(ChatColor.RED + "You did not provide a correct page number!");
+					sender.sendMessage(Lang.INCORRECT_PAGE_NUMBER.getConfigValue());
 					return true;
 				}
 			} else {
@@ -87,43 +88,12 @@ public class ListCommand extends StatzCommand {
 			hasGivenPlayerName = false;
 		}
 
-		//		// Command with page number AND player name
-		//		if (args.length > 2) {
-		//			playerName = args[1];
-		//
-		//			hasGivenPlayerName = true;
-		//
-		//			try {
-		//				pageNumber = Integer.parseInt(args[2]);
-		//			} catch (NumberFormatException e) {
-		//				// Third argument was not a number, so give an error
-		//				sender.sendMessage(ChatColor.RED + "You did not provide a correct page number!");
-		//				return true;
-		//			}
-		//		} else if (args.length > 1) {
-		//			// Provided a page number or player name
-		//
-		//			try {
-		//				pageNumber = Integer.parseInt(args[1]);
-		//				hasGivenPlayerName = false;
-		//			} catch (NumberFormatException e) {
-		//				// Second argument was not a number, so must be a player name
-		//				playerName = args[1];
-		//				hasGivenPlayerName = true;
-		//			}
-		//
-		//		} else if (args.length == 1) {
-		//			// No player name given and no page number
-		//			// Default to page number = 1
-		//			hasGivenPlayerName = false;
-		//		}
-
 		if (!hasGivenPlayerName) {
 			// No name was given, so use player's own name
 
 			// Only players are allowed to check themselves.
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "This command can only be performed by players!");
+				sender.sendMessage(Lang.COMMAND_PERFORMED_ONLY_PLAYERS.getConfigValue());
 				return true;
 			}
 
@@ -137,7 +107,7 @@ public class ListCommand extends StatzCommand {
 			OfflinePlayer targetPlayer = plugin.getServer().getOfflinePlayer(playerName);
 
 			if (!targetPlayer.hasPlayedBefore()) {
-				sender.sendMessage(ChatColor.RED + playerName + " has never played on this server before!");
+				sender.sendMessage(Lang.PLAYER_NEVER_PLAYED_BEFORE.getConfigValue(playerName));
 				return true;
 			}
 
@@ -189,7 +159,7 @@ public class ListCommand extends StatzCommand {
 			}
 
 			if (stat == null) {
-				sender.sendMessage(ChatColor.RED + statType + " is not a correct stat!");
+				sender.sendMessage(Lang.INCORRECT_STAT_TYPE.getConfigValue(statType));
 				return true;
 			}
 
@@ -212,11 +182,11 @@ public class ListCommand extends StatzCommand {
 
 					PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-					sender.sendMessage(ChatColor.YELLOW + "---- [Stat " + statType + " of " + playerName + "] ----");
+					sender.sendMessage(Lang.SPECIFIC_STAT_HEADER.getConfigValue(statType, playerName));
 
 					// Only use valid info.
 					if (!info.isValid() || statType == PlayerStat.PLAYERS) {
-						sender.sendMessage(ChatColor.RED + "There is nothing to show for this stat.");
+						sender.sendMessage(Lang.NO_STATISTICS_TO_SHOW.getConfigValue());
 						return;
 					}
 

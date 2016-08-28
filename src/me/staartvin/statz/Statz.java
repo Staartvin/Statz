@@ -22,6 +22,7 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
+import me.staartvin.statz.language.LanguageHandler;
 import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
 import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
@@ -65,6 +66,7 @@ public class Statz extends JavaPlugin {
 	private ConfigHandler configHandler;
 	private CommandsManager commandsManager;
 	private LogManager logsManager;
+	private LanguageHandler langHandler;
 
 	@Override
 	public void onEnable() {
@@ -129,6 +131,10 @@ public class Statz extends JavaPlugin {
 		
 		// Create log file
 		this.getLogsManager().createLogFile();
+		
+		this.setLangHandler(new LanguageHandler(this));
+		
+		this.getLangHandler().createNewFile();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 		
@@ -487,5 +493,13 @@ public class Statz extends JavaPlugin {
 
 	public void setLogsManager(LogManager logsManager) {
 		this.logsManager = logsManager;
+	}
+
+	public LanguageHandler getLangHandler() {
+		return langHandler;
+	}
+
+	public void setLangHandler(LanguageHandler langHandler) {
+		this.langHandler = langHandler;
 	}
 }

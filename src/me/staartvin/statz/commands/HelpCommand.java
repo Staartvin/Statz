@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
+import me.staartvin.statz.language.Lang;
 
 public class HelpCommand extends StatzCommand {
 
@@ -32,7 +33,7 @@ public class HelpCommand extends StatzCommand {
 			try {
 				page = Integer.parseInt(args[1]);
 			} catch (final Exception e) {
-				sender.sendMessage(ChatColor.RED + "You did not provide a correct page number!");
+				sender.sendMessage(Lang.INCORRECT_PAGE_NUMBER.getConfigValue());
 				return true;
 			}
 			showHelpPages(sender, page);
@@ -95,7 +96,7 @@ public class HelpCommand extends StatzCommand {
 			sender.sendMessage(ChatColor.AQUA + command.getUsage() + ChatColor.GRAY + " - " + command.getDescription());
 		}
 
-		sender.sendMessage(ChatColor.BLUE + "Page " + page + " of " + maxPages);
+		sender.sendMessage(Lang.PAGE_INDEX.getConfigValue(page, maxPages));
 	}
 
 	/* (non-Javadoc)
