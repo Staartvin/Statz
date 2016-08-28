@@ -13,10 +13,9 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.commands.CheckCommand;
+import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.HelpCommand;
 import me.staartvin.statz.commands.HooksCommand;
-import me.staartvin.statz.commands.InfoCommand;
 import me.staartvin.statz.commands.TransferCommand;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -46,8 +45,8 @@ public class CommandsManager implements TabExecutor {
 
 		// Register command classes
 		registeredCommands.put(Arrays.asList("help", "h"), new HelpCommand(plugin));
-		registeredCommands.put(Arrays.asList("check", "c"), new CheckCommand(plugin));
-		registeredCommands.put(Arrays.asList("info", "i"), new InfoCommand(plugin));
+		registeredCommands.put(Arrays.asList("list", "l"), new ListCommand(plugin));
+		//registeredCommands.put(Arrays.asList("info", "i"), new InfoCommand(plugin));
 		registeredCommands.put(Arrays.asList("hooks"), new HooksCommand(plugin));
 		registeredCommands.put(Arrays.asList("transfer"), new TransferCommand(plugin));
 	}
