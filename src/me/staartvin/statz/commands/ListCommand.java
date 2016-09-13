@@ -215,7 +215,21 @@ public class ListCommand extends StatzCommand {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
 			final String[] args) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<String> tabCompletions = new ArrayList<String>();
+		
+		if (args.length == 3) {
+			// Sender entered /statz l <name> ", so we add the player stats as suggestions
+			for (PlayerStat stat: PlayerStat.values()) {
+				tabCompletions.add(stat.toString().toLowerCase());
+			}
+		}
+		
+		if (!tabCompletions.isEmpty()) {
+			return tabCompletions;	
+		} else {
+			return null;
+		}
+		
 	}
 }
