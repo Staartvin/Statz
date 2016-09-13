@@ -17,7 +17,6 @@ import me.staartvin.statz.commands.HelpCommand;
 import me.staartvin.statz.commands.HooksCommand;
 import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.TransferCommand;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -90,9 +89,9 @@ public class CommandsManager implements TabExecutor {
 				
 				Player player = (Player) sender;
 				
-				List<PlayerStat> stats = plugin.getConfigHandler().getCustomList();
+				player.performCommand("statz l 1");
 				
-				plugin.getDataManager().sendStatisticsList(sender, player.getName(), player.getUniqueId(), 1, stats);				
+				return true;			
 			} else {
 				sender.sendMessage(ChatColor.BLUE + "-----------------------------------------------------");
 				sender.sendMessage(

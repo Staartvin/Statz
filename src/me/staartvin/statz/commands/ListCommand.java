@@ -82,7 +82,7 @@ public class ListCommand extends StatzCommand {
 				playerName = args[1];
 				hasGivenPlayerName = true;
 			}
-		} else if (args.length == 1) {
+		} else /*if (args.length == 1)*/ {
 			// No player name given and no page number
 			// Default to page number = 1
 			hasGivenPlayerName = false;
