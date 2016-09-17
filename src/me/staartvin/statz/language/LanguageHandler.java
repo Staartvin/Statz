@@ -28,7 +28,7 @@ public class LanguageHandler {
 		saveConfig();
 
 		Lang.setFile(languageConfig);
-
+		
 		loadConfig();
 
 		plugin.getLogger().info("Language file loaded (lang.yml)");
