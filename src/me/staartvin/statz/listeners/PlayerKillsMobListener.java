@@ -1,15 +1,7 @@
 package me.staartvin.statz.listeners;
 
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Rabbit.Type;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Spider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -54,63 +46,11 @@ public class PlayerKillsMobListener implements Listener {
 			} else {
 				// Player killed mob		
 
-				String mobType = e.getType().toString();
-
-				if (e instanceof Skeleton) {
-					final Skeleton ske = (Skeleton) e;
-
-					if (ske.getSkeletonType() == SkeletonType.WITHER) {
-						mobType = "WITHER " + mobType;
-					}
-				} else if (e instanceof Creeper) {
-					final Creeper cre = (Creeper) e;
-
-					if (cre.isPowered()) {
-						mobType = "POWERED " + mobType;
-					}
-				} else if (e instanceof Chicken) {
-					final Chicken mob = (Chicken) e;
-
-					if (mob.getPassenger() != null) {
-						mobType = mobType + " JOCKEY";
-					}
-				} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Rabbit) {
-					final Rabbit mob = (Rabbit) e;
-
-					if (mob.getRabbitType() == Type.THE_KILLER_BUNNY) {
-						mobType = "KILLER " + mobType;
-					}
-				} else if (e instanceof Spider) {
-					final Spider mob = (Spider) e;
-
-					if (mob.getPassenger() != null) {
-						mobType = mobType + " JOCKEY";
-					}
-				} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Guardian) {
-					final Guardian mob = (Guardian) e;
-
-					if (mob.isElder()) {
-						mobType = "ELDER " + mobType;
-					}
-				}
-
-				final String mob = mobType;
-
-				//				//Get player info.
-				//				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-				//						StatzUtil.makeQuery("world", player.getWorld().getName(), "mob", mob));
-				//
-				//				// Get current value of stat.
-				//				int currentValue = 0;
-				//
-				//				// Check if it is valid!
-				//				if (info.isValid()) {
-				//					currentValue += info.getTotalValue();
-				//				}
+				String mobType = StatzUtil.getMobType(e);
 
 				// Update value to new stat.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-						player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName(), "mob", mob));
+						player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName(), "mob", mobType));
 
 			}
 		} else {

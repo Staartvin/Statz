@@ -35,7 +35,7 @@ public class Query {
 	 * @return value of the column of this query. Null if the query does not have this info.
 	 */
 	public Object getValue(String columnName) {
-		if (!hasValue(columnName))
+		if (!hasKey(columnName))
 			return null;
 		return data.get(columnName);
 	}
@@ -74,8 +74,26 @@ public class Query {
 	 * @param columnName Column name to check
 	 * @return true if this query contains the column and the value is not null. False otherwise.
 	 */
-	public boolean hasValue(String columnName) {
+	public boolean hasKey(String columnName) {
 		return data.containsKey(columnName) && data.get(columnName) != null;
+	}
+	
+	/**
+	 * Check to see if this query has a certain value. This method checks all key-value pairs and verifies whether there
+	 * is a value of a pair that matches the given value.
+	 * @param value Value to check if it exists in this query.
+	 * @return true if it exists, false otherwise.
+	 */
+	public boolean hasValue(Object value) {
+		if (value == null) return false;
+		
+		for (Entry<String, String> dataString : data.entrySet()) {
+			if (dataString != null && dataString.getValue().equalsIgnoreCase(value.toString())) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public Set<Entry<String, String>> getEntrySet() {
@@ -121,7 +139,7 @@ public class Query {
 				}
 
 				// Stored query does not have value that the given query has -> this cannot conflict
-				if (!comparedQuery.hasValue(columnName)) {
+				if (!comparedQuery.hasKey(columnName)) {
 					isSame = false;
 					break;
 				}
@@ -173,7 +191,7 @@ public class Query {
 	 * @param value Value to add to the current value of the column
 	 */
 	public void addValue(String columnName, Object value) {
-		if (!this.hasValue(columnName))
+		if (!this.hasKey(columnName))
 			return;
 
 		Double oldValue = Double.parseDouble(this.getValue("value").toString());
@@ -188,7 +206,7 @@ public class Query {
 	 * @return a message for the log file.
 	 */
 	public String getLogString() {
-		if (!this.hasValue("value")) {
+		if (!this.hasKey("value")) {
 			return "Set playerName of " + this.getValue("uuid") + " to '" + this.getValue("playerName") + "'."; 
 		}
 		

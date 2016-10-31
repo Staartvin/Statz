@@ -208,7 +208,7 @@ public class TransferCommand extends StatzCommand {
 
 					// Remove ID column because SQLite automatically assigns id's to its tables.
 					for (Query q: storedMySQLQueries) {
-						if (q.hasValue("id")) {
+						if (q.hasKey("id")) {
 							q.removeColumn("id");
 						}
 					}

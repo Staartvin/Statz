@@ -50,7 +50,7 @@ public class DataManager {
 	 * from the queries in the pool.
 	 * 
 	 * <br>
-	 * <br>An extra safety mechanism was added in that prevents data from accidentally overriding old data. Every x seconds, the queries
+	 * <br>An extra safety mechanism was added that prevents data from accidentally overriding old data. Every x seconds, the queries
 	 * from the pool are executed on the database. However, this takes some small time (somewhere in milliseconds). When the query is executed,
 	 * it is removed from the pool to prevent it from executing again. However, when getPlayerInfo() is called at the same time when the query is
 	 * deleted, Statz will give back data from the database, since the pool is empty. The database is not yet updated and so the wrong data is
@@ -161,7 +161,7 @@ public class DataManager {
 
 			for (Query map : info.getResults()) {
 				for (Entry<String, String> entry : conditions.getEntrySet()) {
-					if (!map.hasValue(entry.getKey())) {
+					if (!map.hasKey(entry.getKey())) {
 						deletedQueries.add(map);
 						break;
 					}
@@ -182,10 +182,19 @@ public class DataManager {
 		return info;
 	}
 
+	/**
+	 * Set data of a player into the database. The query parameter can be build by using {@link me.staartvin.statz.util.StatzUtil#makeQuery(Object...)}
+	 * @param uuid
+	 * @param statType
+	 * @param results
+	 */
 	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
 
-		//System.out.println("Add to query: " + results);
-
+		// If the query does not have a UUID, add it in manually.
+		if (!results.hasKey("uuid")) {
+			results.setValue("uuid", uuid);
+		}
+		
 		// Add query to the pool.
 		plugin.getDataPoolManager().addQuery(statType, results);
 	}

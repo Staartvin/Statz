@@ -92,7 +92,7 @@ public class DataPoolManager {
 		for (Query conflict : conflictsQuery) {
 			//System.out.println("Conflicting query: " + conflict);
 
-			if (!conflict.hasValue("value")) {
+			if (!conflict.hasKey("value")) {
 				continue;
 			}
 

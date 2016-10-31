@@ -13,11 +13,19 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Rabbit.Type;
+import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.database.datatype.Query;
@@ -30,6 +38,14 @@ public class StatzUtil {
 		DAYS, HOURS, MINUTES, SECONDS
 	}
 
+	/**
+	 * Create a query to retrieve or send data from or to the database.
+	 * <br><br>To create a query, provide strings as data points. 
+	 * <br>For example, to retrieve the number of cows a player has killed, use this method like so:
+	 * <br><br><code>makeQuery("uuid", "uuidOfPlayerHere", "mob", "COW")</code>
+	 * @param strings an array of strings that represents keys and values.
+	 * @return a {@link me.staartvin.statz.database.datatype.Query} object that represents a query to the database.
+	 */
 	public static Query makeQuery(final Object... strings) {
 		final LinkedHashMap<String, String> queries = new LinkedHashMap<>();
 
@@ -633,5 +649,49 @@ public class StatzUtil {
 		}
 
 		return true;
+	}
+	
+	public static String getMobType(Entity e) {
+		String mobType = e.getType().toString();
+
+		if (e instanceof Skeleton) {
+			final Skeleton ske = (Skeleton) e;
+
+			if (ske.getSkeletonType() == SkeletonType.WITHER) {
+				mobType = "WITHER " + mobType;
+			}
+		} else if (e instanceof Creeper) {
+			final Creeper cre = (Creeper) e;
+
+			if (cre.isPowered()) {
+				mobType = "POWERED " + mobType;
+			}
+		} else if (e instanceof Chicken) {
+			final Chicken mob = (Chicken) e;
+
+			if (mob.getPassenger() != null) {
+				mobType = mobType + " JOCKEY";
+			}
+		} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Rabbit) {
+			final Rabbit mob = (Rabbit) e;
+
+			if (mob.getRabbitType() == Type.THE_KILLER_BUNNY) {
+				mobType = "KILLER " + mobType;
+			}
+		} else if (e instanceof Spider) {
+			final Spider mob = (Spider) e;
+
+			if (mob.getPassenger() != null) {
+				mobType = mobType + " JOCKEY";
+			}
+		} else if (/* Check for Minecraft version */ StatzUtil.isHigherVersion("1.8") && e instanceof Guardian) {
+			final Guardian mob = (Guardian) e;
+
+			if (mob.isElder()) {
+				mobType = "ELDER " + mobType;
+			}
+		}
+
+		return mobType;
 	}
 }

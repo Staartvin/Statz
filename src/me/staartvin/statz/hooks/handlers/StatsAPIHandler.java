@@ -2,11 +2,14 @@ package me.staartvin.statz.hooks.handlers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
@@ -16,8 +19,10 @@ import me.staartvin.statz.hooks.DependencyHandler;
 import nl.lolmewn.stats.api.StatsAPI;
 import nl.lolmewn.stats.api.stat.Stat;
 import nl.lolmewn.stats.api.stat.StatEntry;
+import nl.lolmewn.stats.api.storage.StorageException;
 import nl.lolmewn.stats.api.user.StatsHolder;
 import nl.lolmewn.stats.bukkit.BukkitMain;
+import nl.lolmewn.stats.stats.Move;
 
 /**
  * Handles all connections with Stats
@@ -303,6 +308,49 @@ public class StatsAPIHandler implements DependencyHandler {
 			return 0;
 
 		return this.getNormalStat(uuid, "Playtime", worldName);
+	}
+
+	/**
+	 * Get a list of uuids that Stats has logged.
+	 * @return a list of uuids that represent players that Stats has logged in its database.
+	 */
+	public List<UUID> getLoggedPlayers() {
+		List<UUID> playerNames = new ArrayList<>();
+
+		System.out.println("Outputting user manager");
+
+		for (OfflinePlayer player : plugin.getServer().getOfflinePlayers()) {
+			StatsHolder user = this.getStatsHolder(player.getUniqueId());
+
+			System.out.println("USER: " + user);
+			
+			if (user == null) {
+				plugin.getLogger().warning("Could not load data from user " + player.getName() + ". Skipping him/her!");
+				continue;
+			}
+			
+			playerNames.add(player.getUniqueId());
+		}
+
+		return playerNames;
+	}
+
+	public StatsHolder getStatsHolder(UUID uuid) {
+
+		StatsHolder user = stats.getUserManager().getUser(uuid);
+
+		// Users are only loaded when they are offline, so try to force-load them.
+		if (user == null) {
+			try {
+				user = stats.getUserManager().loadUser(uuid, stats.getStatManager());
+				return user;
+			} catch (StorageException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
+		}
+
+		return user;
 	}
 
 	/* (non-Javadoc)

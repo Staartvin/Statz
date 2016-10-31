@@ -22,6 +22,7 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
+import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
 import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
 import me.staartvin.statz.listeners.PlayerBlockBreakListener;
@@ -67,6 +68,7 @@ public class Statz extends JavaPlugin {
 	private CommandsManager commandsManager;
 	private LogManager logsManager;
 	private LanguageHandler langHandler;
+	private ImportManager importManager;
 
 	@Override
 	public void onEnable() {
@@ -135,10 +137,18 @@ public class Statz extends JavaPlugin {
 		this.setLangHandler(new LanguageHandler(this));
 		
 		this.getLangHandler().createNewFile();
+		
+		this.setImportManager(new ImportManager(this));
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 		
-		this.getLogsManager().writeToLogFile("Enabled Statz!");		
+		this.getLogsManager().writeToLogFile("Enabled Statz!");
+		
+		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
+			public void run() {
+				getImportManager().importFromStats3();
+			}
+		}, 100, 100);
 	}
 
 	@Override
@@ -501,5 +511,13 @@ public class Statz extends JavaPlugin {
 
 	public void setLangHandler(LanguageHandler langHandler) {
 		this.langHandler = langHandler;
+	}
+
+	public ImportManager getImportManager() {
+		return importManager;
+	}
+
+	public void setImportManager(ImportManager importManager) {
+		this.importManager = importManager;
 	}
 }
