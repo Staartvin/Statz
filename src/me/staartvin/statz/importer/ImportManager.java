@@ -92,12 +92,12 @@ public class ImportManager {
 					Map<String, Object> metadata = entry.getMetadata();
 
 					double value = entry.getValue();
-					String worldName = (String) metadata.getOrDefault("world", "world");
+					String worldName = (String) metadata.get("world");
 
 					if (stat instanceof Move) {
 						// Movement stat
 
-						double moveType = Double.parseDouble(metadata.getOrDefault("type", 0).toString());
+						double moveType = Double.parseDouble(metadata.get("type").toString());
 
 						String movementType = "WALK";
 
@@ -133,7 +133,7 @@ public class ImportManager {
 					} else if (stat instanceof Kill) {
 						// Kill stat
 
-						EntityType entity = EntityType.fromName((String) metadata.getOrDefault("entityType", "PIG"));
+						EntityType entity = EntityType.fromName((String) metadata.get("entityType"));
 
 						plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.KILLS_MOBS,
 								StatzUtil.makeQuery("value", (value), "mob", entity.toString(), "world", worldName));
@@ -164,8 +164,8 @@ public class ImportManager {
 					} else if (stat instanceof BlockBreak) {
 						// Blocks broken stat
 
-						int dataValue = Integer.parseInt(metadata.getOrDefault("data", 0).toString());
-						String blockName = (String) metadata.getOrDefault("name", "GRASS");
+						int dataValue = Integer.parseInt(metadata.get("data").toString());
+						String blockName = (String) metadata.get("name");
 
 						Material material = Material.getMaterial(blockName);
 
@@ -177,8 +177,8 @@ public class ImportManager {
 					} else if (stat instanceof BlockPlace) {
 						// Blocks placed stat
 
-						int dataValue = Integer.parseInt(metadata.getOrDefault("data", 0).toString());
-						String blockName = (String) metadata.getOrDefault("name", "GRASS");
+						int dataValue = Integer.parseInt(metadata.get("data").toString());
+						String blockName = (String) metadata.get("name");
 
 						Material material = Material.getMaterial(blockName);
 
