@@ -315,12 +315,8 @@ public class StatsAPIHandler implements DependencyHandler {
 	public List<UUID> getLoggedPlayers() {
 		List<UUID> playerNames = new ArrayList<>();
 
-		System.out.println("Outputting user manager");
-
 		for (OfflinePlayer player : plugin.getServer().getOfflinePlayers()) {
 			StatsHolder user = this.getStatsHolder(player.getUniqueId());
-
-			System.out.println("USER: " + user);
 			
 			if (user == null) {
 				plugin.getLogger().warning("Could not load data from user " + player.getName() + ". Skipping him/her!");

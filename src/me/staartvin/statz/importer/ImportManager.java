@@ -340,8 +340,6 @@ public class ImportManager {
 
 			}
 
-			System.out.println("Migrated " + changeCount + " entries for " + uuid);
-
 			// Add added change count
 			importedEntries += changeCount;
 		}

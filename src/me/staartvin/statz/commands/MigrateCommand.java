@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.handlers.StatsAPIHandler;
 import me.staartvin.statz.language.Lang;
 import net.md_5.bungee.api.ChatColor;
 
@@ -31,30 +32,33 @@ public class MigrateCommand extends StatzCommand {
 			sender.sendMessage(Lang.DID_NOT_FIND_DEPENDENCY.getConfigValue("Stats 3"));
 			return true;
 		}
-		
+
 		// Start migrating entries on seperate thread.
 		sender.sendMessage(ChatColor.YELLOW + "Start migrating data from Stats 3 to Statz!");
 		sender.sendMessage(ChatColor.RED + "This may take a while.");
-		
+
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 			public void run() {
 				int changes = plugin.getImportManager().importFromStats3();
-				
+
 				while (changes == 0) {
 					try {
-						Thread.sleep(10000);
+						// Sleep for 10 seconds and then try again - Stats takes a while to load people
+						// For each user that is logged, wait 0.5 seconds.
+						Thread.sleep(((StatsAPIHandler) plugin.getDependencyManager().getDependency(Dependency.STATS))
+								.getLoggedPlayers().size() * 500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 					changes = plugin.getImportManager().importFromStats3();
 				}
-				
+
 				sender.sendMessage(ChatColor.GREEN + "Imported " + changes + " entries from Stats 3 database.");
 			}
 		});
-		
+
 		return true;
 	}
 
