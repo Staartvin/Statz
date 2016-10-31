@@ -22,3 +22,6 @@ permissions:
     statz.transfer.sqlite:
         description: Allows a player to start the transferring of data from SQLite to MySQL.
         default: op
+    statz.migrate:
+        description: Allows a player to start migrating data from Stats 3 to Statz.
+        default: op

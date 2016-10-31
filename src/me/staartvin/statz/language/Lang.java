@@ -47,7 +47,24 @@ public enum Lang {
 	/**
 	 * &eStatz is currently hooked and listening to the following plugins:
 	 */
-	STATZ_HOOKED_AND_LISTENING("statz-hooked-and-listening", "&eStatz is currently hooked and listening to the following plugins:"),;
+	STATZ_HOOKED_AND_LISTENING("statz-hooked-and-listening", "&eStatz is currently hooked and listening to the following plugins:"),
+	/**
+	 * &4Statz could not detect {0} running on this server!
+	 */
+	DID_NOT_FIND_DEPENDENCY("did-not-find-dependency", "&4Statz could not detect {0} running on this server!"),
+	/**
+	 * &4This command was not recognized!
+	 */
+	COMMAND_NOT_RECOGNIZED("command-not-recognized", "&4This command was not recognized!"),
+	/**
+	 * &eUse '/statz help' for a list of commands.
+	 */
+	STATZ_HELP_COMMAND("statz-help-command", "&eUse '/statz help' for a list of commands."),
+	
+	/**
+	 * &4You do not have the permission ({0}) to perform this command."
+	 */
+	INSUFFICIENT_PERMISSIONS("insufficient-permissions", "&4You do not have the permission ({0}) to perform this command.");
 
 	private static FileConfiguration LANG;
 

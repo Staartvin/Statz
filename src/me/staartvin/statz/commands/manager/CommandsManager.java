@@ -16,7 +16,9 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.HelpCommand;
 import me.staartvin.statz.commands.HooksCommand;
 import me.staartvin.statz.commands.ListCommand;
+import me.staartvin.statz.commands.MigrateCommand;
 import me.staartvin.statz.commands.TransferCommand;
+import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -49,6 +51,7 @@ public class CommandsManager implements TabExecutor {
 		//registeredCommands.put(Arrays.asList("info", "i"), new InfoCommand(plugin));
 		registeredCommands.put(Arrays.asList("hooks"), new HooksCommand(plugin));
 		registeredCommands.put(Arrays.asList("transfer"), new TransferCommand(plugin));
+		registeredCommands.put(Arrays.asList("migrate"), new MigrateCommand(plugin));
 	}
 
 	public HashMap<List<String>, StatzCommand> getRegisteredCommands() {
@@ -66,10 +69,15 @@ public class CommandsManager implements TabExecutor {
 	 * @return true if this sender has the given permission, false otherwise.
 	 */
 	public boolean hasPermission(final String permission, final CommandSender sender) {
+		if (permission == null) {
+			return true;
+		}
+		
 		if (!sender.hasPermission(permission)) {
-			sender.sendMessage(ChatColor.RED + "You do not have the permission (" + permission + ") to perform this command");
+			sender.sendMessage(Lang.INSUFFICIENT_PERMISSIONS.getConfigValue(permission));
 			return false;
 		}
+		
 		return true;
 	}
 
@@ -83,7 +91,7 @@ public class CommandsManager implements TabExecutor {
 			if (plugin.getConfigHandler().useCustomList()) {
 				
 				if (!(sender instanceof Player)) {
-					sender.sendMessage(ChatColor.RED + "You can only run this command if you're a player.");
+					sender.sendMessage(Lang.COMMAND_PERFORMED_ONLY_PLAYERS.getConfigValue());
 					return true;
 				}
 				
@@ -97,7 +105,7 @@ public class CommandsManager implements TabExecutor {
 				sender.sendMessage(
 						ChatColor.GOLD + "Developed by: " + ChatColor.GRAY + plugin.getDescription().getAuthors());
 				sender.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.GRAY + plugin.getDescription().getVersion());
-				sender.sendMessage(ChatColor.YELLOW + "Type /statz help for a list of commands.");
+				sender.sendMessage(Lang.STATZ_HELP_COMMAND.getConfigValue());
 			}
 
 			return true;
@@ -120,6 +128,12 @@ public class CommandsManager implements TabExecutor {
 			for (final String actionString : entry.getKey()) {
 
 				if (actionString.equalsIgnoreCase(action)) {
+					
+					// Check if player has proper permission
+					if (!this.hasPermission(entry.getValue().getPermission(), sender)) {
+						return true;
+					}
+					
 					return entry.getValue().onCommand(sender, cmd, label, args);
 				}
 			}
@@ -137,7 +151,7 @@ public class CommandsManager implements TabExecutor {
 			}
 		}
 		
-		sender.sendMessage(ChatColor.RED + "Command not recognised!");
+		sender.sendMessage(Lang.COMMAND_NOT_RECOGNIZED.getConfigValue());
 		
 		if (!bestSuggestions.isEmpty()) {
 			BaseComponent[] builder = new ComponentBuilder("Did you perhaps mean ").color(ChatColor.DARK_AQUA)
@@ -154,7 +168,7 @@ public class CommandsManager implements TabExecutor {
 			}
 		}
 
-		sender.sendMessage(ChatColor.YELLOW + "Use '/statz help' for a list of commands.");
+		sender.sendMessage(Lang.STATZ_HELP_COMMAND.getConfigValue());
 		return true;
 	}
 
