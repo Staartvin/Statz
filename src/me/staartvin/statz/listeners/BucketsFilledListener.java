@@ -1,29 +1,27 @@
 package me.staartvin.statz.listeners;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerBlockPlaceListener implements Listener {
+public class BucketsFilledListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerBlockPlaceListener(final Statz plugin) {
+	public BucketsFilledListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onBlockPlace(final BlockPlaceEvent event) {
+	public void onBucketFill(final PlayerBucketFillEvent event) {
 
-		final PlayerStat stat = PlayerStat.BLOCKS_PLACED;
+		final PlayerStat stat = PlayerStat.BUCKETS_FILLED;
 
 		// Get player
 		final Player player = event.getPlayer();
@@ -32,15 +30,9 @@ public class PlayerBlockPlaceListener implements Listener {
 		if (!plugin.doGeneralCheck(player))
 			return;
 
-		Block blockPlaced = event.getBlockPlaced();
-
-		final int typeId = blockPlaced.getTypeId();
-		final int dataValue = blockPlaced.getData();
-		final String worldName = blockPlaced.getWorld().getName();
-
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
+		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
 		//
 		//		// Get current value of stat.
 		//		int currentValue = 0;
@@ -51,9 +43,8 @@ public class PlayerBlockPlaceListener implements Listener {
 		//		}
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "typeid", typeId, "datavalue",
-						dataValue, "world", worldName));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
+				player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName()));
 
 	}
 }

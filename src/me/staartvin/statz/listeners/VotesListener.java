@@ -14,11 +14,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerVoteListener implements Listener {
+public class VotesListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerVoteListener(final Statz plugin) {
+	public VotesListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

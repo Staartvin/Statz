@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.staartvin.statz.Statz;
 
-public class PlayerQuitListener implements Listener {
+public class QuitListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerQuitListener(final Statz plugin) {
+	public QuitListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
@@ -26,11 +26,11 @@ public class PlayerQuitListener implements Listener {
 				if (!plugin.doGeneralCheck(player)) return;
 
 		// Check if player already has a checker running.
-		if (PlayerJoinListener.updateID.containsKey(player.getUniqueId())) {
+		if (JoinsListener.updateID.containsKey(player.getUniqueId())) {
 			// Cancel task of player
-			plugin.getServer().getScheduler().cancelTask(PlayerJoinListener.updateID.get(player.getUniqueId()));
+			plugin.getServer().getScheduler().cancelTask(JoinsListener.updateID.get(player.getUniqueId()));
 
-			PlayerJoinListener.updateID.remove(player.getUniqueId());
+			JoinsListener.updateID.remove(player.getUniqueId());
 		}
 	}
 

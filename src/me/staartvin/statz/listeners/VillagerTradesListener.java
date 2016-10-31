@@ -14,11 +14,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerTradeVillagerListener implements Listener {
+public class VillagerTradesListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerTradeVillagerListener(final Statz plugin) {
+	public VillagerTradesListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

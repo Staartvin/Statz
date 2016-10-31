@@ -12,11 +12,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerKillsPlayerListener implements Listener {
+public class KillsPlayersListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerKillsPlayerListener(final Statz plugin) {
+	public KillsPlayersListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

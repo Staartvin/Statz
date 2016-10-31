@@ -14,11 +14,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerFishListener implements Listener {
+public class ItemsCaughtListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerFishListener(final Statz plugin) {
+	public ItemsCaughtListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

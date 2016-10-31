@@ -15,12 +15,12 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerJoinListener implements Listener {
+public class JoinsListener implements Listener {
 
 	private final Statz plugin;
 	public static HashMap<UUID, Integer> updateID = new HashMap<>();
 
-	public PlayerJoinListener(final Statz plugin) {
+	public JoinsListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

@@ -4,35 +4,37 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerTeleportListener implements Listener {
+public class ItemsCraftedListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerTeleportListener(final Statz plugin) {
+	public ItemsCraftedListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onTeleport(final PlayerTeleportEvent event) {
+	public void onCraft(final CraftItemEvent event) {
 
-		final PlayerStat stat = PlayerStat.TELEPORTS;
+		final PlayerStat stat = PlayerStat.ITEMS_CRAFTED;
 
 		// Get player
-		final Player player = event.getPlayer();
+		final Player player = (Player) event.getWhoClicked();
 
 		// Do general check
 		if (!plugin.doGeneralCheck(player))
 			return;
 
+		final String itemCrafted = event.getCurrentItem().getType().toString();
+
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
+		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
 		//
 		//		// Get current value of stat.
 		//		int currentValue = 0;
@@ -45,7 +47,7 @@ public class PlayerTeleportListener implements Listener {
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
-						event.getFrom().getWorld().getName(), "destWorld", event.getTo().getWorld().getName(), "cause", event.getCause().toString()));
+						player.getWorld().getName(), "item", itemCrafted));
 
 	}
 }

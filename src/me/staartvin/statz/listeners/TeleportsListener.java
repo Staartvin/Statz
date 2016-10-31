@@ -4,39 +4,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerTakeDamageListener implements Listener {
+public class TeleportsListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerTakeDamageListener(final Statz plugin) {
+	public TeleportsListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onDamage(final EntityDamageEvent event) {
+	public void onTeleport(final PlayerTeleportEvent event) {
 
-		final PlayerStat stat = PlayerStat.DAMAGE_TAKEN;
-
-		if (!(event.getEntity() instanceof Player)) {
-			// It was not a player that got damage
-			return;
-		}
+		final PlayerStat stat = PlayerStat.TELEPORTS;
 
 		// Get player
-		final Player player = (Player) event.getEntity();
+		final Player player = event.getPlayer();
 
 		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
-		
+		if (!plugin.doGeneralCheck(player))
+			return;
+
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "cause", event.getCause().toString()));
+		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
 		//
 		//		// Get current value of stat.
 		//		int currentValue = 0;
@@ -48,8 +44,8 @@ public class PlayerTakeDamageListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", event.getDamage(), "cause",
-						event.getCause().toString(), "world", player.getWorld().getName()));
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+						event.getFrom().getWorld().getName(), "destWorld", event.getTo().getWorld().getName(), "cause", event.getCause().toString()));
 
 	}
 }

@@ -10,11 +10,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerPerformCommandListener implements Listener {
+public class CommandsPerformedListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerPerformCommandListener(final Statz plugin) {
+	public CommandsPerformedListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

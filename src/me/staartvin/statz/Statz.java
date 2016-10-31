@@ -25,35 +25,35 @@ import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
 import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
-import me.staartvin.statz.listeners.PlayerBlockBreakListener;
-import me.staartvin.statz.listeners.PlayerBlockPlaceListener;
-import me.staartvin.statz.listeners.PlayerBreakToolListener;
-import me.staartvin.statz.listeners.PlayerCraftItemListener;
-import me.staartvin.statz.listeners.PlayerDeathListener;
-import me.staartvin.statz.listeners.PlayerDropItemListener;
-import me.staartvin.statz.listeners.PlayerEatFoodListener;
-import me.staartvin.statz.listeners.PlayerEmptyBucketListener;
-import me.staartvin.statz.listeners.PlayerEnterBedListener;
-import me.staartvin.statz.listeners.PlayerFillBucketListener;
-import me.staartvin.statz.listeners.PlayerFishListener;
-import me.staartvin.statz.listeners.PlayerGainXPListener;
-import me.staartvin.statz.listeners.PlayerGetKickedListener;
-import me.staartvin.statz.listeners.PlayerJoinListener;
-import me.staartvin.statz.listeners.PlayerKillsMobListener;
-import me.staartvin.statz.listeners.PlayerKillsPlayerListener;
-import me.staartvin.statz.listeners.PlayerMoveListener;
-import me.staartvin.statz.listeners.PlayerPerformCommandListener;
-import me.staartvin.statz.listeners.PlayerPickUpItemListener;
-import me.staartvin.statz.listeners.PlayerQuitListener;
-import me.staartvin.statz.listeners.PlayerShearListener;
-import me.staartvin.statz.listeners.PlayerShootArrowListener;
-import me.staartvin.statz.listeners.PlayerSwitchWorldListener;
-import me.staartvin.statz.listeners.PlayerTakeDamageListener;
-import me.staartvin.statz.listeners.PlayerTeleportListener;
-import me.staartvin.statz.listeners.PlayerThrowEggListener;
-import me.staartvin.statz.listeners.PlayerTradeVillagerListener;
-import me.staartvin.statz.listeners.PlayerVoteListener;
-import me.staartvin.statz.listeners.VehicleMoveListener;
+import me.staartvin.statz.listeners.BlocksBrokenListener;
+import me.staartvin.statz.listeners.BlocksPlacedListener;
+import me.staartvin.statz.listeners.ToolsBrokenListener;
+import me.staartvin.statz.listeners.ItemsCraftedListener;
+import me.staartvin.statz.listeners.DeathsListener;
+import me.staartvin.statz.listeners.ItemsDroppedListener;
+import me.staartvin.statz.listeners.FoodEatenListener;
+import me.staartvin.statz.listeners.BucketsEmptiedListener;
+import me.staartvin.statz.listeners.EnteredBedsListener;
+import me.staartvin.statz.listeners.BucketsFilledListener;
+import me.staartvin.statz.listeners.ItemsCaughtListener;
+import me.staartvin.statz.listeners.XPGainedListener;
+import me.staartvin.statz.listeners.TimesKickedListener;
+import me.staartvin.statz.listeners.JoinsListener;
+import me.staartvin.statz.listeners.KillsMobsListener;
+import me.staartvin.statz.listeners.KillsPlayersListener;
+import me.staartvin.statz.listeners.DistanceTravelledListener;
+import me.staartvin.statz.listeners.CommandsPerformedListener;
+import me.staartvin.statz.listeners.ItemsPickedUpListener;
+import me.staartvin.statz.listeners.QuitListener;
+import me.staartvin.statz.listeners.TimesShornListener;
+import me.staartvin.statz.listeners.ArrowsShotListener;
+import me.staartvin.statz.listeners.WorldsChangedListener;
+import me.staartvin.statz.listeners.DamageTakenListener;
+import me.staartvin.statz.listeners.TeleportsListener;
+import me.staartvin.statz.listeners.EggsThrownListener;
+import me.staartvin.statz.listeners.VillagerTradesListener;
+import me.staartvin.statz.listeners.VotesListener;
+import me.staartvin.statz.listeners.DistanceTravelledVehicleListener;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.util.StatzUtil;
 
@@ -171,114 +171,114 @@ public class Statz extends JavaPlugin {
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DEATHS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DeathsListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.JOINS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new JoinsListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CAUGHT)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ItemsCaughtListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BLOCKS_PLACED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerBlockPlaceListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new BlocksPlacedListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BLOCKS_BROKEN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerBlockBreakListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new BlocksBrokenListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_MOBS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerKillsMobListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new KillsMobsListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_PLAYERS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerKillsPlayerListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new KillsPlayersListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.FOOD_EATEN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerEatFoodListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new FoodEatenListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DAMAGE_TAKEN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerTakeDamageListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DamageTakenListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_SHORN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerShearListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new TimesShornListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DISTANCE_TRAVELLED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
-			this.getServer().getPluginManager().registerEvents(new VehicleMoveListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DistanceTravelledListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DistanceTravelledVehicleListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CRAFTED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerCraftItemListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ItemsCraftedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.XP_GAINED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerGainXPListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new XPGainedListener(this), this);
 		}
 
-		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 		
 		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER) || this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerVoteListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new VotesListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ARROWS_SHOT)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerShootArrowListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ArrowsShotListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ENTERED_BEDS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerEnterBedListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new EnteredBedsListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.COMMANDS_PERFORMED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerPerformCommandListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new CommandsPerformedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_KICKED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerGetKickedListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new TimesKickedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TOOLS_BROKEN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerBreakToolListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ToolsBrokenListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.EGGS_THROWN)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerThrowEggListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new EggsThrownListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.WORLDS_CHANGED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerSwitchWorldListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new WorldsChangedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_FILLED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerFillBucketListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new BucketsFilledListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_EMPTIED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerEmptyBucketListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new BucketsEmptiedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_PICKED_UP)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerPickUpItemListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ItemsPickedUpListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_DROPPED)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new ItemsDroppedListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TELEPORTS)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerTeleportListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new TeleportsListener(this), this);
 		}
 		
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.VILLAGER_TRADES)) {
-			this.getServer().getPluginManager().registerEvents(new PlayerTradeVillagerListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new VillagerTradesListener(this), this);
 		}
 		
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {

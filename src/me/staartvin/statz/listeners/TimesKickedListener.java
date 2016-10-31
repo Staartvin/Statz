@@ -4,25 +4,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerKickEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerBreakToolListener implements Listener {
+public class TimesKickedListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerBreakToolListener(final Statz plugin) {
+	public TimesKickedListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onToolBreak(final PlayerItemBreakEvent event) {
+	public void onKick(final PlayerKickEvent event) {
 
-		final PlayerStat stat = PlayerStat.TOOLS_BROKEN;
+		final PlayerStat stat = PlayerStat.TIMES_KICKED;
 
 		// Get player
 		final Player player = event.getPlayer();
@@ -30,12 +29,10 @@ public class PlayerBreakToolListener implements Listener {
 		// Do general check
 		if (!plugin.doGeneralCheck(player))
 			return;
-		
-		ItemStack item = event.getBrokenItem();
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "item", item.getType().toString()));
+				player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "reason", event.getReason()));
 
 	}
 }

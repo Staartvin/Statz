@@ -4,34 +4,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerDeathListener implements Listener {
+public class BucketsEmptiedListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerDeathListener(final Statz plugin) {
+	public BucketsEmptiedListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onDie(final PlayerDeathEvent event) {
+	public void onBucketEmpty(final PlayerBucketEmptyEvent event) {
 
-		final PlayerStat stat = PlayerStat.DEATHS;
+		final PlayerStat stat = PlayerStat.BUCKETS_EMPTIED;
 
 		// Get player
-		final Player player = event.getEntity();
-		
+		final Player player = event.getPlayer();
+
 		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
+		if (!plugin.doGeneralCheck(player))
+			return;
 
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName()));
+		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
 		//
 		//		// Get current value of stat.
 		//		int currentValue = 0;
@@ -39,7 +40,6 @@ public class PlayerDeathListener implements Listener {
 		//		// Check if it is valid!
 		//		if (info.isValid()) {
 		//			currentValue += info.getTotalValue();
-		//			//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
 		//		}
 
 		// Update value to new stat.

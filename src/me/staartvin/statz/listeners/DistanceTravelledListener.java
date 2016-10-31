@@ -10,11 +10,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerMoveListener implements Listener {
+public class DistanceTravelledListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerMoveListener(final Statz plugin) {
+	public DistanceTravelledListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

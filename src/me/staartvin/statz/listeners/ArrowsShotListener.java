@@ -10,11 +10,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerShootArrowListener implements Listener {
+public class ArrowsShotListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerShootArrowListener(final Statz plugin) {
+	public ArrowsShotListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

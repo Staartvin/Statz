@@ -11,11 +11,11 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class VehicleMoveListener implements Listener {
+public class DistanceTravelledVehicleListener implements Listener {
 
 	private final Statz plugin;
 
-	public VehicleMoveListener(final Statz plugin) {
+	public DistanceTravelledVehicleListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 

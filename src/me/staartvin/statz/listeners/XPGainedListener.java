@@ -4,35 +4,34 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-public class PlayerEmptyBucketListener implements Listener {
+public class XPGainedListener implements Listener {
 
 	private final Statz plugin;
 
-	public PlayerEmptyBucketListener(final Statz plugin) {
+	public XPGainedListener(final Statz plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onBucketEmpty(final PlayerBucketEmptyEvent event) {
+	public void onXPGain(final PlayerExpChangeEvent event) {
 
-		final PlayerStat stat = PlayerStat.BUCKETS_EMPTIED;
+		final PlayerStat stat = PlayerStat.XP_GAINED;
 
 		// Get player
-		final Player player = event.getPlayer();
-
+		final Player player = (Player) event.getPlayer();
+		
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
-			return;
+				if (!plugin.doGeneralCheck(player)) return;
 
 		//		// Get player info.
 		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("caught", material, "world", player.getWorld().getName()));
+		//				StatzUtil.makeQuery("world", player.getWorld().getName()));
 		//
 		//		// Get current value of stat.
 		//		int currentValue = 0;
@@ -44,7 +43,7 @@ public class PlayerEmptyBucketListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName()));
+				player.getUniqueId().toString(), "value", event.getAmount(), "world", player.getWorld().getName()));
 
 	}
 }
