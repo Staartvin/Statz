@@ -268,7 +268,7 @@ public class ImportManager {
 						// Times joined stat
 
 						plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.JOINS, StatzUtil
-								.makeQuery("value", (value), "world", worldName));
+								.makeQuery("value", (value)));
 
 						changeCount++;
 					} else if (stat instanceof Omnomnom) {
