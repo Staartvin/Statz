@@ -2,7 +2,6 @@ package me.staartvin.statz.hooks.handlers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +21,6 @@ import nl.lolmewn.stats.api.stat.StatEntry;
 import nl.lolmewn.stats.api.storage.StorageException;
 import nl.lolmewn.stats.api.user.StatsHolder;
 import nl.lolmewn.stats.bukkit.BukkitMain;
-import nl.lolmewn.stats.stats.Move;
 
 /**
  * Handles all connections with Stats
