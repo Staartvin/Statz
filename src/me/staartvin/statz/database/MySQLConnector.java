@@ -950,7 +950,7 @@ public class MySQLConnector extends DatabaseConnector {
 
 				update += onDuplicate;
 				
-				System.out.println("UPDATE: "+ update);
+				//System.out.println("UPDATE: "+ update);
 
 				//System.out.println("UPDATE Query: " + update);
 
