@@ -143,12 +143,6 @@ public class Statz extends JavaPlugin {
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 		
 		this.getLogsManager().writeToLogFile("Enabled Statz!");
-		
-		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
-			public void run() {
-				getImportManager().importFromStats3();
-			}
-		}, 100, 100);
 	}
 
 	@Override
