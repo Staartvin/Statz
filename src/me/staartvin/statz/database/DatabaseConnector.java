@@ -56,7 +56,7 @@ public abstract class DatabaseConnector {
 	}
 
 	/**
-	 * Sets up a connection between the plugin and the sqlite database.
+	 * Sets up a connection between the plugin and the database.
 	 * 
 	 * @return a connection to the database or null if it couldn't connect.
 	 */
@@ -68,7 +68,7 @@ public abstract class DatabaseConnector {
 	public abstract void load();
 
 	/**
-	 * Tests whether there is a valid connection available between sqlite
+	 * Tests whether there is a valid connection available between the
 	 * database.
 	 * <br>
 	 * Will spit errors in the console when it could not properly connect.
@@ -149,7 +149,7 @@ public abstract class DatabaseConnector {
 	public abstract void setBatchObjects(final Table table, final List<Query> queries, int mode);
 
 	//	/**
-	//	 * Closes sqlite connection.
+	//	 * Closes database connection.
 	//	 * 
 	//	 * @param ps PreparedStatement to be closed
 	//	 * @param rs ResultSet to be closed
@@ -189,6 +189,9 @@ public abstract class DatabaseConnector {
 		tables.add(table);
 	}
 
+	/**
+	 * Refresh connection with database
+	 */
 	private void refreshConnection() {
 		// Run this query to refresh the connection.
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
