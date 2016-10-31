@@ -14,6 +14,11 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import net.md_5.bungee.api.ChatColor;
 
+/**
+ * This class handles all the data that should be written to a log file.
+ * @author Staartvin
+ *
+ */
 public class LogManager {
 
 	private final static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
@@ -80,6 +85,12 @@ public class LogManager {
 		}
 	}
 
+	/**
+	 * Write query objects of a given statistic to a log file.
+	 * <br>This method will format the queries into human-readable form to write into the log file.
+	 * @param queries Queries to write to log file
+	 * @param stat Statistic that the given queries correspond to. 
+	 */
 	public void writeToLogFile(List<Query> queries, PlayerStat stat) {
 
 		// Creates a new file
@@ -117,6 +128,10 @@ public class LogManager {
 		}
 	}
 
+	/**
+	 * Write a single message to a log file
+	 * @param message Message to write to log file.
+	 */
 	public void writeToLogFile(String message) {
 
 		// Creates a new file
@@ -152,6 +167,10 @@ public class LogManager {
 		}
 	}
 	
+	/**
+	 * Write multiple messages to a log file.
+	 * @param messages List of messages to write to log file.
+	 */
 	public void writeToLogFile(List<String> messages) {
 
 		// Creates a new file

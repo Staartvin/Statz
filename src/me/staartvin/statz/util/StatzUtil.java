@@ -283,6 +283,11 @@ public class StatzUtil {
 		return "WALK"; // Default to walking
 	}
 
+	/**
+	 * Use this method to convert a Query into human-readable form.
+	 * @param query Query to convert.
+	 * @return a string that is readable to humans and represents the given query.
+	 */
 	public static String printQuery(HashMap<String, String> query) {
 		StringBuilder builder = new StringBuilder("[");
 
@@ -295,6 +300,12 @@ public class StatzUtil {
 		return builder.toString();
 	}
 
+	/**
+	 * Round a double to given digits behind the dot (decimal digits).
+	 * @param value Value to round
+	 * @param places decimal digits to round to.
+	 * @return a double that is rounded to given amount of decimal digits.
+	 */
 	public static double roundDouble(double value, int places) {
 		if (places < 0)
 			throw new IllegalArgumentException();
@@ -341,6 +352,12 @@ public class StatzUtil {
 		return string.toString();
 	}
 
+	/**
+	 * Find the closest string in a list compared to a given string.
+	 * @param input String to compare
+	 * @param list List of strings to choose from
+	 * @return a string from the given list that is most closely related to the given string (first parameter).
+	 */
 	public static String findClosestSuggestion(String input, List<String> list) {
 		int lowestDistance = Integer.MAX_VALUE;
 		String bestSuggestion = null;

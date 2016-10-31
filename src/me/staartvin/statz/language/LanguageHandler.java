@@ -11,7 +11,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.staartvin.statz.Statz;
 
 /**
- * @author Vincent Return the language being used.
+ * Class used to reload/create the language file of Statz.
+ * @author Staartvin 
  */
 public class LanguageHandler {
 

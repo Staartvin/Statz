@@ -57,6 +57,11 @@ import me.staartvin.statz.listeners.DistanceTravelledVehicleListener;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.util.StatzUtil;
 
+/**
+ * Main class of Statz Spigot/Bukkit plugin.
+ * @author Staartvin
+ *
+ */
 public class Statz extends JavaPlugin {
 
 	private DatabaseConnector connector;

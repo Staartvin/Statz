@@ -13,6 +13,11 @@ import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
+/**
+ * API class of Statz that other plugins can use to retrieve information from Statz.
+ * @author Staartvin
+ *
+ */
 public class API {
 
 	private Statz plugin;
