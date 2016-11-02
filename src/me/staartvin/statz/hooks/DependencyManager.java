@@ -45,24 +45,111 @@ public class DependencyManager {
 		plugin = instance;
 
 		// Register handlers
-		handlers.put(Dependency.VOTIFIER, new VotifierHandler(instance));
-		handlers.put(Dependency.JOBS, new JobsHandler(instance));
-		handlers.put(Dependency.MCMMO, new McMMOHandler(instance));
-		handlers.put(Dependency.ASKYBLOCK, new ASkyBlockHandler(instance));
-		handlers.put(Dependency.ACIDISLAND, new AcidIslandHandler(instance));
-		handlers.put(Dependency.WORLDGUARD, new WorldGuardHandler(instance));
-		handlers.put(Dependency.ROYAL_COMMANDS, new RoyalCommandsHandler(instance));
-		handlers.put(Dependency.ON_TIME, new OnTimeHandler(instance));
-		handlers.put(Dependency.AFKTERMINATOR, new AFKTerminatorHandler(instance));
-		handlers.put(Dependency.ESSENTIALS, new EssentialsHandler(instance));
-		handlers.put(Dependency.FACTIONS, new FactionsHandler(instance));
-		handlers.put(Dependency.STATISTICS, new StatisticsAPIHandler(instance));
-		handlers.put(Dependency.STATS, new StatsAPIHandler(instance));
-		handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
-		handlers.put(Dependency.VAULT, new VaultHandler(instance));
-		handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
-		handlers.put(Dependency.RPGME, new RPGmeHandler(instance));
-		handlers.put(Dependency.NUVOTIFIER, new NuVotifierHandler(instance));
+		try {
+			handlers.put(Dependency.VOTIFIER, new VotifierHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Votifier!");
+		}
+
+		try {
+			handlers.put(Dependency.JOBS, new JobsHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Jobs!");
+		}
+
+		try {
+			handlers.put(Dependency.MCMMO, new McMMOHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load mcMMO!");
+		}
+
+		try {
+			handlers.put(Dependency.ASKYBLOCK, new ASkyBlockHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load ASkyBlock!");
+		}
+
+		try {
+			handlers.put(Dependency.ACIDISLAND, new AcidIslandHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load AcidIsland!");
+		}
+
+		try {
+			handlers.put(Dependency.WORLDGUARD, new WorldGuardHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load WorldGuard!");
+		}
+
+		try {
+			handlers.put(Dependency.ROYAL_COMMANDS, new RoyalCommandsHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load RoyalCommands!");
+		}
+
+		try {
+			handlers.put(Dependency.ON_TIME, new OnTimeHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load OnTime!");
+		}
+
+		try {
+			handlers.put(Dependency.AFKTERMINATOR, new AFKTerminatorHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load afkTerminator!");
+		}
+		try {
+			handlers.put(Dependency.ESSENTIALS, new EssentialsHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Essentials!");
+		}
+		try {
+			handlers.put(Dependency.FACTIONS, new FactionsHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Factions!");
+		}
+
+		try {
+			handlers.put(Dependency.STATISTICS, new StatisticsAPIHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Statistics!");
+		}
+
+		try {
+			handlers.put(Dependency.STATS, new StatsAPIHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Stats!");
+		}
+
+		try {
+			handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load UltimateCore!");
+		}
+
+		try {
+			handlers.put(Dependency.VAULT, new VaultHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load Vault!");
+		}
+
+		try {
+			handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load GriefPrevention!");
+		}
+
+		try {
+			handlers.put(Dependency.RPGME, new RPGmeHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load RPGMe!");
+		}
+
+		try {
+			handlers.put(Dependency.NUVOTIFIER, new NuVotifierHandler(instance));
+		} catch (NoClassDefFoundError e) {
+			plugin.debugMessage("Could not load NuVotifier!");
+		}
 	}
 
 	/**
@@ -142,14 +229,12 @@ public class DependencyManager {
 				// NuVotifier has the same internal name, and hence cannot be distinguished from Votifier. 
 				// That's why we provide a special case.
 				if (dependency == Dependency.NUVOTIFIER) {
-					plugin.debugMessage(
-							ChatColor.GREEN + "NuVotifier was found and Statz now tracks its data!");
+					plugin.debugMessage(ChatColor.GREEN + "NuVotifier was found and Statz now tracks its data!");
 				} else {
-					plugin.debugMessage(
-							ChatColor.GREEN + dependency.getInternalString() + " was found and Statz now tracks its data!");
+					plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
+							+ " was found and Statz now tracks its data!");
 				}
-				
-				
+
 			}
 		}
 
@@ -181,16 +266,16 @@ public class DependencyManager {
 
 		return handler.isAvailable();
 	}
-	
+
 	public List<Dependency> getAvailableDependencies() {
 		List<Dependency> dependencies = new ArrayList<>();
-		
-		for (Dependency d: Dependency.values()) {
+
+		for (Dependency d : Dependency.values()) {
 			if (this.isAvailable(d)) {
 				dependencies.add(d);
 			}
 		}
-		
+
 		return dependencies;
 	}
 

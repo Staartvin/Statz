@@ -18,7 +18,6 @@ import me.staartvin.statz.hooks.DependencyHandler;
 import nl.lolmewn.stats.api.StatsAPI;
 import nl.lolmewn.stats.api.stat.Stat;
 import nl.lolmewn.stats.api.stat.StatEntry;
-import nl.lolmewn.stats.api.storage.StorageException;
 import nl.lolmewn.stats.api.user.StatsHolder;
 import nl.lolmewn.stats.bukkit.BukkitMain;
 
@@ -338,7 +337,7 @@ public class StatsAPIHandler implements DependencyHandler {
 			try {
 				user = stats.getUserManager().loadUser(uuid, stats.getStatManager());
 				return user;
-			} catch (StorageException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				return null;
 			}
