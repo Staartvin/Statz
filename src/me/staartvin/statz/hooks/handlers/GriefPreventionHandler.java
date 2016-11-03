@@ -3,8 +3,10 @@ package me.staartvin.statz.hooks.handlers;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 
+import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import me.staartvin.statz.Statz;
@@ -127,6 +129,25 @@ public class GriefPreventionHandler implements DependencyHandler {
 		PlayerData data = this.getPlayerData(uuid);
 
 		return data.getBonusClaimBlocks();
+	}
+	
+	/**
+	 * Check whether a location is in the someone's claim.
+	 * @param loc Location to check
+	 * @param uuid UUID of player to find the claim of
+	 * @return true if the given location is in the player's claim; false otherwise.
+	 */
+	public boolean isInRegion(Location loc, UUID uuid) {
+		
+		PlayerData data = this.getPlayerData(uuid);
+		
+		Claim claim = api.dataStore.getClaimAt(loc, false, data.lastClaim);
+		
+		if (claim != null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }
