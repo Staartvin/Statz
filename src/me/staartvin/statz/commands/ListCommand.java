@@ -126,7 +126,8 @@ public class ListCommand extends StatzCommand {
 				return true;
 			}
 		}
-
+		
+		// Show a list of all stats
 		if (showList) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 

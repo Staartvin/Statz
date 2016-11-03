@@ -2,9 +2,11 @@ package me.staartvin.statz.commands.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.bukkit.command.Command;
@@ -18,6 +20,7 @@ import me.staartvin.statz.commands.HooksCommand;
 import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.MigrateCommand;
 import me.staartvin.statz.commands.TransferCommand;
+import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -88,19 +91,34 @@ public class CommandsManager implements TabExecutor {
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
 		if (args.length == 0) {
-			if (plugin.getConfigHandler().useCustomList()) {
-				
-				if (!(sender instanceof Player)) {
-					sender.sendMessage(Lang.COMMAND_PERFORMED_ONLY_PLAYERS.getConfigValue());
-					return true;
-				}
+			// If admin has predefined a list of stats, show that instead of the list view of all stats.
+			if (plugin.getConfigHandler().useCustomList() && sender instanceof Player) {
 				
 				Player player = (Player) sender;
-				
-				player.performCommand("statz l 1");
+					
+				// Show custom stats that admin has provided in the config.
+				plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+					private String playerName;
+					private UUID uuid;
+					private int pageNumber;
+
+					private Runnable init(String playerName, UUID uuid, int pageNumber) {
+						this.playerName = playerName;
+						this.uuid = uuid;
+						this.pageNumber = pageNumber - 1;
+						return this;
+					}
+
+					public void run() {
+
+						plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber, plugin.getConfigHandler().getCustomList());
+
+					}
+				}.init(sender.getName(), player.getUniqueId(), 0));
 				
 				return true;			
-			} else {
+			} else { // Just show information about the plugin.
 				sender.sendMessage(ChatColor.BLUE + "-----------------------------------------------------");
 				sender.sendMessage(
 						ChatColor.GOLD + "Developed by: " + ChatColor.GRAY + plugin.getDescription().getAuthors());

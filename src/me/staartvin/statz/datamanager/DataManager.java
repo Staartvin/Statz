@@ -1,7 +1,6 @@
 package me.staartvin.statz.datamanager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -199,7 +198,7 @@ public class DataManager {
 		plugin.getDataPoolManager().addQuery(statType, results);
 	}
 	
-	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, Collection<PlayerStat> list) {
+	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {
 		List<String> messages = new ArrayList<>();
 		List<TextComponent> messagesSpigot = new ArrayList<>();
 
