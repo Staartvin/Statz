@@ -2,12 +2,11 @@ package me.staartvin.statz.commands.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,7 +19,6 @@ import me.staartvin.statz.commands.HooksCommand;
 import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.MigrateCommand;
 import me.staartvin.statz.commands.TransferCommand;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
