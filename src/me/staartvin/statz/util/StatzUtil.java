@@ -22,10 +22,12 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Spider;
 import org.bukkit.entity.Rabbit.Type;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.database.datatype.Query;
@@ -676,6 +678,8 @@ public class StatzUtil {
 
 			if (ske.getSkeletonType() == SkeletonType.WITHER) {
 				mobType = "WITHER " + mobType;
+			} else if (ske.getSkeletonType() == SkeletonType.STRAY) {
+				mobType = "STRAY";
 			}
 		} else if (e instanceof Creeper) {
 			final Creeper cre = (Creeper) e;
@@ -706,6 +710,12 @@ public class StatzUtil {
 
 			if (mob.isElder()) {
 				mobType = "ELDER " + mobType;
+			}
+		} else if (e instanceof Zombie) {
+			Zombie mob = (Zombie) e;
+			
+			if (mob.getVillagerProfession() == Villager.Profession.HUSK) {
+				mobType = "HUSK";
 			}
 		}
 
