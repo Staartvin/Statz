@@ -12,7 +12,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 
 public class KillsMobsListener implements Listener {
 
