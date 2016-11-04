@@ -1,5 +1,6 @@
 package me.staartvin.statz.listeners;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
+import net.md_5.bungee.api.ChatColor;
 
 public class KillsMobsListener implements Listener {
 
@@ -53,8 +55,17 @@ public class KillsMobsListener implements Listener {
 						player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName(), "mob", mobType));
 
 			}
-		} else {
-			// Entity died of something else
+		} else if (nEvent.getDamager() instanceof Arrow){
+			// Entity was killed by an arrow, now check if it was shot by a player
+			Arrow killerArrow = (Arrow) nEvent.getDamager();
+			
+			if (killerArrow.getShooter() instanceof Player) {
+				Player shooter = (Player) killerArrow.getShooter();
+				
+				// Now update database.
+				plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
+						shooter.getUniqueId().toString(), "value", 1, "world", shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e)));
+			}
 		}
 
 		//		
