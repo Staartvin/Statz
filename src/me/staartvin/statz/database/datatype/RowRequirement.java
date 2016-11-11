@@ -10,6 +10,9 @@ package me.staartvin.statz.database.datatype;
  * <br>
  * <br>Another example: you want to know how far a player has travelled on a horse:
  * <code>getSpecificData(PlayerStat.DISTANCE_TRAVELLED, uuid of player, new RowRequirement("moveType", "HORSE"));</code>
+ * <br>
+ * <br>A final example: you want to know how many apples a player has eaten on world 'foodWorld':
+ * <code>getSpecificData(PlayerStat.FOOD_EATEN, uuid of player, new RowRequirement("foodEaten", "APPLE"), new RowRequirement("world", "foodWorld"));</code>
  * @author Staartvin
  *
  */

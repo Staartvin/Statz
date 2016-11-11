@@ -88,34 +88,7 @@ public class API {
 			return null;
 		}
 
-		double value = 0;
-
-		List<Query> results = info.getResults();
-
-		if (results == null || results.isEmpty())
-			return value;
-
-		for (Query result : results) {
-			boolean isValid = true;
-
-			for (int i = 0; i < conditions.length; i++) {
-
-				RowRequirement req = conditions[i];
-				// Check if each condition that was given is true.
-				if (result.getValue(req.getColumnName()) == null
-						|| !result.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
-					isValid = false;
-					break;
-				}
-			}
-
-			// All conditions were met, so we add this value.
-			if (isValid) {
-				value += Double.parseDouble(result.getValue("value").toString());
-			}
-		}
-
-		return value;
+		return info.getTotalValue(conditions);
 	}
 
 	/**

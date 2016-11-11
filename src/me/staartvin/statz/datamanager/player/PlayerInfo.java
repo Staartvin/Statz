@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
@@ -27,6 +28,10 @@ public class PlayerInfo {
 		this.setUUID(uuid);
 	}
 
+	/**
+	 * Get UUID of the player this PlayerInfo represents.
+	 * @return uuid of the player
+	 */
 	public UUID getUUID() {
 		return uuid;
 	}
@@ -36,8 +41,8 @@ public class PlayerInfo {
 	}
 
 	/**
-	 * Checks whether this player info is valid. PlayerInfo is considered valid
-	 * when:
+	 * Checks whether this PlayerInfo is valid. PlayerInfo is considered valid
+	 * when all of these requirements are met:
 	 * <ul>
 	 * <li>The data is not corrupt.
 	 * <li>The query was valid and did not give any errors.
@@ -107,6 +112,48 @@ public class PlayerInfo {
 		if (row == null) return null;
 		
 		return row.getValue(columnName);
+	}
+	
+	/**
+	 * Get the sum of all values in the 'value' of each row that meets the given RowRequirements.
+	 * @see RowRequirement RowRequirement class for more info about requirements and some examples.
+	 * @param reqs A list of requirements that need to be met before adding the value to the sum.
+	 * @return the sum of the values in the rows that meet the given requirement or 0 if results were invalid or non-existent.
+	 */
+	public double getTotalValue(RowRequirement... reqs) {
+		// Check if we have any requirements - if not, just return double value.
+		if (reqs == null || reqs.length == 0) {
+			return this.getTotalValue();
+		}
+		
+		double value = 0;
+
+		List<Query> results = this.getResults();
+
+		if (results == null || results.isEmpty() || !this.isValid())
+			return value;
+
+		for (Query result : results) {
+			boolean isValid = true;
+
+			for (int i = 0; i < reqs.length; i++) {
+
+				RowRequirement req = reqs[i];
+				// Check if each condition that was given is true.
+				if (result.getValue(req.getColumnName()) == null
+						|| !result.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
+					isValid = false;
+					break;
+				}
+			}
+
+			// All conditions were met, so we add this value.
+			if (isValid) {
+				value += Double.parseDouble(result.getValue("value").toString());
+			}
+		}
+
+		return value;
 	}
 
 	public void setResults(List<Query> result) {
