@@ -163,12 +163,12 @@ public class TransferCommand extends StatzCommand {
 					// When using null as queries parameter, it will get all data in the table.
 					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
 
-					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
+					Table table = plugin.getDatabaseConnector().getTable(stat.getTableName());
 					
 					// Write transferred items to log
 					plugin.getLogsManager().writeToLogFile(storedSQLiteQueries, stat);
 					
-					plugin.getSqlConnector().setBatchObjects(table, storedSQLiteQueries, 2);
+					plugin.getDatabaseConnector().setBatchObjects(table, storedSQLiteQueries, 2);
 
 					updateCount += storedSQLiteQueries.size();
 				}
@@ -216,9 +216,9 @@ public class TransferCommand extends StatzCommand {
 					// Write transferred items to log
 					plugin.getLogsManager().writeToLogFile(storedMySQLQueries, stat);
 					
-					Table table = plugin.getSqlConnector().getTable(stat.getTableName());
+					Table table = plugin.getDatabaseConnector().getTable(stat.getTableName());
 
-					plugin.getSqlConnector().setBatchObjects(table, storedMySQLQueries, 2);
+					plugin.getDatabaseConnector().setBatchObjects(table, storedMySQLQueries, 2);
 
 					updateCount += storedMySQLQueries.size();
 				}

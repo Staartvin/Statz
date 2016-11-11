@@ -92,20 +92,20 @@ public class Statz extends JavaPlugin {
 		// Load SQL connector
 		if (this.getConfigHandler().isMySQLEnabled()) {
 			this.debugMessage(ChatColor.GOLD + "Using MySQL database!");
-			this.setSqlConnector(new MySQLConnector(this));
+			this.setDatabaseConnector(new MySQLConnector(this));
 		} else {
 			this.debugMessage(ChatColor.GOLD + "Using SQLite database!");
-			this.setSqlConnector(new SQLiteConnector(this));
+			this.setDatabaseConnector(new SQLiteConnector(this));
 		}
 
 		// Set up Data Pool Manager
 		this.setDataPoolManager(new DataPoolManager(this));
 
 		// Load tables into hashmap
-		this.getSqlConnector().loadTables();
+		this.getDatabaseConnector().loadTables();
 
 		// Create and load database
-		this.getSqlConnector().load();
+		this.getDatabaseConnector().load();
 
 		// Load data manager as database is loaded!
 		this.setDataManager(new DataManager(this));
@@ -450,11 +450,11 @@ public class Statz extends JavaPlugin {
 		}, 20 * 10, 20 * 30);
 	}
 
-	public DatabaseConnector getSqlConnector() {
+	public DatabaseConnector getDatabaseConnector() {
 		return connector;
 	}
 
-	public void setSqlConnector(final DatabaseConnector sqlConnector) {
+	public void setDatabaseConnector(final DatabaseConnector sqlConnector) {
 		this.connector = sqlConnector;
 	}
 

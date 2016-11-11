@@ -253,7 +253,7 @@ public class DataPoolManager {
 			List<Query> queries = getStoredQueries(stat);
 			List<Query> deletedQueries = new ArrayList<>();
 
-			Table table = plugin.getSqlConnector().getTable(stat.getTableName());
+			Table table = plugin.getDatabaseConnector().getTable(stat.getTableName());
 
 			if (queries == null || table == null || queries.isEmpty()) {
 				// Pool is empty
@@ -261,7 +261,7 @@ public class DataPoolManager {
 			}
 
 			//Update in batch.
-			plugin.getSqlConnector().setBatchObjects(table, queries, 2);
+			plugin.getDatabaseConnector().setBatchObjects(table, queries, 2);
 
 			//System.out.println("In pool: " + queries.size() + " for stat " + stat.getTableName());
 

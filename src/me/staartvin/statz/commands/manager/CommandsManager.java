@@ -18,6 +18,7 @@ import me.staartvin.statz.commands.HelpCommand;
 import me.staartvin.statz.commands.HooksCommand;
 import me.staartvin.statz.commands.ListCommand;
 import me.staartvin.statz.commands.MigrateCommand;
+import me.staartvin.statz.commands.PurgeCommand;
 import me.staartvin.statz.commands.TransferCommand;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
@@ -53,6 +54,7 @@ public class CommandsManager implements TabExecutor {
 		registeredCommands.put(Arrays.asList("hooks"), new HooksCommand(plugin));
 		registeredCommands.put(Arrays.asList("transfer"), new TransferCommand(plugin));
 		registeredCommands.put(Arrays.asList("migrate"), new MigrateCommand(plugin));
+		registeredCommands.put(Arrays.asList("purge"), new PurgeCommand(plugin));
 	}
 
 	public HashMap<List<String>, StatzCommand> getRegisteredCommands() {

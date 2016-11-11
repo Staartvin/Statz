@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -949,7 +950,7 @@ public class MySQLConnector extends DatabaseConnector {
 				}
 
 				update += onDuplicate;
-				
+
 				//System.out.println("UPDATE: "+ update);
 
 				//System.out.println("UPDATE Query: " + update);
@@ -983,5 +984,41 @@ public class MySQLConnector extends DatabaseConnector {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void purgeData(final UUID uuid) {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+
+				Connection conn = null;
+				PreparedStatement ps = null;
+
+				conn = getConnection();
+
+				for (Table table : getTables()) {
+					String update = "DELETE FROM " + table.getTableName() + " WHERE uuid='" + uuid.toString() + "'";
+
+					try {
+						ps = conn.prepareStatement(update);
+						ps.executeUpdate();
+
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+					} finally {
+						try {
+							if (ps != null)
+								ps.close();
+							//if (conn != null)
+							//conn.close();
+						} catch (final SQLException ex) {
+							plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+						}
+					}
+				}
+
+			}
+		});
 	}
 }

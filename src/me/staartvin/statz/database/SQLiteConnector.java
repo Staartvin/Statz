@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
@@ -728,7 +729,6 @@ public class SQLiteConnector extends DatabaseConnector {
 		newTable.addColumn(world);
 		newTable.addColumn("trade", false, SQLDataType.TEXT, true);
 
-
 		newTable.addUniqueMatched(uuid);
 		newTable.addUniqueMatched(world);
 		newTable.addUniqueMatched("trade");
@@ -981,6 +981,42 @@ public class SQLiteConnector extends DatabaseConnector {
 				e.printStackTrace();
 			}
 		}
+	}
 
+	@Override
+	public void purgeData(final UUID uuid) {
+
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+
+				Connection conn = null;
+				PreparedStatement ps = null;
+				
+				conn = getConnection();
+
+				for (Table table : getTables()) {
+					String update = "DELETE FROM " + table.getTableName() + " WHERE uuid='" + uuid.toString() + "'";
+					
+					try {
+						ps = conn.prepareStatement(update);
+						ps.executeUpdate();
+
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+					} finally {
+						try {
+							if (ps != null)
+								ps.close();
+							//if (conn != null)
+							//conn.close();
+						} catch (final SQLException ex) {
+							plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+						}
+					}
+				}
+
+			}
+		});
 	}
 }

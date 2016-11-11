@@ -67,7 +67,7 @@ public class DataManager {
 		final PlayerInfo info = new PlayerInfo(uuid);
 
 		// Get results from database
-		List<Query> results = plugin.getSqlConnector().getObjects(statType.getTableName(),
+		List<Query> results = plugin.getDatabaseConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 
 //		System.out.println("--------------");

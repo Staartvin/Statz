@@ -64,7 +64,12 @@ public enum Lang {
 	/**
 	 * &4You do not have the permission ({0}) to perform this command."
 	 */
-	INSUFFICIENT_PERMISSIONS("insufficient-permissions", "&4You do not have the permission ({0}) to perform this command.");
+	INSUFFICIENT_PERMISSIONS("insufficient-permissions", "&4You do not have the permission ({0}) to perform this command."),
+	
+	/**
+	 * &4Incorrect command usage! Try &e{0}
+	 */
+	INCORRECT_COMMAND_USAGE("incorrect-command-usage", "&4Incorrect command usage! Try &e{0}");
 
 	private static FileConfiguration LANG;
 

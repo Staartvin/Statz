@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -188,6 +189,12 @@ public abstract class DatabaseConnector {
 	public void addTable(final Table table) {
 		tables.add(table);
 	}
+	
+	/**
+	 * Removes all data in the database of the given UUID.
+	 * @param uuid UUID to remove data of.
+	 */
+	public abstract void purgeData(UUID uuid);
 
 	/**
 	 * Refresh connection with database
