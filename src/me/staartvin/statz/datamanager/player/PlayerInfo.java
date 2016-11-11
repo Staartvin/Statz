@@ -54,6 +54,12 @@ public class PlayerInfo {
 		this.isValid = isValid;
 	}
 
+	/**
+	 * Get the value of a column in the given query.
+	 * @param map Query to look for the given key
+	 * @param key Key to search value for
+	 * @return value of the given key in the given query or null if it doesn't exist.
+	 */
 	public String getValue(Query map, final String key) {
 		return map.getValue(key).toString();
 	}
@@ -73,6 +79,34 @@ public class PlayerInfo {
 	 */
 	public List<Query> getResults() {
 		return results;
+	}
+	
+	/**
+	 * Get a certain row of the returned results.
+	 * See {@link #getResults()} for more information.
+	 * @param rowNumber Row number to get query of.
+	 * @return a query that corresponds to this row, or null if it doesn't exist.
+	 */
+	public Query getRow(int rowNumber) {
+		if (rowNumber < 0 || rowNumber >= this.getResults().size()) {
+			return null;
+		}
+		
+		return results.get(rowNumber);
+	}
+	
+	/**
+	 * Get the value of a given column of a given row.
+	 * @param rowNumber Row number to get the query of.
+	 * @param columnName Name of the column to get info out of the row.
+	 * @return a value that corresponds to the given value in the returned results or null if nothing was found.
+	 */
+	public Object getValue(int rowNumber, String columnName) {
+		Query row = this.getRow(rowNumber);
+		
+		if (row == null) return null;
+		
+		return row.getValue(columnName);
 	}
 
 	public void setResults(List<Query> result) {
@@ -110,6 +144,27 @@ public class PlayerInfo {
 		double value = getTotalValue();
 		
 		return StatzUtil.roundDouble(value, roundedDecimals);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder endString = new StringBuilder("PlayerInfo of " + this.getUUID() + ": {");
+		
+		for (Query q : this.results) {
+			endString.append(q.toString() + ", ");
+		}
+		
+		int lastComma = endString.lastIndexOf(",");
+		
+		if (lastComma >= 0) {
+			endString.deleteCharAt(lastComma);
+		}
+		
+		endString = new StringBuilder(endString.toString().trim());
+		
+		endString.append("}");
+		
+		return endString.toString();
 	}
 
 }

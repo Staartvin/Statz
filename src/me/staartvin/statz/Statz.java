@@ -24,36 +24,37 @@ import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
-import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
+import me.staartvin.statz.listeners.ArrowsShotListener;
 import me.staartvin.statz.listeners.BlocksBrokenListener;
 import me.staartvin.statz.listeners.BlocksPlacedListener;
-import me.staartvin.statz.listeners.ToolsBrokenListener;
-import me.staartvin.statz.listeners.ItemsCraftedListener;
-import me.staartvin.statz.listeners.DeathsListener;
-import me.staartvin.statz.listeners.ItemsDroppedListener;
-import me.staartvin.statz.listeners.FoodEatenListener;
 import me.staartvin.statz.listeners.BucketsEmptiedListener;
-import me.staartvin.statz.listeners.EnteredBedsListener;
 import me.staartvin.statz.listeners.BucketsFilledListener;
+import me.staartvin.statz.listeners.CommandsPerformedListener;
+import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
+import me.staartvin.statz.listeners.DamageTakenListener;
+import me.staartvin.statz.listeners.DeathsListener;
+import me.staartvin.statz.listeners.DistanceTravelledListener;
+import me.staartvin.statz.listeners.DistanceTravelledVehicleListener;
+import me.staartvin.statz.listeners.EggsThrownListener;
+import me.staartvin.statz.listeners.EnteredBedsListener;
+import me.staartvin.statz.listeners.FoodEatenListener;
 import me.staartvin.statz.listeners.ItemsCaughtListener;
-import me.staartvin.statz.listeners.XPGainedListener;
-import me.staartvin.statz.listeners.TimesKickedListener;
+import me.staartvin.statz.listeners.ItemsCraftedListener;
+import me.staartvin.statz.listeners.ItemsDroppedListener;
+import me.staartvin.statz.listeners.ItemsPickedUpListener;
 import me.staartvin.statz.listeners.JoinsListener;
 import me.staartvin.statz.listeners.KillsMobsListener;
 import me.staartvin.statz.listeners.KillsPlayersListener;
-import me.staartvin.statz.listeners.DistanceTravelledListener;
-import me.staartvin.statz.listeners.CommandsPerformedListener;
-import me.staartvin.statz.listeners.ItemsPickedUpListener;
 import me.staartvin.statz.listeners.QuitListener;
-import me.staartvin.statz.listeners.TimesShornListener;
-import me.staartvin.statz.listeners.ArrowsShotListener;
-import me.staartvin.statz.listeners.WorldsChangedListener;
-import me.staartvin.statz.listeners.DamageTakenListener;
 import me.staartvin.statz.listeners.TeleportsListener;
-import me.staartvin.statz.listeners.EggsThrownListener;
+import me.staartvin.statz.listeners.TimesKickedListener;
+import me.staartvin.statz.listeners.TimesShornListener;
+import me.staartvin.statz.listeners.ToolsBrokenListener;
+import me.staartvin.statz.listeners.UpdateDataListener;
 import me.staartvin.statz.listeners.VillagerTradesListener;
 import me.staartvin.statz.listeners.VotesListener;
-import me.staartvin.statz.listeners.DistanceTravelledVehicleListener;
+import me.staartvin.statz.listeners.WorldsChangedListener;
+import me.staartvin.statz.listeners.XPGainedListener;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.util.StatzUtil;
 
@@ -283,6 +284,8 @@ public class Statz extends JavaPlugin {
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
 			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
+		
+		this.getServer().getPluginManager().registerEvents(new UpdateDataListener(this), this);
 		
 		// Register confirm command
 		this.getServer().getPluginManager().registerEvents(new ConfirmTransferCommandListener(this), this);

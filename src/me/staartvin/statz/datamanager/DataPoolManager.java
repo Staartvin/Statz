@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.api.events.UpdateDataEvent;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
 
@@ -196,6 +198,17 @@ public class DataPoolManager {
 		// Return a copy of the list
 		return new ArrayList<Query>(queries);
 	}
+	
+	private HashMap<PlayerStat, List<Query>> getCompletePool() {
+		
+		HashMap<PlayerStat, List<Query>> currentPool = new HashMap<>();
+		
+		for (PlayerStat stat : PlayerStat.values()) {
+			currentPool.put(stat, this.getStoredQueries(stat));
+		}
+		
+		return currentPool;
+	}
 
 	//	// Return exactly the same as getStoredQueries(), except the returned list is not a copy but the real object.
 	//	private List<Query> getRawQueries(PlayerStat stat) {
@@ -230,6 +243,8 @@ public class DataPoolManager {
 		if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
 			plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 		}
+		
+		HashMap<PlayerStat, List<Query>> currentPool = this.getCompletePool();
 		
 		//this.printPool();
 
@@ -295,6 +310,12 @@ public class DataPoolManager {
 			}
 
 		}
+		
+		// Send event so other plugins can read the data that has changed
+		UpdateDataEvent event = new UpdateDataEvent(currentPool, plugin);
+		
+		// Call event to show that data has changed.
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 
 	/**
