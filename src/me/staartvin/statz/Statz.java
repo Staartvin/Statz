@@ -60,6 +60,7 @@ import me.staartvin.statz.util.StatzUtil;
 
 /**
  * Main class of Statz Spigot/Bukkit plugin.
+ * 
  * @author Staartvin
  *
  */
@@ -131,23 +132,23 @@ public class Statz extends JavaPlugin {
 
 		// Register command
 		getCommand("statz").setExecutor(getCommandsManager());
-		
+
 		this.setLogsManager(new LogManager(this));
-		
+
 		// Register listeners
 		this.registerListeners();
-		
+
 		// Create log file
 		this.getLogsManager().createLogFile();
-		
+
 		this.setLangHandler(new LanguageHandler(this));
-		
+
 		this.getLangHandler().createNewFile();
-		
+
 		this.setImportManager(new ImportManager(this));
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
-		
+
 		this.getLogsManager().writeToLogFile("Enabled Statz!");
 	}
 
@@ -160,7 +161,7 @@ public class Statz extends JavaPlugin {
 		this.getDataPoolManager().forceSendPool();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
-		
+
 		this.getLogsManager().writeToLogFile("Disabled Statz!");
 	}
 
@@ -193,7 +194,7 @@ public class Statz extends JavaPlugin {
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_MOBS)) {
 			this.getServer().getPluginManager().registerEvents(new KillsMobsListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.KILLS_PLAYERS)) {
 			this.getServer().getPluginManager().registerEvents(new KillsPlayersListener(this), this);
 		}
@@ -209,82 +210,84 @@ public class Statz extends JavaPlugin {
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_SHORN)) {
 			this.getServer().getPluginManager().registerEvents(new TimesShornListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DISTANCE_TRAVELLED)) {
 			this.getServer().getPluginManager().registerEvents(new DistanceTravelledListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DistanceTravelledVehicleListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CRAFTED)) {
 			this.getServer().getPluginManager().registerEvents(new ItemsCraftedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.XP_GAINED)) {
 			this.getServer().getPluginManager().registerEvents(new XPGainedListener(this), this);
 		}
 
 		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
-		
-		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER) || this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)) {
+
+		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)
+				|| this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)
+						&& !this.getConfigHandler().isStatDisabled(PlayerStat.VOTES)) {
 			this.getServer().getPluginManager().registerEvents(new VotesListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ARROWS_SHOT)) {
 			this.getServer().getPluginManager().registerEvents(new ArrowsShotListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ENTERED_BEDS)) {
 			this.getServer().getPluginManager().registerEvents(new EnteredBedsListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.COMMANDS_PERFORMED)) {
 			this.getServer().getPluginManager().registerEvents(new CommandsPerformedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TIMES_KICKED)) {
 			this.getServer().getPluginManager().registerEvents(new TimesKickedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TOOLS_BROKEN)) {
 			this.getServer().getPluginManager().registerEvents(new ToolsBrokenListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.EGGS_THROWN)) {
 			this.getServer().getPluginManager().registerEvents(new EggsThrownListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.WORLDS_CHANGED)) {
 			this.getServer().getPluginManager().registerEvents(new WorldsChangedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_FILLED)) {
 			this.getServer().getPluginManager().registerEvents(new BucketsFilledListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.BUCKETS_EMPTIED)) {
 			this.getServer().getPluginManager().registerEvents(new BucketsEmptiedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_PICKED_UP)) {
 			this.getServer().getPluginManager().registerEvents(new ItemsPickedUpListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_DROPPED)) {
 			this.getServer().getPluginManager().registerEvents(new ItemsDroppedListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.TELEPORTS)) {
 			this.getServer().getPluginManager().registerEvents(new TeleportsListener(this), this);
 		}
-		
+
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.VILLAGER_TRADES)) {
 			this.getServer().getPluginManager().registerEvents(new VillagerTradesListener(this), this);
 		}
-		
+
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
 			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
-		
+
 		this.getServer().getPluginManager().registerEvents(new UpdateDataListener(this), this);
 		
 		// Register confirm command
@@ -293,15 +296,19 @@ public class Statz extends JavaPlugin {
 
 	public void debugMessage(String message) {
 		// Check if debug is enabled
-		if (!this.getConfigHandler().isDebugEnabled()) return;
-		
+		if (!this.getConfigHandler().isDebugEnabled())
+			return;
+
 		this.getServer().getConsoleSender()
 				.sendMessage(ChatColor.translateAlternateColorCodes('&', "[Statz debug] " + message));
 	}
-	
+
 	/**
 	 * This method does a general check for all events.
-	 * <br>Currently, it checks if a player is in creative mode and if we should ignore creative mode
+	 * <br>
+	 * Currently, it checks if a player is in creative mode and if we should
+	 * ignore creative mode
+	 * 
 	 * @param player Player to check
 	 * @return true if we should track the stat, false otherwise.
 	 */
@@ -309,7 +316,7 @@ public class Statz extends JavaPlugin {
 		if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
