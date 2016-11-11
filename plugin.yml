@@ -13,9 +13,12 @@ permissions:
     statz.help:
         description: Allows checking the help pages
         default: true
-    statz.list:
-        description: Allows a player to check its statistics
+    statz.list.self:
+        description: Allows a player to check its own statistics
         default: true
+    statz.list.others:
+        description: Allows a player to check other players' statistics.
+        default: op
     statz.hooks:
         description: Allows a player to check what plugins Statz is currently connected with
         default: op

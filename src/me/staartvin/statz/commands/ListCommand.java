@@ -27,7 +27,6 @@ public class ListCommand extends StatzCommand {
 	public ListCommand(final Statz instance) {
 		this.setUsage("/statz list <player> (stat name) (page number)");
 		this.setDesc("Check the stats of a player.");
-		this.setPermission("statz.list");
 
 		plugin = instance;
 	}
@@ -97,6 +96,12 @@ public class ListCommand extends StatzCommand {
 				return true;
 			}
 
+			// Check permissions
+			if (!sender.hasPermission("statz.list.self")) {
+				sender.sendMessage(Lang.INSUFFICIENT_PERMISSIONS.getConfigValue("statz.list.self"));
+				return true;
+			}
+
 			Player player = (Player) sender;
 
 			playerName = player.getName();
@@ -125,8 +130,14 @@ public class ListCommand extends StatzCommand {
 				sender.sendMessage(ChatColor.RED + "Could not find player!");
 				return true;
 			}
+
+			// Check permissions
+			if (!sender.hasPermission("statz.list.others")) {
+				sender.sendMessage(Lang.INSUFFICIENT_PERMISSIONS.getConfigValue("statz.list.others"));
+				return true;
+			}
 		}
-		
+
 		// Show a list of all stats
 		if (showList) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -144,7 +155,8 @@ public class ListCommand extends StatzCommand {
 
 				public void run() {
 
-					plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber, Arrays.asList(PlayerStat.values()));
+					plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber,
+							Arrays.asList(PlayerStat.values()));
 
 				}
 			}.init(playerName, uuid, pageNumber));
@@ -216,21 +228,21 @@ public class ListCommand extends StatzCommand {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
 			final String[] args) {
-		
+
 		List<String> tabCompletions = new ArrayList<String>();
-		
+
 		if (args.length == 3) {
 			// Sender entered /statz l <name> ", so we add the player stats as suggestions
-			for (PlayerStat stat: PlayerStat.values()) {
+			for (PlayerStat stat : PlayerStat.values()) {
 				tabCompletions.add(stat.toString().toLowerCase());
 			}
 		}
-		
+
 		if (!tabCompletions.isEmpty()) {
-			return tabCompletions;	
+			return tabCompletions;
 		} else {
 			return null;
 		}
-		
+
 	}
 }

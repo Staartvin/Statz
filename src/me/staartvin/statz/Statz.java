@@ -50,7 +50,6 @@ import me.staartvin.statz.listeners.TeleportsListener;
 import me.staartvin.statz.listeners.TimesKickedListener;
 import me.staartvin.statz.listeners.TimesShornListener;
 import me.staartvin.statz.listeners.ToolsBrokenListener;
-import me.staartvin.statz.listeners.UpdateDataListener;
 import me.staartvin.statz.listeners.VillagerTradesListener;
 import me.staartvin.statz.listeners.VotesListener;
 import me.staartvin.statz.listeners.WorldsChangedListener;
@@ -287,8 +286,6 @@ public class Statz extends JavaPlugin {
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
 			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
-
-		this.getServer().getPluginManager().registerEvents(new UpdateDataListener(this), this);
 		
 		// Register confirm command
 		this.getServer().getPluginManager().registerEvents(new ConfirmTransferCommandListener(this), this);
