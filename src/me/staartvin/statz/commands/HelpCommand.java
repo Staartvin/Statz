@@ -54,7 +54,7 @@ public class HelpCommand extends StatzCommand {
 
 			for (final StatzCommand cmd : commands) {
 				// Check if player has permission to do this, before presenting this command
-				if (sender.hasPermission(cmd.getPermission())) {
+				if (cmd.getPermission() != null && sender.hasPermission(cmd.getPermission())) {
 					newList.add(cmd);
 				}
 			}

@@ -27,6 +27,7 @@ public class ListCommand extends StatzCommand {
 	public ListCommand(final Statz instance) {
 		this.setUsage("/statz list <player> (stat name) (page number)");
 		this.setDesc("Check the stats of a player.");
+		this.setPermission("statz.list.self");
 
 		plugin = instance;
 	}
