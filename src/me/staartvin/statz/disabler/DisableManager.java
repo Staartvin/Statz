@@ -17,6 +17,11 @@ import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.handlers.GriefPreventionHandler;
 import me.staartvin.statz.hooks.handlers.WorldGuardHandler;
 
+/**
+ * This class reads from the disabled-stats.yml and has methods to check whether a statistic should be tracked in a certain area.
+ * @author Staartvin
+ *
+ */
 public class DisableManager {
 
 	private Statz plugin;
@@ -59,7 +64,7 @@ public class DisableManager {
 
 			GriefPreventionHandler gpHandler = (GriefPreventionHandler) plugin.getDependencyManager()
 					.getDependency(Dependency.GRIEF_PREVENTION);
-			
+
 			// Check for all disabled uuid claims if a player is in them.
 			if (!disabledUUIDs.isEmpty()) {
 				for (String disabledClaim : disabledUUIDs) {
