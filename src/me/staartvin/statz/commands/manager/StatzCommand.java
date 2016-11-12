@@ -16,7 +16,7 @@ import org.bukkit.command.TabExecutor;
  */
 public abstract class StatzCommand implements TabExecutor {
 
-	private String desc = "", usage = "", permission = "";
+	private String desc = null, usage = null, permission = null;
 
 	/**
 	 * Gets the description that is used for this command, can be null or empty.
