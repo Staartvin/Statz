@@ -1,4 +1,4 @@
-package me.staartvin.statz.disabler;
+package me.staartvin.statz.statsdisabler;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +106,7 @@ public class DisableManager {
 
 		disableConfig.options()
 				.header("This file is used for disabling certain statistics in certain regions (e.g. WorldGuard) or when some requirements are met."
-						+ "\nFor more information on how to use this file, go to: <link here>");
+						+ "\nFor more information on how to use this file, go to: https://github.com/Staartvin/Statz/wiki/How-do-I-use-the-disabled-stats.yml-file%3F");
 
 		disableConfig.options().copyDefaults(true);
 		saveConfig();

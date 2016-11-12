@@ -20,7 +20,6 @@ import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
-import me.staartvin.statz.disabler.DisableManager;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.importer.ImportManager;
@@ -56,6 +55,7 @@ import me.staartvin.statz.listeners.VotesListener;
 import me.staartvin.statz.listeners.WorldsChangedListener;
 import me.staartvin.statz.listeners.XPGainedListener;
 import me.staartvin.statz.logger.LogManager;
+import me.staartvin.statz.statsdisabler.DisableManager;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
