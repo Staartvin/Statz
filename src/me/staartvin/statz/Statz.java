@@ -20,6 +20,7 @@ import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.disabler.DisableManager;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.importer.ImportManager;
@@ -75,6 +76,7 @@ public class Statz extends JavaPlugin {
 	private LogManager logsManager;
 	private LanguageHandler langHandler;
 	private ImportManager importManager;
+	private DisableManager disableManager;
 
 	@Override
 	public void onEnable() {
@@ -142,7 +144,13 @@ public class Statz extends JavaPlugin {
 
 		this.setLangHandler(new LanguageHandler(this));
 
+		// Load lang.yml
 		this.getLangHandler().createNewFile();
+		
+		this.setDisableManager(new DisableManager(this));
+		
+		// Load disabled-stats.yml
+		this.getDisableManager().createNewFile();
 
 		this.setImportManager(new ImportManager(this));
 
@@ -307,10 +315,15 @@ public class Statz extends JavaPlugin {
 	 * ignore creative mode
 	 * 
 	 * @param player Player to check
+	 * @param stat Stat to check
 	 * @return true if we should track the stat, false otherwise.
 	 */
-	public boolean doGeneralCheck(Player player) {
+	public boolean doGeneralCheck(Player player, PlayerStat stat) {
 		if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
+			return false;
+		}
+		
+		if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
 			return false;
 		}
 
@@ -525,5 +538,13 @@ public class Statz extends JavaPlugin {
 
 	public void setImportManager(ImportManager importManager) {
 		this.importManager = importManager;
+	}
+
+	public DisableManager getDisableManager() {
+		return disableManager;
+	}
+
+	public void setDisableManager(DisableManager disableManager) {
+		this.disableManager = disableManager;
 	}
 }

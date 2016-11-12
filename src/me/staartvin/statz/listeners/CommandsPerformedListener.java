@@ -27,7 +27,7 @@ public class CommandsPerformedListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 		
 		String message = event.getMessage();

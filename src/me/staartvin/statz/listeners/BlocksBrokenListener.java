@@ -22,32 +22,21 @@ public class BlocksBrokenListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event) {
-		
+
 		final PlayerStat stat = PlayerStat.BLOCKS_BROKEN;
 
 		// Get player
 		final Player player = event.getPlayer();
-		
+
 		// Do general check
-		if (!plugin.doGeneralCheck(player)) return;
+		if (!plugin.doGeneralCheck(player, stat))
+			return;
 
 		Block blockBroken = event.getBlock();
 
 		final int typeId = blockBroken.getTypeId();
 		final int dataValue = blockBroken.getData();
 		final String worldName = blockBroken.getWorld().getName();
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,

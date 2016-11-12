@@ -37,9 +37,10 @@ public class KillsMobsListener implements Listener {
 			// Entity died because of Player
 			// Killer
 			final Player player = (Player) nEvent.getDamager();
-			
+
 			// Do general check
-			if (!plugin.doGeneralCheck(player)) return;
+			if (!plugin.doGeneralCheck(player, stat))
+				return;
 
 			if (e instanceof Player) {
 				// Player killed player
@@ -50,20 +51,22 @@ public class KillsMobsListener implements Listener {
 				String mobType = StatzUtil.getMobType(e);
 
 				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-						player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName(), "mob", mobType));
+				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+								player.getWorld().getName(), "mob", mobType));
 
 			}
-		} else if (nEvent.getDamager() instanceof Arrow){
+		} else if (nEvent.getDamager() instanceof Arrow) {
 			// Entity was killed by an arrow, now check if it was shot by a player
 			Arrow killerArrow = (Arrow) nEvent.getDamager();
-			
+
 			if (killerArrow.getShooter() instanceof Player) {
 				Player shooter = (Player) killerArrow.getShooter();
-				
+
 				// Now update database.
-				plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-						shooter.getUniqueId().toString(), "value", 1, "world", shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e)));
+				plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat,
+						StatzUtil.makeQuery("uuid", shooter.getUniqueId().toString(), "value", 1, "world",
+								shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e)));
 			}
 		}
 

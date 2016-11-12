@@ -25,9 +25,10 @@ public class EnteredBedsListener implements Listener {
 
 		// Get player
 		final Player player = (Player) event.getPlayer();
-		
+
 		// Do general check
-		if (!plugin.doGeneralCheck(player)) return;
+		if (!plugin.doGeneralCheck(player, stat))
+			return;
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",

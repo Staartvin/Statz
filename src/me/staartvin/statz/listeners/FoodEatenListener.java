@@ -25,26 +25,15 @@ public class FoodEatenListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
-		
+
 		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
+		if (!plugin.doGeneralCheck(player, stat))
+			return;
 
 		final String foodName = StatzUtil.getFoodName(event.getItem());
 
 		if (foodName == null)
 			return;
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "foodEaten", foodName));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,

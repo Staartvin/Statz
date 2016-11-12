@@ -57,7 +57,7 @@ public class DistanceTravelledVehicleListener implements Listener {
 			return;
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
 		final double distTravelled = event.getFrom().distance(event.getTo());
@@ -67,18 +67,6 @@ public class DistanceTravelledVehicleListener implements Listener {
 		}
 
 		final String movement = movementType;
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "moveType", movement));
-		//
-		//		// Get current value of stat.
-		//		double currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,

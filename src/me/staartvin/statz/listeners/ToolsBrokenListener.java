@@ -28,14 +28,15 @@ public class ToolsBrokenListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
-		
+
 		ItemStack item = event.getBrokenItem();
 
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "item", item.getType().toString()));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("uuid", player.getUniqueId(), "value", 1, "world", player.getWorld().getName(),
+						"item", item.getType().toString()));
 
 	}
 }

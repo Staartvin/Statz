@@ -27,22 +27,10 @@ public class ItemsCraftedListener implements Listener {
 		final Player player = (Player) event.getWhoClicked();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
 		final String itemCrafted = event.getCurrentItem().getType().toString();
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName(), "item", itemCrafted));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,

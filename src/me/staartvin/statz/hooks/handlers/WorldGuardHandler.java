@@ -69,14 +69,25 @@ public class WorldGuardHandler implements DependencyHandler {
 		if (player == null || regionName == null)
 			return false;
 
-		final Location loc = player.getLocation();
+		return this.isInRegion(player.getLocation(), regionName);
+	}
+	
+	/**
+	 * @see #isInRegion(Player, String)
+	 * @param location
+	 * @param regionName
+	 * @return
+	 */
+	public boolean isInRegion(Location location, String regionName) {
 
-		final RegionManager regManager = worldGuardAPI.getRegionManager(loc.getWorld());
+		if (location == null) return false;
+		
+		final RegionManager regManager = worldGuardAPI.getRegionManager(location.getWorld());
 
 		if (regManager == null)
 			return false;
 
-		final ApplicableRegionSet set = regManager.getApplicableRegions(loc);
+		final ApplicableRegionSet set = regManager.getApplicableRegions(location);
 
 		if (set == null)
 			return false;

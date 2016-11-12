@@ -46,26 +46,15 @@ public class VillagerTradesListener implements Listener {
 		Player player = (Player) event.getWhoClicked();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
-		
+
 		ItemStack item = event.getCurrentItem();
 
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName()));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
-
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId().toString(), "value", item.getAmount(), "world", player.getWorld().getName(), "trade", item.getType().toString()));
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", item.getAmount(), "world",
+						player.getWorld().getName(), "trade", item.getType().toString()));
 
 	}
 }

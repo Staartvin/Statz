@@ -31,24 +31,14 @@ public class JoinsListener implements Listener {
 
 		// Get player
 		final Player player = event.getPlayer();
-		
+
 		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
+		if (!plugin.doGeneralCheck(player, stat))
+			return;
 
 		// Update name in database.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.PLAYERS,
 				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "playerName", player.getName()));
-
-		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat);
-		//
-		//		// Get current value of stat.
-		//		double currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue = info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
@@ -65,22 +55,22 @@ public class JoinsListener implements Listener {
 						return;
 					}
 
-//					// Get player info.
-//					final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-//							PlayerStat.TIME_PLAYED, StatzUtil.makeQuery("world", player.getWorld().getName()));
-//
-//					// Get current value of stat.
-//					double currentValue = 0;
-//
-//					// Check if it is valid!
-//					if (info.isValid()) {
-//						currentValue += info.getTotalValue();
-//					}
+					//					// Get player info.
+					//					final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
+					//							PlayerStat.TIME_PLAYED, StatzUtil.makeQuery("world", player.getWorld().getName()));
+					//
+					//					// Get current value of stat.
+					//					double currentValue = 0;
+					//
+					//					// Check if it is valid!
+					//					if (info.isValid()) {
+					//						currentValue += info.getTotalValue();
+					//					}
 
 					// Update value to new stat.
 					plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED,
-							StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1,
-									"world", player.getWorld().getName()));
+							StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+									player.getWorld().getName()));
 
 				}
 			};

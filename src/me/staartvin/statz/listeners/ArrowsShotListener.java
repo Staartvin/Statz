@@ -31,7 +31,7 @@ public class ArrowsShotListener implements Listener {
 		final Player player = (Player) event.getEntity();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
 		// Update value to new stat.

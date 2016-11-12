@@ -29,7 +29,7 @@ public class BlocksPlacedListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
 		Block blockPlaced = event.getBlockPlaced();
@@ -37,18 +37,6 @@ public class BlocksPlacedListener implements Listener {
 		final int typeId = blockPlaced.getTypeId();
 		final int dataValue = blockPlaced.getData();
 		final String worldName = blockPlaced.getWorld().getName();
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("typeid", typeId, "datavalue", dataValue, "world", worldName));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//		}
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,

@@ -36,28 +36,15 @@ public class KillsPlayersListener implements Listener {
 			// Entity died because of Player
 			// Killer
 			final Player player = (Player) nEvent.getDamager();
-			
+
 			// Do general check
-			if (!plugin.doGeneralCheck(player)) return;
+			if (!plugin.doGeneralCheck(player, stat))
+				return;
 
 			if (e instanceof Player) {
 				// Player killed player
 
 				final Player murderedPlayer = (Player) e;
-
-				//				//Get player info.
-				//				final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-				//						PlayerStat.KILLS_PLAYERS, StatzUtil.makeQuery("world", player.getWorld().getName(),
-				//								"playerKilled", murderedPlayer.getName()));
-				//
-				//				// Get current value of stat.
-				//				int currentValue = 0;
-				//
-				//				// Check if it is valid!
-				//				if (info.isValid()) {
-				//					currentValue += info.getTotalValue();
-				//					//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
-				//				}
 
 				// Update value to new stat.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
@@ -66,8 +53,8 @@ public class KillsPlayersListener implements Listener {
 
 			} else {
 				// Player killed mob		
-// Handled by other listener
-			}	
+				// Handled by other listener
+			}
 		} else {
 			// Entity died of something else
 		}

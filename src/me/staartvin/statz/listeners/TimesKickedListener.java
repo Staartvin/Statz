@@ -27,7 +27,7 @@ public class TimesKickedListener implements Listener {
 		final Player player = event.getPlayer();
 
 		// Do general check
-		if (!plugin.doGeneralCheck(player))
+		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
 		// Update value to new stat.

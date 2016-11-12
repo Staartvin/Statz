@@ -25,23 +25,11 @@ public class DeathsListener implements Listener {
 
 		// Get player
 		final Player player = event.getEntity();
-		
+
 		// Do general check
-				if (!plugin.doGeneralCheck(player)) return;
-
-		//		// Get player info.
-		//		final PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), stat,
-		//				StatzUtil.makeQuery("world", player.getWorld().getName()));
-		//
-		//		// Get current value of stat.
-		//		int currentValue = 0;
-		//
-		//		// Check if it is valid!
-		//		if (info.isValid()) {
-		//			currentValue += info.getTotalValue();
-		//			//currentValue = Integer.parseInt(info.getResults().getValue(0).getValue("value").toString());
-		//		}
-
+		if (!plugin.doGeneralCheck(player, stat))
+			return;
+		
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
 				player.getUniqueId().toString(), "value", 1, "world", player.getWorld().getName()));
