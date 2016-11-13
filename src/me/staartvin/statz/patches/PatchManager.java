@@ -20,6 +20,8 @@ public class PatchManager {
 	public void applyPatches() {
 		// Apply all patches in the correct order
 
+		int count = 0;
+		
 		System.out.println("---------- [Applying Database patches] ----------");
 		
 		for (Patch patch : patches) {
@@ -29,8 +31,9 @@ public class PatchManager {
 			
 			plugin.getLogger().info("Applying patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
 			patch.applyChanges();
+			count++;
 		}
 		
-		System.out.println("---------- [All patches are applied] ----------");
+		System.out.println("---------- [" + count + " patches have been applied] ----------");
 	}
 }
