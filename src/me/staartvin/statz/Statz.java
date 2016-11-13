@@ -34,6 +34,7 @@ import me.staartvin.statz.listeners.ConfirmTransferCommandListener;
 import me.staartvin.statz.listeners.DamageTakenListener;
 import me.staartvin.statz.listeners.DeathsListener;
 import me.staartvin.statz.listeners.DistanceTravelledListener;
+import me.staartvin.statz.listeners.DistanceTravelledToggleGlideListener;
 import me.staartvin.statz.listeners.DistanceTravelledVehicleListener;
 import me.staartvin.statz.listeners.EggsThrownListener;
 import me.staartvin.statz.listeners.EnteredBedsListener;
@@ -232,6 +233,7 @@ public class Statz extends JavaPlugin {
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.DISTANCE_TRAVELLED)) {
 			this.getServer().getPluginManager().registerEvents(new DistanceTravelledListener(this), this);
 			this.getServer().getPluginManager().registerEvents(new DistanceTravelledVehicleListener(this), this);
+			this.getServer().getPluginManager().registerEvents(new DistanceTravelledToggleGlideListener(this), this);
 		}
 
 		if (!this.getConfigHandler().isStatDisabled(PlayerStat.ITEMS_CRAFTED)) {

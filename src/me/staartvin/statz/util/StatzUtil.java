@@ -41,6 +41,9 @@ public class StatzUtil {
 	public static enum Time {
 		DAYS, HOURS, MINUTES, SECONDS
 	}
+	
+	// This is true if player is gliding with an elytra
+	public static boolean isGliding = false;
 
 	/**
 	 * Create a query to retrieve or send data from or to the database.
@@ -252,7 +255,7 @@ public class StatzUtil {
 
 	// Courtesy to Lolmewn for this code.
 	public static String getMovementType(Player player) {
-		if (player.isFlying()) {
+		if (player.isFlying()) {	
 			return "FLY";
 		}
 		if (player.isInsideVehicle()) {
@@ -284,6 +287,11 @@ public class StatzUtil {
 				}
 			}
 		}
+		
+		if (isGliding) {
+			return "FLY WITH ELYTRA";
+		}
+		
 		return "WALK"; // Default to walking
 	}
 
