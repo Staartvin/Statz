@@ -15,19 +15,19 @@ public class WeaponColumnMobKillsPatch extends Patch {
 	@Override
 	public void applyChanges() {
 
+		String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
+
 		List<String> queries = Arrays.asList(new String[] {
-				"ALTER TABLE " + this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName()
-						+ " ADD weapon VARCHAR(255) NOT NULL",
-				"ALTER TABLE " + this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName()
-						+ " ADD UNIQUE (weapon)" });
+				"ALTER TABLE " + tableName + " ADD weapon VARCHAR(255) NOT NULL", "ALTER TABLE " + tableName
+						+ " DROP INDEX `uuid`, ADD UNIQUE `uuid` (`uuid`, `mob`, `world`, `weapon`) USING BTREE;" });
 
 		try {
 			this.getDatabaseConnector().sendQueries(queries);
-			
+
 			this.getStatz().getConfigHandler().setLatestPatchVersion(this.getPatchId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+
 		}
 
 	}
