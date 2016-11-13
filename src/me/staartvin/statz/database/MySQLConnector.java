@@ -319,16 +319,19 @@ public class MySQLConnector extends DatabaseConnector {
 		uuid = new Column("uuid", false, SQLDataType.TEXT, true);
 		typeID = new Column("mob", false, SQLDataType.TEXT, true);
 		world = new Column("world", false, SQLDataType.TEXT, true);
+		Column weapon = new Column("weapon", false, SQLDataType.TEXT, true);
 
 		newTable.addColumn(id);
 		newTable.addColumn(uuid); // UUID of the player
 		newTable.addColumn("value", false, SQLDataType.INT);
 		newTable.addColumn(world);
 		newTable.addColumn(typeID);
+		newTable.addColumn(weapon);
 
 		newTable.addUniqueMatched(uuid);
 		newTable.addUniqueMatched(typeID);
 		newTable.addUniqueMatched(world);
+		newTable.addUniqueMatched(weapon);
 
 		this.addTable(newTable);
 
