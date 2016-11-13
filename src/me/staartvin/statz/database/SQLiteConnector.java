@@ -992,12 +992,12 @@ public class SQLiteConnector extends DatabaseConnector {
 
 				Connection conn = null;
 				PreparedStatement ps = null;
-				
+
 				conn = getConnection();
 
 				for (Table table : getTables()) {
 					String update = "DELETE FROM " + table.getTableName() + " WHERE uuid='" + uuid.toString() + "'";
-					
+
 					try {
 						ps = conn.prepareStatement(update);
 						ps.executeUpdate();
@@ -1016,6 +1016,69 @@ public class SQLiteConnector extends DatabaseConnector {
 					}
 				}
 
+			}
+		});
+	}
+
+	@Override
+	public void sendQuery(final String query) {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+
+				Connection conn = null;
+				PreparedStatement ps = null;
+
+				conn = getConnection();
+				try {
+					ps = conn.prepareStatement(query);
+					ps.executeUpdate();
+
+				} catch (final SQLException ex) {
+					plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+				} finally {
+					try {
+						if (ps != null)
+							ps.close();
+						//if (conn != null)
+						//conn.close();
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+					}
+				}
+
+			}
+		});
+	}
+
+	@Override
+	public void sendQueries(final List<String> queries) {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+
+				Connection conn = null;
+				PreparedStatement ps = null;
+
+				conn = getConnection();
+
+				for (String query : queries) {
+					try {
+						ps = conn.prepareStatement(query);
+						ps.executeUpdate();
+
+					} catch (final SQLException ex) {
+						plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+					} finally {
+						try {
+							if (ps != null)
+								ps.close();
+
+						} catch (final SQLException ex) {
+							plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+						}
+					}
+				}
 			}
 		});
 	}

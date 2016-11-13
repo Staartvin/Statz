@@ -55,6 +55,7 @@ import me.staartvin.statz.listeners.VotesListener;
 import me.staartvin.statz.listeners.WorldsChangedListener;
 import me.staartvin.statz.listeners.XPGainedListener;
 import me.staartvin.statz.logger.LogManager;
+import me.staartvin.statz.patches.PatchManager;
 import me.staartvin.statz.statsdisabler.DisableManager;
 import me.staartvin.statz.util.StatzUtil;
 
@@ -77,6 +78,7 @@ public class Statz extends JavaPlugin {
 	private LanguageHandler langHandler;
 	private ImportManager importManager;
 	private DisableManager disableManager;
+	private PatchManager patchManager;
 
 	@Override
 	public void onEnable() {
@@ -122,6 +124,12 @@ public class Statz extends JavaPlugin {
 
 			}
 		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
+		
+		// Create patch manager and send patches
+		this.setPatchManager(new PatchManager(this));
+		
+		// Apply patches
+		this.getPatchManager().applyPatches();
 
 		// Do performance test
 		//this.doPerformanceTest();
@@ -162,6 +170,9 @@ public class Statz extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
+		// Saving config
+		this.getConfigHandler().saveConfig();
+		
 		debugMessage(ChatColor.RED + "Saving updates to database!");
 
 		// Send the complete pool.
@@ -546,5 +557,13 @@ public class Statz extends JavaPlugin {
 
 	public void setDisableManager(DisableManager disableManager) {
 		this.disableManager = disableManager;
+	}
+
+	public PatchManager getPatchManager() {
+		return patchManager;
+	}
+
+	public void setPatchManager(PatchManager patchManager) {
+		this.patchManager = patchManager;
 	}
 }

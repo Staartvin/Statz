@@ -10,10 +10,13 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
+
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
 import me.staartvin.statz.database.datatype.sqlite.SQLiteTable;
+import me.staartvin.statz.datamanager.PlayerStat;
 
 public abstract class DatabaseConnector {
 	private final Statz plugin;
@@ -37,10 +40,10 @@ public abstract class DatabaseConnector {
 	public abstract void loadTables();
 
 	/**
-	 * Get a {@linkplain SQLiteTable} object by table name.
+	 * Get a {@linkplain Table} object by table name.
 	 * 
 	 * @param tableName Name of the table
-	 * @return SQLiteTable object represented by that name or NULL if none was
+	 * @return Table object represented by that name or NULL if none was
 	 *         found.
 	 */
 	public Table getTable(String tableName) {
@@ -54,6 +57,15 @@ public abstract class DatabaseConnector {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @see #getTable(String)
+	 * @param stat
+	 * @return
+	 */
+	public Table getTable(PlayerStat stat) {
+		return this.getTable(stat.getTableName());
 	}
 
 	/**
@@ -189,7 +201,7 @@ public abstract class DatabaseConnector {
 	public void addTable(final Table table) {
 		tables.add(table);
 	}
-	
+
 	/**
 	 * Removes all data in the database of the given UUID.
 	 * @param uuid UUID to remove data of.
@@ -228,4 +240,8 @@ public abstract class DatabaseConnector {
 			}
 		});
 	}
+
+	public abstract void sendQuery(String query);
+	
+	public abstract void sendQueries(List<String> queries) throws Exception;
 }
