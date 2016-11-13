@@ -12,6 +12,7 @@ import me.staartvin.statz.util.StatzUtil;
 
 public class DistanceTravelledToggleGlideListener implements Listener {
 
+	@SuppressWarnings("unused")
 	private final Statz plugin;
 
 	public DistanceTravelledToggleGlideListener(final Statz plugin) {
@@ -21,13 +22,11 @@ public class DistanceTravelledToggleGlideListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onMove(final EntityToggleGlideEvent event) {
 
-		final PlayerStat stat = PlayerStat.DISTANCE_TRAVELLED;
-
 		if (!(event.getEntity() instanceof Player)) return;
 		
 		// Get player
 		final Player player = (Player) event.getEntity();
 
-		StatzUtil.isGliding = event.isGliding();
+		StatzUtil.isGliding.put(player.getUniqueId(), event.isGliding());
 	}
 }

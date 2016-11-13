@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +44,7 @@ public class StatzUtil {
 	}
 	
 	// This is true if player is gliding with an elytra
-	public static boolean isGliding = false;
+	public static HashMap<UUID, Boolean> isGliding = new HashMap<>();
 
 	/**
 	 * Create a query to retrieve or send data from or to the database.
@@ -288,7 +289,7 @@ public class StatzUtil {
 			}
 		}
 		
-		if (isGliding) {
+		if (isGliding.containsKey(player.getUniqueId()) && isGliding.get(player.getUniqueId())) {
 			return "FLY WITH ELYTRA";
 		}
 		
