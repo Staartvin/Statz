@@ -78,7 +78,7 @@ public class KillsMobsListener implements Listener {
 				// Now update database.
 				plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat,
 						StatzUtil.makeQuery("uuid", shooter.getUniqueId().toString(), "value", 1, "world",
-								shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e)));
+								shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e), "weapon", "BOW"));
 			}
 		}
 
