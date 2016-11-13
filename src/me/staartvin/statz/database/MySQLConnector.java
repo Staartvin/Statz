@@ -114,6 +114,9 @@ public class MySQLConnector extends DatabaseConnector {
 				}
 
 				initialize();
+				
+				// Apply patches
+				plugin.getPatchManager().applyPatches();
 			}
 		});
 	}

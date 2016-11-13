@@ -15,7 +15,9 @@ public abstract class Patch {
 		return plugin;
 	}
 	
-	public abstract void applyChanges();
+	public abstract void applyMySQLChanges();
+	
+	public abstract void applySQLiteChanges();
 	
 	public abstract String getPatchName();
 	

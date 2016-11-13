@@ -30,7 +30,13 @@ public class PatchManager {
 			if (plugin.getConfigHandler().getLatestPatchVersion() >= patch.getPatchId()) continue;
 			
 			plugin.getLogger().info("Applying patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
-			patch.applyChanges();
+			
+			if (plugin.getConfigHandler().isMySQLEnabled()) {
+				patch.applyMySQLChanges();
+			} else {
+				patch.applySQLiteChanges();
+			}
+			
 			count++;
 		}
 		

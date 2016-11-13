@@ -102,6 +102,9 @@ public class Statz extends JavaPlugin {
 			this.setDatabaseConnector(new SQLiteConnector(this));
 		}
 
+		// Create patch manager and send patches
+		this.setPatchManager(new PatchManager(this));
+
 		// Set up Data Pool Manager
 		this.setDataPoolManager(new DataPoolManager(this));
 
@@ -125,12 +128,6 @@ public class Statz extends JavaPlugin {
 
 			}
 		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
-		
-		// Create patch manager and send patches
-		this.setPatchManager(new PatchManager(this));
-		
-		// Apply patches
-		this.getPatchManager().applyPatches();
 
 		// Do performance test
 		//this.doPerformanceTest();
@@ -155,9 +152,9 @@ public class Statz extends JavaPlugin {
 
 		// Load lang.yml
 		this.getLangHandler().createNewFile();
-		
+
 		this.setDisableManager(new DisableManager(this));
-		
+
 		// Load disabled-stats.yml
 		this.getDisableManager().createNewFile();
 
@@ -173,7 +170,7 @@ public class Statz extends JavaPlugin {
 
 		// Saving config
 		this.getConfigHandler().saveConfig();
-		
+
 		debugMessage(ChatColor.RED + "Saving updates to database!");
 
 		// Send the complete pool.
@@ -307,7 +304,7 @@ public class Statz extends JavaPlugin {
 		for (PlayerStat stat : this.getConfigHandler().getDisabledStats()) {
 			this.debugMessage(ChatColor.DARK_AQUA + "Statz won't track " + stat.toString() + "!");
 		}
-		
+
 		// Register confirm command
 		this.getServer().getPluginManager().registerEvents(new ConfirmTransferCommandListener(this), this);
 	}
@@ -335,7 +332,7 @@ public class Statz extends JavaPlugin {
 		if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
 			return false;
 		}
-		
+
 		if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
 			return false;
 		}
