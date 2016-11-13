@@ -1,5 +1,6 @@
 package me.staartvin.statz.listeners;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
@@ -49,11 +51,21 @@ public class KillsMobsListener implements Listener {
 				// Player killed mob		
 
 				String mobType = StatzUtil.getMobType(e);
-
+				
+				String weapon = "";
+				
+				ItemStack item = player.getInventory().getItemInMainHand();
+				
+				if (item.getType() == Material.AIR) {
+					weapon = "HAND";
+				} else {
+					weapon = item.getType().toString();
+				}
+				
 				// Update value to new stat.
 				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
 						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
-								player.getWorld().getName(), "mob", mobType));
+								player.getWorld().getName(), "mob", mobType, "weapon", weapon));
 
 			}
 		} else if (nEvent.getDamager() instanceof Arrow) {
