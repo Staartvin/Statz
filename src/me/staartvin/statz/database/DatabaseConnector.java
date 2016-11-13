@@ -10,12 +10,9 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 
-import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
-import me.staartvin.statz.database.datatype.sqlite.SQLiteTable;
 import me.staartvin.statz.datamanager.PlayerStat;
 
 public abstract class DatabaseConnector {
