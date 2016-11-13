@@ -49,9 +49,11 @@ public class ConfigHandler {
 		plugin.getConfig().addDefault("ignore creative", false);
 
 		plugin.getConfig().addDefault("enable debug output", true);
-		
+
+		plugin.getConfig().addDefault("latest patch version", 0);
+
 		plugin.getConfig().addDefault("use custom statz list", false);
-		
+
 		plugin.getConfig().addDefault("custom statz list", Arrays.asList("JOINS", "FOOD_EATEN", "KILLS_PLAYERS"));
 
 		plugin.getConfig().options().copyDefaults(true);
@@ -82,7 +84,7 @@ public class ConfigHandler {
 
 	public void setShowDatabaseSave(boolean value) {
 		plugin.getConfig().set("show database save message", value);
-		plugin.saveConfig();
+		saveConfig();
 	}
 
 	public boolean isMySQLEnabled() {
@@ -141,14 +143,14 @@ public class ConfigHandler {
 	public boolean isDebugEnabled() {
 		return plugin.getConfig().getBoolean("enable debug output", true);
 	}
-	
+
 	public boolean useCustomList() {
 		return plugin.getConfig().getBoolean("use custom statz list", false);
 	}
-	
+
 	public List<PlayerStat> getCustomList() {
 		List<PlayerStat> customList = new ArrayList<PlayerStat>();
-		
+
 		for (String customListEntry : plugin.getConfig().getStringList("custom statz list")) {
 			for (PlayerStat stat : PlayerStat.values()) {
 				if (stat.getTableName().equalsIgnoreCase(customListEntry)) {
@@ -156,8 +158,18 @@ public class ConfigHandler {
 				}
 			}
 		}
-		
+
 		return customList;
+	}
+
+	public int getLatestPatchVersion() {
+		return plugin.getConfig().getInt("latest patch version", 0);
+	}
+
+	public void setLatestPatchVersion(int version) {
+		plugin.getConfig().set("latest patch version", version);
+
+		this.saveConfig();
 	}
 
 }
