@@ -48,18 +48,22 @@ public class WeaponColumnMobKillsPatch extends Patch {
 		String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
 		String tempName = tableName + "_temp";
 
-		// Move old table to new temp table
-		// Drop old table
-		// Create new table with weapon column and unique constraint
-		// Move all data from temp table to new table
-		// Remove temp table
-		// Done!
+		// Add new column with default value
+		// Move old table to new temp table ->
+		// Drop old table ->
+		// Create new table with weapon column and unique constraint ->
+		// Move all data from temp table to new table ->
+		// Remove temp table ->
+		// Done! :-)
 		List<String> queries = Arrays.asList(new String[] {
 				"ALTER TABLE " + tableName + " ADD COLUMN weapon TEXT DEFAULT('HAND') NOT NULL;",
 				"CREATE TABLE " + tempName + " AS SELECT * FROM " + tableName + ";", "DROP TABLE " + tableName + ";",
-				"CREATE TABLE " + tableName + " (id INTEGER PRIMARY KEY NOT NULL, uuid TEXT NOT NULL, value INTEGER NOT NULL, world TEXT NOT NULL,"
+				"CREATE TABLE " + tableName
+						+ " (id INTEGER PRIMARY KEY NOT NULL, uuid TEXT NOT NULL, value INTEGER NOT NULL, world TEXT NOT NULL,"
 						+ "mob TEXT NOT NULL, weapon TEXT DEFAULT ('HAND') NOT NULL, UNIQUE (uuid,world,mob,weapon));",
-				"INSERT INTO " + tableName + " (id,uuid,value,world,mob,weapon) SELECT id, uuid, value, world, mob, weapon FROM " + tempName + ";",
+				"INSERT INTO " + tableName
+						+ " (id, uuid, value, world, mob, weapon) SELECT id, uuid, value, world, mob, weapon FROM "
+						+ tempName + ";",
 				"DROP TABLE " + tempName + ";" });
 
 		try {

@@ -100,6 +100,7 @@ public class SQLiteConnector extends DatabaseConnector {
 				}
 
 				initialize();
+				
 				// Apply patches
 				plugin.getPatchManager().applyPatches();
 			}

@@ -42,4 +42,5 @@ public class PatchManager {
 		
 		System.out.println("---------- [" + count + " patches have been applied] ----------");
 	}
+	
 }
