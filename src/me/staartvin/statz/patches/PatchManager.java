@@ -22,7 +22,7 @@ public class PatchManager {
 
 		int count = 0;
 		
-		System.out.println("---------- [Applying Database patches] ----------");
+		plugin.getLogger().info("---------- [Applying Database patches] ----------");
 		
 		for (Patch patch : patches) {
 			
@@ -40,7 +40,7 @@ public class PatchManager {
 			count++;
 		}
 		
-		System.out.println("---------- [" + count + " patches have been applied] ----------");
+		plugin.getLogger().info("---------- [" + count + " patches have been applied] ----------");
 	}
 	
 }
