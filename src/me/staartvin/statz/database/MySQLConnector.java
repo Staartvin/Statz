@@ -66,7 +66,7 @@ public class MySQLConnector extends DatabaseConnector {
 
 			try {
 				final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
-						+ "?rewriteBatchedStatements=true";
+						+ "?rewriteBatchedStatements=true&autoReconnect=true";
 
 				connection = DriverManager.getConnection(url, username, password);
 			} catch (final SQLException ex) {
