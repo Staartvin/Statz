@@ -3,11 +3,10 @@ package me.staartvin.statz.datamanager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
