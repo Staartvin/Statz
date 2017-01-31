@@ -146,7 +146,7 @@ public class CommandsManager implements TabExecutor {
 			for (final String actionString : entry.getKey()) {
 
 				if (actionString.equalsIgnoreCase(action)) {
-					
+				    
 					// Check if player has proper permission
 					if (!this.hasPermission(entry.getValue().getPermission(), sender)) {
 						return true;
