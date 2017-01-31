@@ -27,7 +27,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
 			this.getStatz().getConfigHandler().setLatestPatchVersion(this.getPatchId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-
+		        this.getStatz().getLogger().warning("Failed to patch MySQL database for patch " + this.getPatchId());
 		}
 
 	}
@@ -71,7 +71,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
 			this.getStatz().getConfigHandler().setLatestPatchVersion(this.getPatchId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-
+		    this.getStatz().getLogger().warning("Failed to patch SQLite database for patch " + this.getPatchId());
 		}
 
 	}
