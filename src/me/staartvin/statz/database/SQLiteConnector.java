@@ -175,8 +175,6 @@ public class SQLiteConnector extends DatabaseConnector {
 			statement.append(");");
 
 			statements.add(statement.toString());
-			
-			System.out.println("Statement: " + statement);
 
 			plugin.debugMessage(ChatColor.BLUE + "Loaded table '" + table.getTableName() + "'");
 		}

@@ -201,8 +201,6 @@ public class StatsAPIHandler implements DependencyHandler {
 		final StatsHolder holder = stats.getUserManager().getUser(uuid);
 
 		if (holder == null) {
-			plugin.debugMessage("UUID '" + uuid.toString() + "' was not found in Stats database!");
-
 			return new ArrayList<StatEntry>();
 		}
 
