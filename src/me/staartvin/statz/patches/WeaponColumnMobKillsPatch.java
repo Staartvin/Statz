@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Table.SQLDataType;
 import me.staartvin.statz.datamanager.PlayerStat;
 
 public class WeaponColumnMobKillsPatch extends Patch {
