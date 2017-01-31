@@ -132,11 +132,13 @@ public class ListCommand extends StatzCommand {
 				return true;
 			}
 
-			// Check permissions
-			if (!sender.hasPermission("statz.list.others")) {
-				sender.sendMessage(Lang.INSUFFICIENT_PERMISSIONS.getConfigValue("statz.list.others"));
-				return true;
-			}
+			if (!sender.getName().equalsIgnoreCase(playerName)) {
+			 // Check permissions
+	                        if (!sender.hasPermission("statz.list.others")) {
+	                                sender.sendMessage(Lang.INSUFFICIENT_PERMISSIONS.getConfigValue("statz.list.others"));
+	                                return true;
+	                        }
+			}			
 		}
 
 		// Show a list of all stats
