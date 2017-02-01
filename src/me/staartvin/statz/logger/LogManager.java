@@ -39,6 +39,7 @@ public class LogManager {
 	 * <br>
 	 * The file will be created in the folder 'debugger' and will have the name
 	 * 'debug-yyyyMMddHHmmss'.
+	 * @return The format date that will be used to create this log file.
 	 */
 	public String createLogFile() {
 		dateFormatSave = dateFormat.format(new Date());
