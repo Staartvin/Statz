@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  * To get the default value, do {@link #getDefault()}.
  * 
  * For the defined value in the lang.yml config, use
- * {@link #getConfigValue(String... args)}.
+ * {@link #getConfigValue(Object...)}.
  * String objects are expected as input.
  * 
  * @author Staartvin and gomeow
