@@ -11,11 +11,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/spigot.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Statz/lib/bukkit-1.10.2-R0.1-20160630.052520-14-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/Votifier.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
@@ -25,8 +20,6 @@
 	<classpathentry kind="lib" path="lib/mcMMO.jar"/>
 	<classpathentry kind="lib" path="lib/askyblock.jar"/>
 	<classpathentry kind="lib" path="lib/acidisland.jar"/>
-	<classpathentry kind="lib" path="lib/worldguard-6.1.jar"/>
-	<classpathentry kind="lib" path="lib/worldedit-bukkit-6.1.jar"/>
 	<classpathentry kind="lib" path="lib/RoyalCommands.jar"/>
 	<classpathentry kind="lib" path="lib/OnTime.jar"/>
 	<classpathentry kind="lib" path="lib/afkTerminator.jar"/>
@@ -39,7 +32,14 @@
 	<classpathentry kind="lib" path="lib/EssentialsX-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/GriefPrevention.jar"/>
 	<classpathentry kind="lib" path="lib/RPGme.jar"/>
-	<classpathentry kind="lib" path="lib/nuvotifier-universal-2.3.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/Jobs3.5.7.jar"/>
+	<classpathentry kind="lib" path="lib/Jobs3.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/nuvotifier-universal-2.3.4.jar"/>
+	<classpathentry kind="lib" path="lib/spigot-1.11.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="https://hub.spigotmc.org/javadocs/spigot/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/worldguard-6.2.jar"/>
+	<classpathentry kind="lib" path="lib/worldedit-bukkit-6.1.5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

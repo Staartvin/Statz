@@ -255,7 +255,8 @@ public class StatzUtil {
 	}
 
 	// Courtesy to Lolmewn for this code.
-	public static String getMovementType(Player player) {
+	@SuppressWarnings("deprecation")
+    public static String getMovementType(Player player) {
 		if (player.isFlying()) {	
 			return "FLY";
 		}
