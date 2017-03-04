@@ -151,9 +151,9 @@ public class MySQLConnector extends DatabaseConnector {
                 if (column.getDataType().equals(SQLDataType.INT)) {
                     statement.append("" + column.getColumnName() + " BIGINT");
                 } else if (column.getDataType().equals(SQLDataType.TEXT)) {
-                    statement.append("" + column.getColumnName() + " VARCHAR(255)");
+                    statement.append("" + column.getColumnName() + " VARCHAR(100)");
                 } else if (column.getDataType().equals(SQLDataType.DOUBLE)) {
-                    statement.append("" + column.getColumnName() + " DECIMAL(65,10)");
+                    statement.append("" + column.getColumnName() + " DECIMAL(20,10)");
                 } else {
                     statement.append("" + column.getColumnName() + " " + column.getDataType().toString());
                 }
