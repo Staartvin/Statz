@@ -1,28 +1,29 @@
 package me.staartvin.statz.hooks.handlers;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.vexsoftware.votifier.Votifier;
+import com.hm.achievement.AdvancedAchievements;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
- * Handles all connections with Votifier
+ * Handles all connections with AdvancedAchievements
  * <p>
- * Date created: 21:02:20 15 mrt. 2014
+ * Date created: 21:02:05 15 mrt. 2014
  * 
  * @author Staartvin
  * 
  */
-public class VotifierHandler implements DependencyHandler {
+public class AdvancedAchievementsHandler implements DependencyHandler {
 
     private final Statz plugin;
-    private Votifier api;
+    private AdvancedAchievements api;
 
-    public VotifierHandler(final Statz instance) {
+    public AdvancedAchievementsHandler(final Statz instance) {
         plugin = instance;
     }
 
@@ -34,17 +35,10 @@ public class VotifierHandler implements DependencyHandler {
     @Override
     public Plugin get() {
         final Plugin plugin = this.plugin.getServer().getPluginManager()
-                .getPlugin(Dependency.VOTIFIER.getInternalString());
+                .getPlugin(Dependency.ADVANCEDACHIEVEMENTS.getInternalString());
 
-        try {
-            // May not be loaded
-            if (plugin == null || !(plugin instanceof Votifier)) {
-                return null; // Maybe you want throw an exception instead
-            }
-        } catch (NoClassDefFoundError e) {
-            // Votifier was not found, maybe try NuVotifier
-            return null;
-            // e.printStackTrace();
+        if (plugin == null || !(plugin instanceof AdvancedAchievements)) {
+            return null; // Maybe you want throw an exception instead
         }
 
         return plugin;
@@ -57,7 +51,8 @@ public class VotifierHandler implements DependencyHandler {
      */
     @Override
     public boolean isAvailable() {
-        return api != null;
+        // API is static class
+        return isInstalled();
     }
 
     /*
@@ -67,7 +62,7 @@ public class VotifierHandler implements DependencyHandler {
      */
     @Override
     public boolean isInstalled() {
-        Plugin plugin = get();
+        final AdvancedAchievements plugin = (AdvancedAchievements) get();
 
         return plugin != null && plugin.isEnabled();
     }
@@ -81,25 +76,39 @@ public class VotifierHandler implements DependencyHandler {
     public boolean setup(final boolean verbose) {
         if (!isInstalled()) {
             if (verbose) {
-                plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
+                plugin.debugMessage(
+                        ChatColor.RED + Dependency.ADVANCEDACHIEVEMENTS.getInternalString() + " has not been found!");
             }
             return false;
         } else {
-            try {
-                api = (Votifier) get();
-            } catch (NoClassDefFoundError e) {
-                // Do nothing atm
-            }
+
+            api = (AdvancedAchievements) get();
 
             if (api != null) {
                 return true;
             } else {
                 if (verbose) {
-                    plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString()
+                    plugin.debugMessage(ChatColor.RED + Dependency.ADVANCEDACHIEVEMENTS.getInternalString()
                             + " has been found but cannot be used!");
                 }
                 return false;
             }
         }
+    }
+    
+    public boolean hasAchievement(Player player, String achievementName) {
+        if (!this.isAvailable()) {
+            return false;
+        }
+        
+        return api.getPoolsManager().hasPlayerAchievement(player, achievementName);
+    }
+    
+    public int getNumberOfAchievements(Player player) {
+        if (!this.isAvailable()) {
+            return -1;
+        }
+        
+        return api.getDb().getPlayerAchievementsAmount(player);
     }
 }

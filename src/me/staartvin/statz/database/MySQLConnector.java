@@ -55,34 +55,36 @@ public class MySQLConnector extends DatabaseConnector {
      * @see me.staartvin.statz.database.Database#getSQLConnection()
      */
     @Override
-    public Connection getConnection() {
-        synchronized (this) {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    return connection;
-                }
-            } catch (SQLException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+    public synchronized Connection getConnection() {
 
-            try {
-                final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
-                        + "?rewriteBatchedStatements=true&autoReconnect=true";
+        System.out.println("REQUESTING CONNECTION ON THREAD " + Thread.currentThread());
 
-                connection = DriverManager.getConnection(url, username, password);
-            } catch (final SQLException ex) {
-                System.out.println("SQLDataStorage.connect");
-                System.out.println("SQLException: " + ex.getMessage());
-                System.out.println("SQLState: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-                plugin.getLogger().log(Level.SEVERE, "MySQL exception on initialize: " + ex.getMessage());
-                return null;
-            } catch (final Exception e) {
-                e.printStackTrace();
+        try {
+            if (connection != null && !connection.isClosed()) {
+                return connection;
             }
-            return connection;
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
+
+        try {
+            final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
+                    + "?rewriteBatchedStatements=true&autoReconnect=true";
+
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (final SQLException ex) {
+            System.out.println("SQLDataStorage.connect");
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            plugin.getLogger().log(Level.SEVERE, "MySQL exception on initialize: " + ex.getMessage());
+            return null;
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
+
     }
 
     /*
@@ -1089,10 +1091,10 @@ public class MySQLConnector extends DatabaseConnector {
                         ps.executeUpdate();
 
                     } catch (Exception ex) {
-                       
+
                         Thread t = Thread.currentThread();
                         t.getUncaughtExceptionHandler().uncaughtException(t, ex);
-                        
+
                         // plugin.getLogger().log(Level.SEVERE, "Couldn't
                         // execute MySQL statement:", ex);
                     } finally {

@@ -24,117 +24,128 @@ import me.staartvin.statz.hooks.DependencyHandler;
  */
 public class WorldGuardHandler implements DependencyHandler {
 
-	private final Statz plugin;
-	private WorldGuardPlugin worldGuardAPI;
+    private final Statz plugin;
+    private WorldGuardPlugin worldGuardAPI;
 
-	public WorldGuardHandler(final Statz instance) {
-		plugin = instance;
-	}
+    public WorldGuardHandler(final Statz instance) {
+        plugin = instance;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
-	 */
-	@Override
-	public Plugin get() {
-		final Plugin wgPlugin = plugin.getServer().getPluginManager()
-				.getPlugin(Dependency.WORLDGUARD.getInternalString());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
+     */
+    @Override
+    public Plugin get() {
+        final Plugin wgPlugin = plugin.getServer().getPluginManager()
+                .getPlugin(Dependency.WORLDGUARD.getInternalString());
 
-		// WorldGuard may not be loaded
-		if (wgPlugin == null || !(wgPlugin instanceof WorldGuardPlugin)) {
-			return null; // Maybe you want throw an exception instead
-		}
+        // WorldGuard may not be loaded
+        if (wgPlugin == null || !(wgPlugin instanceof WorldGuardPlugin)) {
+            return null; // Maybe you want throw an exception instead
+        }
 
-		return wgPlugin;
-	}
+        return wgPlugin;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
-	 */
-	@Override
-	public boolean isAvailable() {
-		return worldGuardAPI != null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
+     */
+    @Override
+    public boolean isAvailable() {
+        return worldGuardAPI != null;
+    }
 
-	/**
-	 * Check to see if a player is in a specific region
-	 * 
-	 * @param player Player that needs to be checked
-	 * @param regionName Name of the region to be checked
-	 * @return true if the player is in that region; false otherwise.
-	 */
-	public boolean isInRegion(final Player player, final String regionName) {
-		if (!isAvailable())
-			return false;
+    /**
+     * Check to see if a player is in a specific region
+     * 
+     * @param player
+     *            Player that needs to be checked
+     * @param regionName
+     *            Name of the region to be checked
+     * @return true if the player is in that region; false otherwise.
+     */
+    public boolean isInRegion(final Player player, final String regionName) {
+        if (!isAvailable())
+            return false;
 
-		if (player == null || regionName == null)
-			return false;
+        if (player == null || regionName == null)
+            return false;
 
-		return this.isInRegion(player.getLocation(), regionName);
-	}
-	
-	/**
-	 * @see #isInRegion(Player, String)
-	 * @param location
-	 * @param regionName
-	 * @return
-	 */
-	public boolean isInRegion(Location location, String regionName) {
+        return this.isInRegion(player.getLocation(), regionName);
+    }
 
-		if (location == null) return false;
-		
-		final RegionManager regManager = worldGuardAPI.getRegionManager(location.getWorld());
+    /**
+     * @see #isInRegion(Player, String)
+     * @param location
+     * @param regionName
+     * @return
+     */
+    public boolean isInRegion(Location location, String regionName) {
 
-		if (regManager == null)
-			return false;
+        if (location == null)
+            return false;
 
-		final ApplicableRegionSet set = regManager.getApplicableRegions(location);
+        final RegionManager regManager = worldGuardAPI.getRegionManager(location.getWorld());
 
-		if (set == null)
-			return false;
+        if (regManager == null)
+            return false;
 
-		for (final ProtectedRegion region : set) {
-			final String name = region.getId();
+        final ApplicableRegionSet set = regManager.getApplicableRegions(location);
 
-			if (name.equalsIgnoreCase(regionName)) {
-				return true;
-			}
-		}
+        if (set == null)
+            return false;
 
-		return false;
-	}
+        for (final ProtectedRegion region : set) {
+            final String name = region.getId();
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
-	 */
-	@Override
-	public boolean isInstalled() {
-		final WorldGuardPlugin wg = (WorldGuardPlugin) get();
+            if (name.equalsIgnoreCase(regionName)) {
+                return true;
+            }
+        }
 
-		return wg != null && wg.isEnabled();
-	}
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
-	 */
-	@Override
-	public boolean setup(final boolean verbose) {
-		if (!isInstalled()) {
-			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString() + " has not been found!");
-			}
-			return false;
-		} else {
-			worldGuardAPI = (WorldGuardPlugin) get();
-			if (worldGuardAPI != null) {
-				return true;
-			} else {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString()
-							+ " has been found but cannot be used!");
-				}
-				return false;
-			}
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
+     */
+    @Override
+    public boolean isInstalled() {
+        final WorldGuardPlugin wg = (WorldGuardPlugin) get();
+
+        return wg != null && wg.isEnabled();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
+     */
+    @Override
+    public boolean setup(final boolean verbose) {
+        if (!isInstalled()) {
+            if (verbose) {
+                plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString() + " has not been found!");
+            }
+            return false;
+        } else {
+            worldGuardAPI = (WorldGuardPlugin) get();
+            if (worldGuardAPI != null) {
+                return true;
+            } else {
+                if (verbose) {
+                    plugin.debugMessage(ChatColor.RED + Dependency.WORLDGUARD.getInternalString()
+                            + " has been found but cannot be used!");
+                }
+                return false;
+            }
+        }
+    }
 
 }

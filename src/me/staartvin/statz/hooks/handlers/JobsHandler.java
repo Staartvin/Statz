@@ -28,155 +28,163 @@ import me.staartvin.statz.util.StatzUtil;
  */
 public class JobsHandler implements DependencyHandler {
 
-	private final Statz plugin;
-	private Jobs api;
+    private final Statz plugin;
+    private Jobs api;
 
-	public JobsHandler(final Statz instance) {
-		plugin = instance;
-	}
+    public JobsHandler(final Statz instance) {
+        plugin = instance;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
-	 */
-	@Override
-	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.JOBS.getInternalString());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
+     */
+    @Override
+    public Plugin get() {
+        final Plugin plugin = this.plugin.getServer().getPluginManager().getPlugin(Dependency.JOBS.getInternalString());
 
-		// May not be loaded
-		if (plugin == null || !(plugin instanceof Jobs)) {
-			return null; // Maybe you want throw an exception instead
-		}
+        // May not be loaded
+        if (plugin == null || !(plugin instanceof Jobs)) {
+            return null; // Maybe you want throw an exception instead
+        }
 
-		return plugin;
-	}
+        return plugin;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
-	 */
-	@Override
-	public boolean isAvailable() {
-		return api != null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
+     */
+    @Override
+    public boolean isAvailable() {
+        return api != null;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
-	 */
-	@Override
-	public boolean isInstalled() {
-		final Plugin plugin = get();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
+     */
+    @Override
+    public boolean isInstalled() {
+        final Plugin plugin = get();
 
-		return plugin != null && plugin.isEnabled();
-	}
+        return plugin != null && plugin.isEnabled();
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
-	 */
-	@Override
-	public boolean setup(final boolean verbose) {
-		if (!isInstalled()) {
-			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.JOBS.getInternalString() + " has not been found!");
-			}
-			return false;
-		} else {
-			api = (Jobs) get();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
+     */
+    @Override
+    public boolean setup(final boolean verbose) {
+        if (!isInstalled()) {
+            if (verbose) {
+                plugin.debugMessage(ChatColor.RED + Dependency.JOBS.getInternalString() + " has not been found!");
+            }
+            return false;
+        } else {
+            api = (Jobs) get();
 
-			if (api != null) {
-				return true;
-			} else {
-				if (verbose) {
-					plugin.getLogger()
-							.info(Dependency.JOBS.getInternalString() + " has been found but cannot be used!");
-				}
-				return false;
-			}
-		}
-	}
+            if (api != null) {
+                return true;
+            } else {
+                if (verbose) {
+                    plugin.getLogger()
+                            .info(Dependency.JOBS.getInternalString() + " has been found but cannot be used!");
+                }
+                return false;
+            }
+        }
+    }
 
-	public double getCurrentPoints(UUID uuid) {
-		if (!this.isAvailable() || uuid == null)
-			return -1;
+    public double getCurrentPoints(UUID uuid) {
+        if (!this.isAvailable() || uuid == null)
+            return -1;
 
-		PlayerPoints pointInfo = Jobs.getPlayerManager().getPointsData().getPlayerPointsInfo(uuid);
+        PlayerPoints pointInfo = Jobs.getPlayerManager().getPointsData().getPlayerPointsInfo(uuid);
 
-		if (pointInfo == null)
-			return -1;
+        if (pointInfo == null)
+            return -1;
 
-		return StatzUtil.roundDouble(pointInfo.getCurrentPoints(), 2);
-	}
+        return StatzUtil.roundDouble(pointInfo.getCurrentPoints(), 2);
+    }
 
-	public double getTotalPoints(UUID uuid) {
-		if (!this.isAvailable() || uuid == null)
-			return -1;
+    public double getTotalPoints(UUID uuid) {
+        if (!this.isAvailable() || uuid == null)
+            return -1;
 
-		PlayerPoints pointInfo = Jobs.getPlayerManager().getPointsData().getPlayerPointsInfo(uuid);
+        PlayerPoints pointInfo = Jobs.getPlayerManager().getPointsData().getPlayerPointsInfo(uuid);
 
-		if (pointInfo == null)
-			return -1;
+        if (pointInfo == null)
+            return -1;
 
-		return StatzUtil.roundDouble(pointInfo.getTotalPoints(), 2);
-	}
+        return StatzUtil.roundDouble(pointInfo.getTotalPoints(), 2);
+    }
 
-	public double getCurrentXP(Player player, String jobName) {
-		if (!this.isAvailable())
-			return -1;
+    public double getCurrentXP(Player player, String jobName) {
+        if (!this.isAvailable())
+            return -1;
 
-		Job job = this.getJob(jobName);
+        Job job = this.getJob(jobName);
 
-		if (job == null)
-			return -1;
+        if (job == null)
+            return -1;
 
-		JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
+        JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
 
-		if (jobsPlayer == null)
-			return -1;
+        if (jobsPlayer == null)
+            return -1;
 
-		JobProgression progress = jobsPlayer.getJobProgression(job);
+        JobProgression progress = jobsPlayer.getJobProgression(job);
 
-		if (progress == null)
-			return -1;
+        if (progress == null)
+            return -1;
 
-		return StatzUtil.roundDouble(progress.getExperience(), 2);
-	}
+        return StatzUtil.roundDouble(progress.getExperience(), 2);
+    }
 
-	public double getCurrentLevel(Player player, String jobName) {
-		if (!this.isAvailable())
-			return -1;
+    public double getCurrentLevel(Player player, String jobName) {
+        if (!this.isAvailable())
+            return -1;
 
-		Job job = this.getJob(jobName);
+        Job job = this.getJob(jobName);
 
-		if (job == null)
-			return -1;
+        if (job == null)
+            return -1;
 
-		JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
+        JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
 
-		if (jobsPlayer == null)
-			return -1;
+        if (jobsPlayer == null)
+            return -1;
 
-		JobProgression progress = jobsPlayer.getJobProgression(job);
+        JobProgression progress = jobsPlayer.getJobProgression(job);
 
-		if (progress == null)
-			return -1;
+        if (progress == null)
+            return -1;
 
-		return StatzUtil.roundDouble(progress.getLevel(), 2);
-	}
+        return StatzUtil.roundDouble(progress.getLevel(), 2);
+    }
 
-	public Job getJob(String jobName) {
-		if (!this.isAvailable())
-			return null;
+    public Job getJob(String jobName) {
+        if (!this.isAvailable())
+            return null;
 
-		return Jobs.getJob(jobName);
-	}
+        return Jobs.getJob(jobName);
+    }
 
-	public List<JobProgression> getJobs(Player player) {
-		if (!this.isAvailable())
-			return null;
+    public List<JobProgression> getJobs(Player player) {
+        if (!this.isAvailable())
+            return null;
 
-		JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
+        JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(player);
 
-		if (jobsPlayer == null)
-			return null;
+        if (jobsPlayer == null)
+            return null;
 
-		return jobsPlayer.getJobProgression();
-	}
+        return jobsPlayer.getJobProgression();
+    }
 }

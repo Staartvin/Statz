@@ -21,83 +21,91 @@ import me.staartvin.statz.hooks.DependencyHandler;
  */
 public class FactionsHandler implements DependencyHandler {
 
-	private Factions api;
-	private final Statz plugin;
+    private Factions api;
+    private final Statz plugin;
 
-	public FactionsHandler(final Statz instance) {
-		plugin = instance;
-	}
+    public FactionsHandler(final Statz instance) {
+        plugin = instance;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
-	 */
-	@Override
-	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager()
-				.getPlugin(Dependency.FACTIONS.getInternalString());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
+     */
+    @Override
+    public Plugin get() {
+        final Plugin plugin = this.plugin.getServer().getPluginManager()
+                .getPlugin(Dependency.FACTIONS.getInternalString());
 
-		// WorldGuard may not be loaded
-		if (plugin == null || !(plugin instanceof Factions)) {
-			return null; // Maybe you want throw an exception instead
-		}
+        // WorldGuard may not be loaded
+        if (plugin == null || !(plugin instanceof Factions)) {
+            return null; // Maybe you want throw an exception instead
+        }
 
-		return plugin;
-	}
+        return plugin;
+    }
 
-	public double getFactionPower(final Player player) {
-		if (!isAvailable())
-			return -1;
+    public double getFactionPower(final Player player) {
+        if (!isAvailable())
+            return -1;
 
-		final MPlayer uPlayer = MPlayer.get(player);
+        final MPlayer uPlayer = MPlayer.get(player);
 
-		if (!uPlayer.hasFaction()) {
-			return -1;
-		}
+        if (!uPlayer.hasFaction()) {
+            return -1;
+        }
 
-		return uPlayer.getFaction().getPower();
-	}
+        return uPlayer.getFaction().getPower();
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
-	 */
-	@Override
-	public boolean isAvailable() {
-		return api != null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
+     */
+    @Override
+    public boolean isAvailable() {
+        return api != null;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
-	 */
-	@Override
-	public boolean isInstalled() {
-		final Factions plugin = (Factions) get();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
+     */
+    @Override
+    public boolean isInstalled() {
+        final Factions plugin = (Factions) get();
 
-		return plugin != null && plugin.isEnabled();
-	}
+        return plugin != null && plugin.isEnabled();
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
-	 */
-	@Override
-	public boolean setup(final boolean verbose) {
-		if (!isInstalled()) {
-			if (verbose) {
-				plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has not been found!");
-			}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
+     */
+    @Override
+    public boolean setup(final boolean verbose) {
+        if (!isInstalled()) {
+            if (verbose) {
+                plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString() + " has not been found!");
+            }
 
-			return false;
-		} else {
-			api = (Factions) get();
+            return false;
+        } else {
+            api = (Factions) get();
 
-			if (api != null) {
-				return true;
-			} else {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString()
-							+ " has been found but cannot be used!");
-				}
-				return false;
-			}
-		}
-	}
+            if (api != null) {
+                return true;
+            } else {
+                if (verbose) {
+                    plugin.debugMessage(ChatColor.RED + Dependency.FACTIONS.getInternalString()
+                            + " has been found but cannot be used!");
+                }
+                return false;
+            }
+        }
+    }
 }

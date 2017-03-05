@@ -1,28 +1,33 @@
 package me.staartvin.statz.hooks.handlers;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.vexsoftware.votifier.NuVotifierBukkit;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
+import us.talabrek.ultimateskyblock.uSkyBlock;
+import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
 /**
- * Handles all connections with Votifier
+ * Handles all connections with uSkyBlock
  * <p>
- * Date created: 21:02:20 15 mrt. 2014
+ * Date created: 21:02:05 15 mrt. 2014
  * 
  * @author Staartvin
  * 
  */
-public class NuVotifierHandler implements DependencyHandler {
+public class uSkyBlockHandler implements DependencyHandler {
 
     private final Statz plugin;
-    private NuVotifierBukkit api;
+    private uSkyBlockAPI api;
 
-    public NuVotifierHandler(final Statz instance) {
+    public uSkyBlockHandler(final Statz instance) {
         plugin = instance;
     }
 
@@ -34,16 +39,10 @@ public class NuVotifierHandler implements DependencyHandler {
     @Override
     public Plugin get() {
         final Plugin plugin = this.plugin.getServer().getPluginManager()
-                .getPlugin(Dependency.NUVOTIFIER.getInternalString());
+                .getPlugin(Dependency.USKYBLOCK.getInternalString());
 
-        try {
-            // May not be loaded
-            if (plugin == null || !(plugin instanceof NuVotifierBukkit)) {
-                return null; // Maybe you want throw an exception instead
-            }
-        } catch (NoClassDefFoundError e) {
-            // Votifier was not found, maybe try NuVotifier
-            return null;
+        if (plugin == null || !(plugin instanceof uSkyBlockAPI)) {
+            return null; // Maybe you want throw an exception instead
         }
 
         return plugin;
@@ -56,7 +55,8 @@ public class NuVotifierHandler implements DependencyHandler {
      */
     @Override
     public boolean isAvailable() {
-        return api != null;
+        // API is static class
+        return isInstalled();
     }
 
     /*
@@ -66,7 +66,7 @@ public class NuVotifierHandler implements DependencyHandler {
      */
     @Override
     public boolean isInstalled() {
-        Plugin plugin = get();
+        final Plugin plugin = get();
 
         return plugin != null && plugin.isEnabled();
     }
@@ -80,20 +80,37 @@ public class NuVotifierHandler implements DependencyHandler {
     public boolean setup(final boolean verbose) {
         if (!isInstalled()) {
             if (verbose) {
-                plugin.debugMessage(ChatColor.RED + "NuVotifier has not been found!");
+                plugin.debugMessage(
+                        ChatColor.RED + Dependency.USKYBLOCK.getInternalString() + " has not been found!");
             }
             return false;
         } else {
-            api = (NuVotifierBukkit) get();
+
+            api = (uSkyBlockAPI) get();
 
             if (api != null) {
                 return true;
             } else {
                 if (verbose) {
-                    plugin.debugMessage(ChatColor.RED + "NuVotifier has been found but cannot be used!");
+                    plugin.debugMessage(ChatColor.RED + Dependency.USKYBLOCK.getInternalString()
+                            + " has been found but cannot be used!");
                 }
                 return false;
             }
         }
+    }
+    
+    public double getIslandLevel(Player player) {
+        if (!isAvailable())
+            return -1;
+
+        return api.getIslandLevel(player);
+    }
+    
+    public int getIslandRank(Player player) {
+        if (!isAvailable())
+            return -1;
+
+        return api.getIslandRank(player).getRank();
     }
 }

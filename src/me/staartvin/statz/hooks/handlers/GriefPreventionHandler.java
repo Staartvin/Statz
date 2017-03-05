@@ -23,131 +23,143 @@ import me.staartvin.statz.hooks.DependencyHandler;
  */
 public class GriefPreventionHandler implements DependencyHandler {
 
-	private GriefPrevention api;
-	private final Statz plugin;
+    private GriefPrevention api;
+    private final Statz plugin;
 
-	public GriefPreventionHandler(final Statz instance) {
-		plugin = instance;
-	}
+    public GriefPreventionHandler(final Statz instance) {
+        plugin = instance;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
-	 */
-	@Override
-	public Plugin get() {
-		final Plugin plugin = this.plugin.getServer().getPluginManager()
-				.getPlugin(Dependency.GRIEF_PREVENTION.getInternalString());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#get()
+     */
+    @Override
+    public Plugin get() {
+        final Plugin plugin = this.plugin.getServer().getPluginManager()
+                .getPlugin(Dependency.GRIEF_PREVENTION.getInternalString());
 
-		// WorldGuard may not be loaded
-		if (plugin == null || !(plugin instanceof GriefPrevention)) {
-			return null; // Maybe you want throw an exception instead
-		}
+        // WorldGuard may not be loaded
+        if (plugin == null || !(plugin instanceof GriefPrevention)) {
+            return null; // Maybe you want throw an exception instead
+        }
 
-		return plugin;
-	}
+        return plugin;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
-	 */
-	@Override
-	public boolean isAvailable() {
-		return api != null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isAvailable()
+     */
+    @Override
+    public boolean isAvailable() {
+        return api != null;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
-	 */
-	@Override
-	public boolean isInstalled() {
-		final GriefPrevention plugin = (GriefPrevention) get();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#isInstalled()
+     */
+    @Override
+    public boolean isInstalled() {
+        final GriefPrevention plugin = (GriefPrevention) get();
 
-		return plugin != null && plugin.isEnabled();
-	}
+        return plugin != null && plugin.isEnabled();
+    }
 
-	/* (non-Javadoc)
-	 * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
-	 */
-	@Override
-	public boolean setup(final boolean verbose) {
-		if (!isInstalled()) {
-			if (verbose) {
-				plugin.debugMessage(
-						ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString() + " has not been found!");
-			}
-			return false;
-		} else {
-			api = (GriefPrevention) get();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see me.armar.plugins.autorank.hooks.DependencyHandler#setup()
+     */
+    @Override
+    public boolean setup(final boolean verbose) {
+        if (!isInstalled()) {
+            if (verbose) {
+                plugin.debugMessage(
+                        ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString() + " has not been found!");
+            }
+            return false;
+        } else {
+            api = (GriefPrevention) get();
 
-			if (api != null) {
-				return true;
-			} else {
-				if (verbose) {
-					plugin.debugMessage(ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString()
-							+ " has been found but cannot be used!");
-				}
-				return false;
-			}
-		}
-	}
+            if (api != null) {
+                return true;
+            } else {
+                if (verbose) {
+                    plugin.debugMessage(ChatColor.RED + Dependency.GRIEF_PREVENTION.getInternalString()
+                            + " has been found but cannot be used!");
+                }
+                return false;
+            }
+        }
+    }
 
-	private PlayerData getPlayerData(UUID uuid) {
-		return api.dataStore.getPlayerData(uuid);
-	}
+    private PlayerData getPlayerData(UUID uuid) {
+        return api.dataStore.getPlayerData(uuid);
+    }
 
-	public int getNumberOfClaims(UUID uuid) {
-		if (!this.isAvailable()) {
-			return -1;
-		}
+    public int getNumberOfClaims(UUID uuid) {
+        if (!this.isAvailable()) {
+            return -1;
+        }
 
-		PlayerData data = this.getPlayerData(uuid);
+        PlayerData data = this.getPlayerData(uuid);
 
-		return data.getClaims().size();
-	}
+        return data.getClaims().size();
+    }
 
-	public int getNumberOfClaimedBlocks(UUID uuid) {
-		if (!this.isAvailable())
-			return -1;
+    public int getNumberOfClaimedBlocks(UUID uuid) {
+        if (!this.isAvailable())
+            return -1;
 
-		PlayerData data = this.getPlayerData(uuid);
+        PlayerData data = this.getPlayerData(uuid);
 
-		return data.getAccruedClaimBlocks();
-	}
+        return data.getAccruedClaimBlocks();
+    }
 
-	public int getNumberOfRemainingBlocks(UUID uuid) {
-		if (!this.isAvailable())
-			return -1;
+    public int getNumberOfRemainingBlocks(UUID uuid) {
+        if (!this.isAvailable())
+            return -1;
 
-		PlayerData data = this.getPlayerData(uuid);
+        PlayerData data = this.getPlayerData(uuid);
 
-		return data.getRemainingClaimBlocks();
-	}
+        return data.getRemainingClaimBlocks();
+    }
 
-	public int getNumberOfBonusBlocks(UUID uuid) {
-		if (!this.isAvailable())
-			return -1;
+    public int getNumberOfBonusBlocks(UUID uuid) {
+        if (!this.isAvailable())
+            return -1;
 
-		PlayerData data = this.getPlayerData(uuid);
+        PlayerData data = this.getPlayerData(uuid);
 
-		return data.getBonusClaimBlocks();
-	}
-	
-	/**
-	 * Check whether a location is in the someone's claim.
-	 * @param loc Location to check
-	 * @param uuid UUID of player to find the claim of
-	 * @return true if the given location is in the player's claim; false otherwise.
-	 */
-	public boolean isInRegion(Location loc, UUID uuid) {
-		
-		PlayerData data = this.getPlayerData(uuid);
-		
-		Claim claim = api.dataStore.getClaimAt(loc, false, data.lastClaim);
-		
-		if (claim != null) {
-			return true;
-		}
-		
-		return false;
-	}
+        return data.getBonusClaimBlocks();
+    }
+
+    /**
+     * Check whether a location is in the someone's claim.
+     * 
+     * @param loc
+     *            Location to check
+     * @param uuid
+     *            UUID of player to find the claim of
+     * @return true if the given location is in the player's claim; false
+     *         otherwise.
+     */
+    public boolean isInRegion(Location loc, UUID uuid) {
+
+        PlayerData data = this.getPlayerData(uuid);
+
+        Claim claim = api.dataStore.getClaimAt(loc, false, data.lastClaim);
+
+        if (claim != null) {
+            return true;
+        }
+
+        return false;
+    }
 
 }

@@ -41,5 +41,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/worldguard-6.2.jar"/>
 	<classpathentry kind="lib" path="lib/worldedit-bukkit-6.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/AdvancedAchievements.jar"/>
+	<classpathentry kind="lib" path="lib/BattleLevels.jar"/>
+	<classpathentry kind="lib" path="lib/uSkyBlock.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
