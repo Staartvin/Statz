@@ -1,17 +1,12 @@
 package me.staartvin.statz.hooks.handlers;
 
-import java.util.UUID;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
-import us.talabrek.ultimateskyblock.uSkyBlock;
 import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
 /**
