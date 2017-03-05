@@ -68,6 +68,16 @@
 			<id>sk89q-repo</id>
 			<url>http://maven.sk89q.com/artifactory/repo/</url>
 		</repository>
+
+		<repository>
+			<id>uSkyBlock-mvn-repo</id>
+			<url>https://raw.github.com/rlf/uSkyBlock/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
@@ -217,6 +227,24 @@
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
 			<version>2.3.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.rlf</groupId>
+			<artifactId>uSkyBlock-API</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>me.robin.battlelevels.api</groupId>
+			<artifactId>BattleLevels</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.hm.achievement</groupId>
+			<artifactId>AdvancedAchievements</artifactId>
+			<version>4.2</version>
 		</dependency>
 
 	</dependencies>
