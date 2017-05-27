@@ -163,6 +163,17 @@ public class Statz extends JavaPlugin {
 		this.getLogger().info(this.getDescription().getFullName() + " has been enabled!");
 
 		this.getLogsManager().writeToLogFile("Enabled Statz!");
+
+		// Check whether you are running at high enough version.
+		String minimumVersion = "1.10";
+
+		if (!StatzUtil.isHigherVersion(minimumVersion)) {
+            this.getServer().getConsoleSender().sendMessage("[Statz] " + ChatColor.RED + "You are running a version of Minecraft below " + minimumVersion + "! This version of Statz needs at least " + minimumVersion);
+            this.getServer().getConsoleSender().sendMessage("[Statz] " + ChatColor.RED + "Statz will now disable itself.");
+
+            // Disable Statz.
+            this.getServer().getPluginManager().disablePlugin(this);
+        }
 	}
 
 	@Override
