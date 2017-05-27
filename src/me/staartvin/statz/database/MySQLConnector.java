@@ -57,8 +57,6 @@ public class MySQLConnector extends DatabaseConnector {
     @Override
     public synchronized Connection getConnection() {
 
-        System.out.println("REQUESTING CONNECTION ON THREAD " + Thread.currentThread());
-
         try {
             if (connection != null && !connection.isClosed()) {
                 return connection;
