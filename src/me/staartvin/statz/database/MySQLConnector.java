@@ -130,7 +130,7 @@ public class MySQLConnector extends DatabaseConnector {
      * proper tables. <br>
      * It looks at the tables that are loaded in memory and dynamically creates
      * proper SQL statements.
-     * 
+     *
      * @return SQL statements that will create the necessary tables when run.
      */
     public List<String> createTablesStatement() {
@@ -224,7 +224,7 @@ public class MySQLConnector extends DatabaseConnector {
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("playerName", false, SQLDataType.TEXT); // Name of
-                                                                   // player
+        // player
         this.addTable(newTable);
 
         // ----------------------------------------------------------
@@ -234,8 +234,8 @@ public class MySQLConnector extends DatabaseConnector {
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT); // How many times
-                                                             // did the player
-                                                             // join.
+        // did the player
+        // join.
 
         this.addTable(newTable);
 
@@ -247,11 +247,8 @@ public class MySQLConnector extends DatabaseConnector {
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
-        newTable.addColumn("value", false, SQLDataType.INT); // How many times
-                                                             // did the player
-                                                             // die.
-        newTable.addColumn("world", false, SQLDataType.TEXT); // What world did
-                                                              // the player die.
+        newTable.addColumn("value", false, SQLDataType.INT); // How many times did the player die.
+        newTable.addColumn("world", false, SQLDataType.TEXT); // What world did the player die.
 
         newTable.addUniqueMatched("uuid");
         newTable.addUniqueMatched("world");
@@ -509,8 +506,8 @@ public class MySQLConnector extends DatabaseConnector {
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT); // How many times
-                                                             // did the player
-                                                             // vote.
+        // did the player
+        // vote.
 
         newTable.addUniqueMatched(uuid);
 

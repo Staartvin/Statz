@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import me.staartvin.statz.gui.GUIManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -80,6 +81,7 @@ public class Statz extends JavaPlugin {
 	private ImportManager importManager;
 	private DisableManager disableManager;
 	private PatchManager patchManager;
+	private GUIManager guiManager;
 
 	@Override
 	public void onEnable() {
@@ -139,6 +141,9 @@ public class Statz extends JavaPlugin {
 
 		// Register command
 		getCommand("statz").setExecutor(getCommandsManager());
+
+		// Load GUI manager
+        this.setGUIManager(new GUIManager(this));
 
 		this.setLogsManager(new LogManager(this));
 
@@ -576,4 +581,12 @@ public class Statz extends JavaPlugin {
 	public void setPatchManager(PatchManager patchManager) {
 		this.patchManager = patchManager;
 	}
+
+    public GUIManager getGUIManager() {
+        return guiManager;
+    }
+
+    public void setGUIManager(GUIManager guiManager) {
+        this.guiManager = guiManager;
+    }
 }

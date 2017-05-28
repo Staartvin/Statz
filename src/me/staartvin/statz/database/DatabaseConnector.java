@@ -158,23 +158,6 @@ public abstract class DatabaseConnector {
 	 */
 	public abstract void setBatchObjects(final Table table, final List<Query> queries, int mode);
 
-	//	/**
-	//	 * Closes database connection.
-	//	 * 
-	//	 * @param ps PreparedStatement to be closed
-	//	 * @param rs ResultSet to be closed
-	//	 */
-	//	public void close(final PreparedStatement ps, final ResultSet rs) {
-	//		try {
-	//			if (ps != null)
-	//				ps.close();
-	//			if (rs != null)
-	//				rs.close();
-	//		} catch (final SQLException ex) {
-	//			plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-	//		}
-	//	}
-
 	/**
 	 * Get a list of currently loaded tables.
 	 * @return a list of loaded tables.

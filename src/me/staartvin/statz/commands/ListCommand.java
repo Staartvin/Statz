@@ -42,6 +42,14 @@ public class ListCommand extends StatzCommand {
 
 		boolean hasGivenPlayerName = false;
 
+		if (sender instanceof Player) {
+
+		    Player player = (Player) sender;
+
+		    plugin.getGUIManager().showInventory(player, plugin.getGUIManager().getStatisticsListInventory(player));
+        }
+
+
 		// If this is true, a list of stats will be shown, otherwise we'll show a specific stat.
 		boolean showList = true;
 
