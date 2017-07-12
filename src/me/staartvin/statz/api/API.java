@@ -35,7 +35,7 @@ public class API {
 	 * @param worldName Name of the world to get the info from, can also be null to find the total on all worlds.
 	 * @return the total count of a stat. E.g. the total amount of killed players on a world (or on all worlds).
 	 */
-	public Object getTotalOf(final PlayerStat statType, final UUID uuid, final String worldName) {
+	public Double getTotalOf(final PlayerStat statType, final UUID uuid, final String worldName) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
 		if (!info.isValid()) {
@@ -81,7 +81,7 @@ public class API {
 	 * @param conditions Extra conditions that need to be met. If no conditions are given, this method will act the same as {@link #getTotalOf(PlayerStat, UUID, String)}.
 	 * @return the total count taking the given conditions in consideration or null if no data for the given player was found.
 	 */
-	public Object getSpecificData(final PlayerStat statType, final UUID uuid, final RowRequirement... conditions) {
+	public Double getSpecificData(final PlayerStat statType, final UUID uuid, final RowRequirement... conditions) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
 		if (!info.isValid()) {
