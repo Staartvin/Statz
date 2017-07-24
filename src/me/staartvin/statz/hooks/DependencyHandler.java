@@ -1,5 +1,7 @@
 package me.staartvin.statz.hooks;
 
+import me.staartvin.statz.Statz;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -11,7 +13,7 @@ import org.bukkit.plugin.Plugin;
  * @author Staartvin
  * 
  */
-public interface DependencyHandler {
+public abstract class DependencyHandler {
 
     /**
      * Get the main class of the dependency. <br>
@@ -19,21 +21,21 @@ public interface DependencyHandler {
      * 
      * @return main class of plugin, or null if not found.
      */
-    public Plugin get();
+    public abstract Plugin get();
 
     /**
      * Check whether Statz has hooked this dependency and thus can use it.
      * 
      * @return true if Statz hooked into it, false otherwise.
      */
-    public boolean isAvailable();
+    public abstract boolean isAvailable();
 
     /**
      * Check to see if this dependency is running on this server
      * 
      * @return true if it is, false otherwise.
      */
-    public boolean isInstalled();
+    public abstract boolean isInstalled();
 
     /**
      * Setup the hook between this dependency and Autorank
@@ -42,5 +44,9 @@ public interface DependencyHandler {
      *            Whether to show output or not
      * @return true if correctly setup, false otherwise.
      */
-    public boolean setup(boolean verbose);
+    public abstract boolean setup(boolean verbose);
+
+    public Statz getPlugin() {
+        return (Statz) Bukkit.getPluginManager().getPlugin("Statz");
+    }
 }

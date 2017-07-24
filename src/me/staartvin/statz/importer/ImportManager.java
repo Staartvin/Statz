@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
+import me.staartvin.plugins.pluginlibrary.hooks.StatsHook;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -12,7 +15,6 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
-import me.staartvin.statz.hooks.handlers.StatsAPIHandler;
 import me.staartvin.statz.util.StatzUtil;
 import nl.lolmewn.stats.api.stat.Stat;
 import nl.lolmewn.stats.api.stat.StatEntry;
@@ -67,15 +69,15 @@ public class ImportManager {
 	public int importFromStats3() {
 		int importedEntries = 0;
 
-		DependencyHandler handler = plugin.getDependencyManager().getDependency(Dependency.STATS);
+        LibraryHook hook = plugin.getDependencyManager().getLibraryHook(Library.STATS);
 
-		if (!handler.isAvailable()) {
+		if (hook == null || !hook.isAvailable()) {
 			plugin.getLogger().warning("Cannot import data from Stats 3 as it is not running!");
 
 			return 0;
 		}
 
-		StatsAPIHandler stats3 = (StatsAPIHandler) handler;
+		StatsHook stats3 = (StatsHook) hook;
 
 		List<UUID> loggedPlayers = stats3.getLoggedPlayers();
 

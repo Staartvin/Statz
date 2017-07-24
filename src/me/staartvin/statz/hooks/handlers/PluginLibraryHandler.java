@@ -1,29 +1,28 @@
 package me.staartvin.statz.hooks.handlers;
 
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-
 import com.vexsoftware.votifier.Votifier;
-
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.PluginLibrary;
+import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 
 /**
- * Handles all connections with Votifier
+ * Handles all connections with PluginLibrary
  * <p>
  * Date created: 21:02:20 15 mrt. 2014
  * 
  * @author Staartvin
  * 
  */
-public class VotifierHandler extends DependencyHandler {
+public class PluginLibraryHandler extends DependencyHandler {
 
-    private final Statz plugin;
-    private Votifier api;
+    private PluginLibrary pluginLibrary;
 
-    public VotifierHandler() {
-        plugin = this.getPlugin();
+    public PluginLibraryHandler() {
     }
 
     /*
@@ -33,12 +32,12 @@ public class VotifierHandler extends DependencyHandler {
      */
     @Override
     public Plugin get() {
-        final Plugin plugin = this.plugin.getServer().getPluginManager()
-                .getPlugin(Dependency.VOTIFIER.getInternalString());
+        final Plugin plugin = this.getPlugin().getServer().getPluginManager()
+                .getPlugin(Dependency.PLUGINLIBRARY.getInternalString());
 
         try {
             // May not be loaded
-            if (plugin == null || !(plugin instanceof Votifier)) {
+            if (plugin == null || !(plugin instanceof PluginLibrary)) {
                 return null; // Maybe you want throw an exception instead
             }
         } catch (NoClassDefFoundError e) {
@@ -57,7 +56,7 @@ public class VotifierHandler extends DependencyHandler {
      */
     @Override
     public boolean isAvailable() {
-        return api != null;
+        return pluginLibrary != null;
     }
 
     /*
@@ -81,25 +80,38 @@ public class VotifierHandler extends DependencyHandler {
     public boolean setup(final boolean verbose) {
         if (!isInstalled()) {
             if (verbose) {
-                plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
+                this.getPlugin().debugMessage(ChatColor.RED + Dependency.PLUGINLIBRARY.getInternalString() + " has not been found!");
             }
             return false;
         } else {
             try {
-                api = (Votifier) get();
+                pluginLibrary = (PluginLibrary) get();
             } catch (NoClassDefFoundError e) {
                 // Do nothing atm
             }
 
-            if (api != null) {
+            if (pluginLibrary != null) {
                 return true;
             } else {
                 if (verbose) {
-                    plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString()
+                    this.getPlugin().debugMessage(ChatColor.RED + Dependency.PLUGINLIBRARY.getInternalString()
                             + " has been found but cannot be used!");
                 }
                 return false;
             }
         }
+    }
+
+    /**
+     * Get the library hook of PluginLibrary
+     * @param library Library to obtain
+     * @return library hook that is used by PluginLibrary or null if not found.
+     */
+    public LibraryHook getLibraryHook(Library library) {
+        if (!this.isAvailable()) return null;
+
+        if (library == null) return null;
+
+        return PluginLibrary.getLibrary(library);
     }
 }

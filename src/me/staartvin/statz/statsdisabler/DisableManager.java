@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.hooks.GriefPreventionHook;
+import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
+import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,127 +18,128 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.hooks.Dependency;
-import me.staartvin.statz.hooks.handlers.GriefPreventionHandler;
-import me.staartvin.statz.hooks.handlers.WorldGuardHandler;
 
 /**
  * This class reads from the disabled-stats.yml and has methods to check whether a statistic should be tracked in a certain area.
- * @author Staartvin
  *
+ * @author Staartvin
  */
 public class DisableManager {
 
-	private Statz plugin;
+    private Statz plugin;
 
-	private FileConfiguration disableConfig;
-	private File disableConfigFile;
+    private FileConfiguration disableConfig;
+    private File disableConfigFile;
 
-	public DisableManager(Statz plugin) {
-		this.plugin = plugin;
-	}
+    public DisableManager(Statz plugin) {
+        this.plugin = plugin;
+    }
 
-	/**
-	 * Is a stat disabled in a certain location?
-	 * @param loc Location to check
-	 * @param stat Stat to check
-	 * @return true if it is disabled on this location, false otherwise.
-	 */
-	public boolean isStatDisabledLocation(Location loc, PlayerStat stat) {
+    /**
+     * Is a stat disabled in a certain location?
+     *
+     * @param loc  Location to check
+     * @param stat Stat to check
+     * @return true if it is disabled on this location, false otherwise.
+     */
+    public boolean isStatDisabledLocation(Location loc, PlayerStat stat) {
 
-		// Only check for WG regions if WorldGuard is installed
-		if (plugin.getDependencyManager().isAvailable(Dependency.WORLDGUARD)) {
-			List<String> disabledRegions = this.getDisabledWorldGuardRegions(stat);
+        LibraryHook worldGuardHook = plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
 
-			WorldGuardHandler wgHandler = (WorldGuardHandler) plugin.getDependencyManager()
-					.getDependency(Dependency.WORLDGUARD);
+        // Only check for WG regions if WorldGuard is installed
+        if (worldGuardHook != null && worldGuardHook.isAvailable()) {
+            List<String> disabledRegions = this.getDisabledWorldGuardRegions(stat);
 
-			// Check for all disabled regions if a player is in them.
-			if (!disabledRegions.isEmpty()) {
-				for (String regionName : disabledRegions) {
-					if (wgHandler.isInRegion(loc, regionName)) {
-						return true;
-					}
-				}
-			}
-		}
+            WorldGuardHook wgHook = (WorldGuardHook) plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
 
-		// Check GriefPrevention claims
-		if (plugin.getDependencyManager().isAvailable(Dependency.GRIEF_PREVENTION)) {
-			List<String> disabledUUIDs = this.getDisabledGriefPreventionClaims(stat);
+            // Check for all disabled regions if a player is in them.
+            if (!disabledRegions.isEmpty()) {
+                for (String regionName : disabledRegions) {
+                    if (wgHook.isInRegion(loc, regionName)) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-			GriefPreventionHandler gpHandler = (GriefPreventionHandler) plugin.getDependencyManager()
-					.getDependency(Dependency.GRIEF_PREVENTION);
+        LibraryHook griefPreventionHook = plugin.getDependencyManager().getLibraryHook(Library.GRIEFPREVENTION);
 
-			// Check for all disabled uuid claims if a player is in them.
-			if (!disabledUUIDs.isEmpty()) {
-				for (String disabledClaim : disabledUUIDs) {
-					if (gpHandler.isInRegion(loc, UUID.fromString(disabledClaim))) {
-						return true;
-					}
-				}
-			}
-		}
+        // Check GriefPrevention claims
+        if (griefPreventionHook != null && griefPreventionHook.isAvailable()) {
+            List<String> disabledUUIDs = this.getDisabledGriefPreventionClaims(stat);
 
-		return false;
-	}
+            GriefPreventionHook gpHook = (GriefPreventionHook) plugin.getDependencyManager().getLibraryHook(Library.GRIEFPREVENTION);
 
-	public List<String> getDisabledWorldGuardRegions(PlayerStat stat) {
-		return this.disableConfig.getStringList(stat.toString() + ".WorldGuard regions");
-	}
+            // Check for all disabled uuid claims if a player is in them.
+            if (!disabledUUIDs.isEmpty()) {
+                for (String disabledClaim : disabledUUIDs) {
+                    if (gpHook.isInRegion(loc, UUID.fromString(disabledClaim))) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-	public List<String> getDisabledGriefPreventionClaims(PlayerStat stat) {
-		return this.disableConfig.getStringList(stat.toString() + ".GriefPrevention claims");
-	}
+        return false;
+    }
 
-	public void createNewFile() {
-		reloadConfig();
-		saveConfig();
+    public List<String> getDisabledWorldGuardRegions(PlayerStat stat) {
+        return this.disableConfig.getStringList(stat.toString() + ".WorldGuard regions");
+    }
 
-		loadConfig();
+    public List<String> getDisabledGriefPreventionClaims(PlayerStat stat) {
+        return this.disableConfig.getStringList(stat.toString() + ".GriefPrevention claims");
+    }
 
-		plugin.getLogger().info("Stats disabled file loaded (disabled-stats.yml)");
-	}
+    public void createNewFile() {
+        reloadConfig();
+        saveConfig();
 
-	public FileConfiguration getConfig() {
-		if (disableConfig == null) {
-			this.reloadConfig();
-		}
-		return disableConfig;
-	}
+        loadConfig();
 
-	public void loadConfig() {
+        plugin.getLogger().info("Stats disabled file loaded (disabled-stats.yml)");
+    }
 
-		disableConfig.options()
-				.header("This file is used for disabling certain statistics in certain regions (e.g. WorldGuard) or when some requirements are met."
-						+ "\nFor more information on how to use this file, go to: https://github.com/Staartvin/Statz/wiki/How-do-I-use-the-disabled-stats.yml-file%3F");
+    public FileConfiguration getConfig() {
+        if (disableConfig == null) {
+            this.reloadConfig();
+        }
+        return disableConfig;
+    }
 
-		disableConfig.options().copyDefaults(true);
-		saveConfig();
-	}
+    public void loadConfig() {
 
-	@SuppressWarnings("deprecation")
-	public void reloadConfig() {
-		if (disableConfigFile == null) {
-			disableConfigFile = new File(plugin.getDataFolder(), "disabled-stats.yml");
-		}
-		disableConfig = YamlConfiguration.loadConfiguration(disableConfigFile);
+        disableConfig.options()
+                .header("This file is used for disabling certain statistics in certain regions (e.g. WorldGuard) or when some requirements are met."
+                        + "\nFor more information on how to use this file, go to: https://github.com/Staartvin/Statz/wiki/How-do-I-use-the-disabled-stats.yml-file%3F");
 
-		// Look for defaults in the jar
-		final InputStream defConfigStream = plugin.getResource("disabled-stats.yml");
-		if (defConfigStream != null) {
-			final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			disableConfig.setDefaults(defConfig);
-		}
-	}
+        disableConfig.options().copyDefaults(true);
+        saveConfig();
+    }
 
-	public void saveConfig() {
-		if (disableConfig == null || disableConfigFile == null) {
-			return;
-		}
-		try {
-			getConfig().save(disableConfigFile);
-		} catch (final IOException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Could not save config to " + disableConfigFile, ex);
-		}
-	}
+    @SuppressWarnings("deprecation")
+    public void reloadConfig() {
+        if (disableConfigFile == null) {
+            disableConfigFile = new File(plugin.getDataFolder(), "disabled-stats.yml");
+        }
+        disableConfig = YamlConfiguration.loadConfiguration(disableConfigFile);
+
+        // Look for defaults in the jar
+        final InputStream defConfigStream = plugin.getResource("disabled-stats.yml");
+        if (defConfigStream != null) {
+            final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            disableConfig.setDefaults(defConfig);
+        }
+    }
+
+    public void saveConfig() {
+        if (disableConfig == null || disableConfigFile == null) {
+            return;
+        }
+        try {
+            getConfig().save(disableConfigFile);
+        } catch (final IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + disableConfigFile, ex);
+        }
+    }
 }

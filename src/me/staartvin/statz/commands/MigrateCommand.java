@@ -2,13 +2,14 @@ package me.staartvin.statz.commands;
 
 import java.util.List;
 
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.hooks.StatsHook;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.hooks.Dependency;
-import me.staartvin.statz.hooks.handlers.StatsAPIHandler;
 import me.staartvin.statz.language.Lang;
 import net.md_5.bungee.api.ChatColor;
 
@@ -28,7 +29,7 @@ public class MigrateCommand extends StatzCommand {
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
 		// Could not find Stats 3 - abort mission
-		if (!plugin.getDependencyManager().isAvailable(Dependency.STATS)) {
+		if (!plugin.getDependencyManager().isAvailable(Library.STATS)) {
 			sender.sendMessage(Lang.DID_NOT_FIND_DEPENDENCY.getConfigValue("Stats 3"));
 			return true;
 		}
@@ -45,7 +46,7 @@ public class MigrateCommand extends StatzCommand {
 					try {
 						// Sleep for 10 seconds and then try again - Stats takes a while to load people
 						// For each user that is logged, wait 0.5 seconds.
-						Thread.sleep(((StatsAPIHandler) plugin.getDependencyManager().getDependency(Dependency.STATS))
+						Thread.sleep(((StatsHook) plugin.getDependencyManager().getLibraryHook(Library.STATS))
 								.getLoggedPlayers().size() * 500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block

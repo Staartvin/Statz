@@ -17,13 +17,13 @@ import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
  * @author Staartvin
  * 
  */
-public class uSkyBlockHandler implements DependencyHandler {
+public class uSkyBlockHandler extends DependencyHandler {
 
     private final Statz plugin;
     private uSkyBlockAPI api;
 
-    public uSkyBlockHandler(final Statz instance) {
-        plugin = instance;
+    public uSkyBlockHandler() {
+        plugin = this.getPlugin();
     }
 
     /*

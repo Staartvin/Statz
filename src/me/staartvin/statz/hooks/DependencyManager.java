@@ -5,8 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.PluginLibrary;
+import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
 import net.md_5.bungee.api.ChatColor;
+import sun.plugin2.main.server.Plugin;
 
 /**
  * This class is used for loading all the dependencies Statz has. <br>
@@ -34,113 +39,6 @@ public class DependencyManager {
                 plugin.debugMessage("Could not load " + dep.getInternalString() + "!");
             }   
         }
-        
-        // Register handlers
-        /*try {
-            handlers.put(Dependency.VOTIFIER, new VotifierHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Votifier!");
-        }
-
-        try {
-            handlers.put(Dependency.JOBS, new JobsHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Jobs!");
-        }
-
-        try {
-            handlers.put(Dependency.MCMMO, new McMMOHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load mcMMO!");
-        }
-
-        try {
-            handlers.put(Dependency.ASKYBLOCK, new ASkyBlockHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load ASkyBlock!");
-        }
-
-        try {
-            handlers.put(Dependency.ACIDISLAND, new AcidIslandHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load AcidIsland!");
-        }
-
-        try {
-            handlers.put(Dependency.WORLDGUARD, new WorldGuardHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load WorldGuard!");
-        }
-
-        try {
-            handlers.put(Dependency.ROYAL_COMMANDS, new RoyalCommandsHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load RoyalCommands!");
-        }
-
-        try {
-            handlers.put(Dependency.ON_TIME, new OnTimeHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load OnTime!");
-        }
-
-        try {
-            handlers.put(Dependency.AFKTERMINATOR, new AFKTerminatorHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load afkTerminator!");
-        }
-        try {
-            handlers.put(Dependency.ESSENTIALS, new EssentialsHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Essentials!");
-        }
-        try {
-            handlers.put(Dependency.FACTIONS, new FactionsHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Factions!");
-        }
-
-        try {
-            handlers.put(Dependency.STATISTICS, new StatisticsAPIHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Statistics!");
-        }
-
-        try {
-            handlers.put(Dependency.STATS, new StatsAPIHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Stats!");
-        }
-
-        try {
-            handlers.put(Dependency.ULTIMATE_CORE, new UltimateCoreHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load UltimateCore!");
-        }
-
-        try {
-            handlers.put(Dependency.VAULT, new VaultHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load Vault!");
-        }
-
-        try {
-            handlers.put(Dependency.GRIEF_PREVENTION, new GriefPreventionHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load GriefPrevention!");
-        }
-
-        try {
-            handlers.put(Dependency.RPGME, new RPGmeHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load RPGMe!");
-        }
-
-        try {
-            handlers.put(Dependency.NUVOTIFIER, new NuVotifierHandler(instance));
-        } catch (NoClassDefFoundError e) {
-            plugin.debugMessage("Could not load NuVotifier!");
-        }*/
     }
 
     /**
@@ -239,6 +137,50 @@ public class DependencyManager {
         }
 
         return dependencies;
+    }
+
+    /**
+     * Get library hook of PluginLibrary
+     * @param library library to get
+     * @return hook used by PluginLibrary (if available) or null if not found.
+     */
+    public LibraryHook getLibraryHook(Library library) {
+        if (!this.isAvailable(Dependency.PLUGINLIBRARY)) return null;
+
+        if (library == null) return null;
+
+        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(Dependency.PLUGINLIBRARY);
+
+        if (handler == null) {
+            return null;
+        }
+
+        return handler.getLibraryHook(library);
+    }
+
+    /**
+     * Check whether a plugin is available using PluginLibrary.
+     * @param library Library to check
+     * @return true if it is available, false otherwise.
+     */
+    public boolean isAvailable(Library library) {
+        if (!this.isAvailable(Dependency.PLUGINLIBRARY)) return false;
+
+        if (library == null) return false;
+
+        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(Dependency.PLUGINLIBRARY);
+
+        if (handler == null) {
+            return false;
+        }
+
+        LibraryHook hook = handler.getLibraryHook(library);
+
+        if (hook == null) {
+            return false;
+        }
+
+        return hook.isAvailable();
     }
 
 }

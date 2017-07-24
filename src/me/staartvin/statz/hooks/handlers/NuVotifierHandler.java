@@ -17,13 +17,13 @@ import me.staartvin.statz.hooks.DependencyHandler;
  * @author Staartvin
  * 
  */
-public class NuVotifierHandler implements DependencyHandler {
+public class NuVotifierHandler extends DependencyHandler {
 
     private final Statz plugin;
     private NuVotifierBukkit api;
 
-    public NuVotifierHandler(final Statz instance) {
-        plugin = instance;
+    public NuVotifierHandler() {
+        plugin = this.getPlugin();
     }
 
     /*
