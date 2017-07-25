@@ -110,7 +110,7 @@
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>
-        
+
 		<dependency>
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
