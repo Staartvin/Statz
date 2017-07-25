@@ -96,34 +96,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.gamingmesh</groupId>
-			<artifactId>jobs</artifactId>
-			<version>3.5.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>net.ess3</groupId>
-			<artifactId>EssentialsX</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.massivecraft</groupId>
-			<artifactId>Factions</artifactId>
-			<version>2.8.2</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>com.massivecraft</groupId>
-			<artifactId>MassiveCore</artifactId>
-			<version>2.8.2</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
 			<groupId>nl.lolmewn.stats</groupId>
 			<artifactId>Stats</artifactId>
 			<version>3.0.2</version>
@@ -138,113 +110,11 @@
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>
-
-		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldedit</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-
-		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldguard</artifactId>
-			<version>6.1.1-SNAPSHOT</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>com.gmail.nossr50.mcMMO</groupId>
-			<artifactId>mcMMO</artifactId>
-			<version>1.5.04-20160115.213815-1</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>RoyalCommands</groupId>
-			<artifactId>RoyalCommands</artifactId>
-			<version>4.1.1</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>OnTime</groupId>
-			<artifactId>OnTime</artifactId>
-			<version>4.1.3</version>
-			<scope>provided</scope>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>bammerbom</groupId>
-			<artifactId>UltimateCoreNew</artifactId>
-			<version>2.1.16</version>
-		</dependency>
-
-		<dependency>
-			<groupId>Statistics</groupId>
-			<artifactId>Statistics</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>afkTerminator</groupId>
-			<artifactId>afkTerminator</artifactId>
-			<version>3.0.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.wasteofplastic</groupId>
-			<artifactId>acidisland</artifactId>
-			<version>2.9.8.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.wasteofplastic</groupId>
-			<artifactId>askyblock</artifactId>
-			<version>2.9.8.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>GriefPrevention</groupId>
-			<artifactId>GriefPrevention</artifactId>
-			<version>14.9.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>RPGme</groupId>
-			<artifactId>RPGme</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-
+        
 		<dependency>
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
 			<version>2.3.2.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.rlf</groupId>
-			<artifactId>uSkyBlock-API</artifactId>
-			<version>2.6.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>me.robin.battlelevels.api</groupId>
-			<artifactId>BattleLevels</artifactId>
-			<version>1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.hm.achievement</groupId>
-			<artifactId>AdvancedAchievements</artifactId>
-			<version>4.2</version>
 		</dependency>
 
 		<dependency>
@@ -256,7 +126,7 @@
         <dependency>
             <groupId>me.staartvin</groupId>
             <artifactId>PluginLibrary</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
     </dependencies>
