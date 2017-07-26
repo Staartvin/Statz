@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.PluginLibrary;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
 import net.md_5.bungee.api.ChatColor;
-import sun.plugin2.main.server.Plugin;
 
 /**
  * This class is used for loading all the dependencies Statz has. <br>
