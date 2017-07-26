@@ -97,10 +97,10 @@ public class Statz extends JavaPlugin {
 
 		// Load SQL connector
 		if (this.getConfigHandler().isMySQLEnabled()) {
-			this.debugMessage(ChatColor.GOLD + "Using MySQL database!");
+			this.getLogger().info("Using MySQL database!");
 			this.setDatabaseConnector(new MySQLConnector(this));
 		} else {
-			this.debugMessage(ChatColor.GOLD + "Using SQLite database!");
+			this.getLogger().info("Using SQLite database!");
 			this.setDatabaseConnector(new SQLiteConnector(this));
 		}
 
