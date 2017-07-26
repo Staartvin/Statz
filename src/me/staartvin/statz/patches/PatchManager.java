@@ -12,7 +12,9 @@ public class PatchManager {
     public PatchManager(Statz plugin) {
         this.plugin = plugin;
 
+        // Register patches.
         patches.add(new WeaponColumnMobKillsPatch(plugin));
+        patches.add(new MobKillsWitherSkeletonPatch(plugin));
     }
 
     private List<Patch> patches = new ArrayList<>();
