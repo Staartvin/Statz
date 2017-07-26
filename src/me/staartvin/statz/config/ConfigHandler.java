@@ -33,7 +33,7 @@ public class ConfigHandler {
                 + "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19");
 
         plugin.getConfig().addDefault("track stats", true);
-        plugin.getConfig().addDefault("show database save message", true);
+        plugin.getConfig().addDefault("show database save message", false);
 
         plugin.getConfig().addDefault("mysql.enabled", false);
         plugin.getConfig().addDefault("mysql.hostname", "localhost:3306");
@@ -80,7 +80,7 @@ public class ConfigHandler {
     }
 
     public boolean shouldShowDatabaseSave() {
-        return plugin.getConfig().getBoolean("show database save message", true);
+        return plugin.getConfig().getBoolean("show database save message", false);
     }
 
     public void setShowDatabaseSave(boolean value) {
