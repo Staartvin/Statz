@@ -164,15 +164,10 @@ public class DependencyManager {
      * @return true if it is available, false otherwise.
      */
     public boolean isAvailable(Library library) {
-        System.out.println("I hit this first");
 
         if (!this.isAvailable(Dependency.PLUGINLIBRARY)) return false;
 
-        System.out.println("I hit this");
-
         if (library == null) return false;
-
-        System.out.println("I hit this 2");
 
         PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(Dependency.PLUGINLIBRARY);
 
@@ -180,11 +175,7 @@ public class DependencyManager {
             return false;
         }
 
-        System.out.println("I hit this 3");
-
         LibraryHook hook = handler.getLibraryHook(library);
-
-        System.out.println("I hit this 4");
 
         if (hook == null) {
             return false;
