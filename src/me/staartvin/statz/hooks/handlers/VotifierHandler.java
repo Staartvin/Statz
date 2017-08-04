@@ -6,7 +6,7 @@ import org.bukkit.plugin.Plugin;
 import com.vexsoftware.votifier.Votifier;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
@@ -34,7 +34,7 @@ public class VotifierHandler extends DependencyHandler {
     @Override
     public Plugin get() {
         final Plugin plugin = this.plugin.getServer().getPluginManager()
-                .getPlugin(Dependency.VOTIFIER.getInternalString());
+                .getPlugin(StatzDependency.VOTIFIER.getInternalString());
 
         try {
             // May not be loaded
@@ -81,7 +81,7 @@ public class VotifierHandler extends DependencyHandler {
     public boolean setup(final boolean verbose) {
         if (!isInstalled()) {
             if (verbose) {
-                plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString() + " has not been found!");
+                plugin.debugMessage(ChatColor.RED + StatzDependency.VOTIFIER.getInternalString() + " has not been found!");
             }
             return false;
         } else {
@@ -95,7 +95,7 @@ public class VotifierHandler extends DependencyHandler {
                 return true;
             } else {
                 if (verbose) {
-                    plugin.debugMessage(ChatColor.RED + Dependency.VOTIFIER.getInternalString()
+                    plugin.debugMessage(ChatColor.RED + StatzDependency.VOTIFIER.getInternalString()
                             + " has been found but cannot be used!");
                 }
                 return false;

@@ -1,12 +1,12 @@
 package me.staartvin.statz.hooks.handlers;
 
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
 import com.vexsoftware.votifier.NuVotifierBukkit;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
@@ -34,7 +34,7 @@ public class NuVotifierHandler extends DependencyHandler {
     @Override
     public Plugin get() {
         final Plugin plugin = this.plugin.getServer().getPluginManager()
-                .getPlugin(Dependency.NUVOTIFIER.getInternalString());
+                .getPlugin(StatzDependency.NUVOTIFIER.getInternalString());
 
         try {
             // May not be loaded

@@ -1,11 +1,9 @@
 package me.staartvin.statz.hooks.handlers;
 
-import com.vexsoftware.votifier.Votifier;
 import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.plugins.pluginlibrary.PluginLibrary;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -33,7 +31,7 @@ public class PluginLibraryHandler extends DependencyHandler {
     @Override
     public Plugin get() {
         final Plugin plugin = this.getPlugin().getServer().getPluginManager()
-                .getPlugin(Dependency.PLUGINLIBRARY.getInternalString());
+                .getPlugin(StatzDependency.PLUGINLIBRARY.getInternalString());
 
         try {
             // May not be loaded
@@ -80,7 +78,7 @@ public class PluginLibraryHandler extends DependencyHandler {
     public boolean setup(final boolean verbose) {
         if (!isInstalled()) {
             if (verbose) {
-                this.getPlugin().debugMessage(ChatColor.RED + Dependency.PLUGINLIBRARY.getInternalString() + " has not been found!");
+                this.getPlugin().debugMessage(ChatColor.RED + StatzDependency.PLUGINLIBRARY.getInternalString() + " has not been found!");
             }
             return false;
         } else {
@@ -94,7 +92,7 @@ public class PluginLibraryHandler extends DependencyHandler {
                 return true;
             } else {
                 if (verbose) {
-                    this.getPlugin().debugMessage(ChatColor.RED + Dependency.PLUGINLIBRARY.getInternalString()
+                    this.getPlugin().debugMessage(ChatColor.RED + StatzDependency.PLUGINLIBRARY.getInternalString()
                             + " has been found but cannot be used!");
                 }
                 return false;

@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import me.staartvin.statz.gui.GUIManager;
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -21,7 +22,6 @@ import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
-import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
@@ -259,8 +259,8 @@ public class Statz extends JavaPlugin {
 
 		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
-		if (this.getDependencyManager().isAvailable(Dependency.VOTIFIER)
-				|| this.getDependencyManager().isAvailable(Dependency.NUVOTIFIER)
+		if (this.getDependencyManager().isAvailable(StatzDependency.VOTIFIER)
+				|| this.getDependencyManager().isAvailable(StatzDependency.NUVOTIFIER)
 						&& !this.getConfigHandler().isStatDisabled(PlayerStat.VOTES)) {
 			this.getServer().getPluginManager().registerEvents(new VotesListener(this), this);
 		}

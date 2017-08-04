@@ -7,17 +7,17 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.handlers.NuVotifierHandler;
 import me.staartvin.statz.hooks.handlers.VotifierHandler;
 
-public enum Dependency {
+public enum StatzDependency {
 
     VOTIFIER("Votifier", new VotifierHandler()),
     NUVOTIFIER("Votifier", new NuVotifierHandler()),
     PLUGINLIBRARY("PluginLibrary", new PluginLibraryHandler());
 
-    Dependency(String internalName) {
+    StatzDependency(String internalName) {
         this.internalName = internalName;
     }
 
-    Dependency(String internalName, DependencyHandler handler) {
+    StatzDependency(String internalName, DependencyHandler handler) {
         this.internalName = internalName;
         this.setDependencyHandler(handler);
     }

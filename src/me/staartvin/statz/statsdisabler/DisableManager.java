@@ -17,7 +17,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.hooks.Dependency;
 
 /**
  * This class reads from the disabled-stats.yml and has methods to check whether a statistic should be tracked in a certain area.

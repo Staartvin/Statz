@@ -22,14 +22,14 @@ import net.md_5.bungee.api.ChatColor;
  */
 public class DependencyManager {
 
-    private final HashMap<Dependency, DependencyHandler> handlers = new HashMap<Dependency, DependencyHandler>();
+    private final HashMap<StatzDependency, DependencyHandler> handlers = new HashMap<StatzDependency, DependencyHandler>();
 
     private final Statz plugin;
 
     public DependencyManager(final Statz instance) {
         plugin = instance;
         
-        for (Dependency dep : Dependency.values()) {
+        for (StatzDependency dep : StatzDependency.values()) {
          // Register handlers
             try {
                 handlers.put(dep, dep.getDependencyHandler());
@@ -43,11 +43,11 @@ public class DependencyManager {
      * Gets a specific dependency.
      * 
      * @param dep
-     *            Dependency to get.
+     *            StatzDependency to get.
      * @return the {@linkplain DependencyHandler} that is associated with the
-     *         given {@linkplain Dependency}, can be null.
+     *         given {@linkplain StatzDependency}, can be null.
      */
-    public DependencyHandler getDependency(final Dependency dep) {
+    public DependencyHandler getDependency(final StatzDependency dep) {
 
         if (!handlers.containsKey(dep)) {
             throw new IllegalArgumentException("Unknown dependency '" + dep.toString() + "'");
@@ -75,7 +75,7 @@ public class DependencyManager {
             boolean succeeded = depHandler.setup(true);
 
             if (succeeded) {
-                Dependency dependency = this.getDependencyByHandler(depHandler);
+                StatzDependency dependency = this.getDependencyByHandler(depHandler);
 
                 if (dependency == null)
                     continue;
@@ -83,7 +83,7 @@ public class DependencyManager {
                 // NuVotifier has the same internal name, and hence cannot be
                 // distinguished from Votifier.
                 // That's why we provide a special case.
-                if (dependency == Dependency.NUVOTIFIER) {
+                if (dependency == StatzDependency.NUVOTIFIER) {
                     plugin.debugMessage(ChatColor.GREEN + "NuVotifier was found and Statz now tracks its data!");
                 } else {
                     plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
@@ -100,15 +100,15 @@ public class DependencyManager {
     }
 
     /**
-     * Get the Dependency by the Dependency Handler
+     * Get the StatzDependency by the StatzDependency Handler
      * 
      * @param depHandler
      *            The dependency handler to get the dependency from.
      * @return the dependency that is associated with this dependency handler or
      *         null if no association was found.
      */
-    public Dependency getDependencyByHandler(DependencyHandler depHandler) {
-        for (Entry<Dependency, DependencyHandler> entry : handlers.entrySet()) {
+    public StatzDependency getDependencyByHandler(DependencyHandler depHandler) {
+        for (Entry<StatzDependency, DependencyHandler> entry : handlers.entrySet()) {
             if (entry.getValue().equals(depHandler)) {
                 return entry.getKey();
             }
@@ -116,7 +116,7 @@ public class DependencyManager {
         return null;
     }
 
-    public boolean isAvailable(Dependency dep) {
+    public boolean isAvailable(StatzDependency dep) {
         DependencyHandler handler = handlers.get(dep);
 
         if (handler == null)
@@ -125,10 +125,10 @@ public class DependencyManager {
         return handler.isAvailable();
     }
 
-    public List<Dependency> getAvailableDependencies() {
-        List<Dependency> dependencies = new ArrayList<>();
+    public List<StatzDependency> getAvailableDependencies() {
+        List<StatzDependency> dependencies = new ArrayList<>();
 
-        for (Dependency d : Dependency.values()) {
+        for (StatzDependency d : StatzDependency.values()) {
             if (this.isAvailable(d)) {
                 dependencies.add(d);
             }
@@ -143,11 +143,11 @@ public class DependencyManager {
      * @return hook used by PluginLibrary (if available) or null if not found.
      */
     public LibraryHook getLibraryHook(Library library) {
-        if (!this.isAvailable(Dependency.PLUGINLIBRARY)) return null;
+        if (!this.isAvailable(StatzDependency.PLUGINLIBRARY)) return null;
 
         if (library == null) return null;
 
-        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(Dependency.PLUGINLIBRARY);
+        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(StatzDependency.PLUGINLIBRARY);
 
         if (handler == null) {
             return null;
@@ -163,11 +163,11 @@ public class DependencyManager {
      */
     public boolean isAvailable(Library library) {
 
-        if (!this.isAvailable(Dependency.PLUGINLIBRARY)) return false;
+        if (!this.isAvailable(StatzDependency.PLUGINLIBRARY)) return false;
 
         if (library == null) return false;
 
-        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(Dependency.PLUGINLIBRARY);
+        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(StatzDependency.PLUGINLIBRARY);
 
         if (handler == null) {
             return false;
