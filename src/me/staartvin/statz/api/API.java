@@ -3,6 +3,7 @@ package me.staartvin.statz.api;
 import java.util.List;
 import java.util.UUID;
 
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.Statistic;
 
 import me.staartvin.statz.Statz;
@@ -10,7 +11,6 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
-import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
@@ -97,7 +97,7 @@ public class API {
 	 * @param dep The dependency to get the Statz handler for.
 	 * @return a {@link DependencyHandler} to control data from another plugin, or null if none exists.
 	 */
-	public DependencyHandler getDependencyHandler(Dependency dep) {
+	public DependencyHandler getDependencyHandler(StatzDependency dep) {
 		return plugin.getDependencyManager().getDependency(dep);
 	}
 
