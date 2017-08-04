@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
-import me.staartvin.statz.hooks.Dependency;
+import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.language.Lang;
 
 public class HooksCommand extends StatzCommand {
@@ -28,7 +28,7 @@ public class HooksCommand extends StatzCommand {
 
 		sender.sendMessage(Lang.STATZ_HOOKED_AND_LISTENING.getConfigValue());
 		
-		for (Dependency d: plugin.getDependencyManager().getAvailableDependencies()) {
+		for (StatzDependency d: plugin.getDependencyManager().getAvailableDependencies()) {
 			sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.GREEN + d.getInternalString());
 		}
 		

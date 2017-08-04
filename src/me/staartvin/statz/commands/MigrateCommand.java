@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
-import me.staartvin.statz.hooks.Dependency;
 import me.staartvin.statz.language.Lang;
 import net.md_5.bungee.api.ChatColor;
 
