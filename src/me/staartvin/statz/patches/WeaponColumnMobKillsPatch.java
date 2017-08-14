@@ -22,7 +22,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
                         + " DROP INDEX `uuid`, ADD UNIQUE `uuid` (`uuid`, `mob`, `world`, `weapon`) USING BTREE;" });
 
         try {
-            this.getDatabaseConnector().sendQueries(queries);
+            this.getDatabaseConnector().sendQueries(queries, false);
 
             return true;
 
@@ -68,7 +68,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
                 "DROP TABLE " + tempName + ";" });
 
         try {
-            this.getDatabaseConnector().sendQueries(queries);
+            this.getDatabaseConnector().sendQueries(queries, false);
 
             return true;
         } catch (Exception e) {

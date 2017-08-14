@@ -14,7 +14,8 @@ public class PatchManager {
 
         // Register patches.
         patches.add(new WeaponColumnMobKillsPatch(plugin));
-        patches.add(new MobKillsWitherSkeletonPatch(plugin));
+        patches.add(new RenameWitherSkeletonPatch(plugin));
+        patches.add(new RenameElderGuardianPatch(plugin));
     }
 
     private List<Patch> patches = new ArrayList<>();
@@ -39,19 +40,29 @@ public class PatchManager {
 
             plugin.getLogger().info("Applying patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
 
+            boolean success = false;
+
             // Update latest patch information.
             if (plugin.getConfigHandler().isMySQLEnabled()) {
-                if (patch.applyMySQLChanges()) {
+
+                success = patch.applyMySQLChanges();
+
+                if (success) {
                     plugin.getConfigHandler().setLatestPatchMySQLVersion(patch.getPatchId());
-                } else {
-                    // Failed
                 }
             } else {
-                if (patch.applySQLiteChanges()) {
+                success = patch.applySQLiteChanges();
+
+                if (success) {
                     plugin.getConfigHandler().setLatestPatchSQLiteVersion(patch.getPatchId());
-                } else {
-                 // Failed
                 }
+            }
+
+            if (success) {
+                plugin.getLogger().info("Successfully applied patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
+            } else {
+                plugin.getLogger().info("Failed to apply patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
+                break;
             }
 
             count++;

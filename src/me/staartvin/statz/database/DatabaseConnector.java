@@ -2,6 +2,7 @@ package me.staartvin.statz.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +222,21 @@ public abstract class DatabaseConnector {
 		});
 	}
 
-	public abstract void sendQuery(String query);
-	
-	public abstract void sendQueries(List<String> queries) throws Exception;
+    /**
+     * Send a specific query (as a string) to the database. It is not recommended to use this method to obtain data
+     * about the database. Use {@link #setObjects(Table, Query, int)} and {@link #getObjects(Table, Query)} instead.
+     * @param query Query to perform
+     * @param wantResult whether you want the result set back.
+     * @return the result set if wantResult is true, otherwise it will return null.
+     */
+	public abstract ResultSet sendQuery(String query, boolean wantResult);
+
+    /**
+     * Send specific queries (as strings) to the database. It is not recommended to use this method to obtain data
+     * about the database. Use {@link #setObjects(Table, Query, int)} and {@link #getObjects(Table, Query)} instead.
+     * @param queries Queries to perform
+     * @param wantResult whether you want the result sets back.
+     * @return a list of result sets (in order of executing the queries) if wantResult is true, otherwise it will return null.
+     */
+	public abstract List<ResultSet> sendQueries(List<String> queries, boolean wantResult) throws Exception;
 }

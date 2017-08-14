@@ -1039,71 +1039,79 @@ public class MySQLConnector extends DatabaseConnector {
     }
 
     @Override
-    public void sendQuery(final String query) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+    public ResultSet sendQuery(final String query, final boolean wantResult) {
 
-            public void run() {
+        Connection conn = null;
+        PreparedStatement ps = null;
 
-                Connection conn = null;
-                PreparedStatement ps = null;
+        conn = getConnection();
+        ResultSet resultSet = null;
 
-                conn = getConnection();
-                try {
-                    ps = conn.prepareStatement(query);
-                    ps.executeUpdate();
+        try {
+            ps = conn.prepareStatement(query);
 
-                } catch (final SQLException ex) {
-                    plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
-                } finally {
-                    try {
-                        if (ps != null)
-                            ps.close();
-                        // if (conn != null)
-                        // conn.close();
-                    } catch (final SQLException ex) {
-                        plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
-                    }
-                }
-
+            // If we need the result, store it.
+            if (wantResult) {
+                resultSet = ps.executeQuery();
+            } else { // We do not need the result, so just update the database.
+                ps.executeUpdate();
             }
-        });
+
+        } catch (final SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+        } finally {
+            try {
+                if (ps != null && !wantResult)
+                    ps.close();
+                //if (conn != null)
+                //conn.close();
+            } catch (final SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
+            }
+        }
+
+        return resultSet;
     }
 
     @Override
-    public void sendQueries(final List<String> queries) throws Exception {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+    public List<ResultSet> sendQueries(final List<String> queries, boolean wantResult) {
 
-            public void run() {
+        Connection conn = null;
+        PreparedStatement ps = null;
 
-                Connection conn = null;
-                PreparedStatement ps = null;
+        conn = getConnection();
 
-                conn = getConnection();
+        List<ResultSet> resultSets = null;
 
-                for (String query : queries) {
-                    try {
-                        ps = conn.prepareStatement(query);
-                        ps.executeUpdate();
+        for (String query : queries) {
+            try {
+                ps = conn.prepareStatement(query);
 
-                    } catch (Exception ex) {
+                if (wantResult) {
+                    ResultSet resultSet = ps.executeQuery();
 
-                        Thread t = Thread.currentThread();
-                        t.getUncaughtExceptionHandler().uncaughtException(t, ex);
-
-                        // plugin.getLogger().log(Level.SEVERE, "Couldn't
-                        // execute MySQL statement:", ex);
-                    } finally {
-                        try {
-                            if (ps != null)
-                                ps.close();
-                            // if (conn != null)
-                            // conn.close();
-                        } catch (final SQLException ex) {
-                            plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
-                        }
+                    // Only add result sets that are not null.
+                    if (resultSet != null) {
+                        resultSets.add(resultSet);
                     }
+                } else { // We do not care about result sets, so just perform an update to the database.
+                    ps.executeUpdate();
+                }
+
+
+            } catch (final SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+            } finally {
+                try {
+                    if (ps != null && !wantResult)
+                        ps.close();
+
+                } catch (final SQLException ex) {
+                    plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
                 }
             }
-        });
+        }
+
+        return resultSets;
     }
 }
