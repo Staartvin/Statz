@@ -42,14 +42,6 @@ public class ListCommand extends StatzCommand {
 
 		boolean hasGivenPlayerName = false;
 
-		if (sender instanceof Player) {
-
-		    Player player = (Player) sender;
-
-		    plugin.getGUIManager().showInventory(player, plugin.getGUIManager().getStatisticsListInventory(player));
-        }
-
-
 		// If this is true, a list of stats will be shown, otherwise we'll show a specific stat.
 		boolean showList = true;
 
@@ -151,26 +143,40 @@ public class ListCommand extends StatzCommand {
 
 		// Show a list of all stats
 		if (showList) {
-			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
-				private String playerName;
-				private UUID uuid;
-				private int pageNumber;
+		    // Check if we should show the gui and whether the player is checking him/herself.
+            // We can only show the gui for a player that is online.
+		    if (plugin.getConfigHandler().isStatzGUIenabled() && sender instanceof Player && ((Player) sender).getUniqueId() == uuid)  { // Show GUI
 
-				private Runnable init(String playerName, UUID uuid, int pageNumber) {
-					this.playerName = playerName;
-					this.uuid = uuid;
-					this.pageNumber = pageNumber - 1;
-					return this;
-				}
+                if (sender instanceof Player) {
 
-				public void run() {
+                    Player player = (Player) sender;
 
-					plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber,
-							Arrays.asList(PlayerStat.values()));
+                    plugin.getGUIManager().showInventory(player, plugin.getGUIManager().getStatisticsListInventory(player));
+                }
 
-				}
-			}.init(playerName, uuid, pageNumber));
+            } else { // Only show text.
+                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+                    private String playerName;
+                    private UUID uuid;
+                    private int pageNumber;
+
+                    private Runnable init(String playerName, UUID uuid, int pageNumber) {
+                        this.playerName = playerName;
+                        this.uuid = uuid;
+                        this.pageNumber = pageNumber - 1;
+                        return this;
+                    }
+
+                    public void run() {
+
+                        plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber,
+                                Arrays.asList(PlayerStat.values()));
+
+                    }
+                }.init(playerName, uuid, pageNumber));
+            }
 		} else {
 			// Show specific stat
 			PlayerStat stat = null;

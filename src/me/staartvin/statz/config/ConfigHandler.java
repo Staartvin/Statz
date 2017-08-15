@@ -30,7 +30,8 @@ public class ConfigHandler {
                 + "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode."
                 + "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any."
                 + "\nIf 'use custom statz list' is set to true, the /statz command will show a list of statistics for a player. The statistics that get displayed can be altered by changing the 'custom statz list' variable."
-                + "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19");
+                + "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19"
+                + "\nThe 'use statz gui' option enables you to view the statistics of a player via a gui. It is disabled by default ");
 
         plugin.getConfig().addDefault("track stats", true);
         plugin.getConfig().addDefault("show database save message", false);
@@ -56,6 +57,8 @@ public class ConfigHandler {
         plugin.getConfig().addDefault("use custom statz list", false);
 
         plugin.getConfig().addDefault("custom statz list", Arrays.asList("JOINS", "FOOD_EATEN", "KILLS_PLAYERS"));
+
+        plugin.getConfig().addDefault("use statz gui", false);
 
         plugin.getConfig().options().copyDefaults(true);
 
@@ -181,6 +184,10 @@ public class ConfigHandler {
         plugin.getConfig().set("latest patch sqlite version", version);
 
         this.saveConfig();
+    }
+
+    public boolean isStatzGUIenabled() {
+        return plugin.getConfig().getBoolean("use statz gui", false);
     }
 
 }
