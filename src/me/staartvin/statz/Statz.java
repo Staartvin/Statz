@@ -184,9 +184,6 @@ public class Statz extends JavaPlugin {
 	@Override
 	public void onDisable() {
 
-		// Saving config
-		this.getConfigHandler().saveConfig();
-
 		debugMessage(ChatColor.RED + "Saving updates to database!");
 
 		// Send the complete pool.
