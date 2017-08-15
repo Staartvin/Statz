@@ -58,16 +58,16 @@ public class GUIManager implements Listener {
 
         Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(player);
 
-        Inventory inv = Bukkit.createInventory(null, (data.size() + 8) / 9 * 9, "Statistics of " + ChatColor.RED + player.getName());
-
         int count = 0;
+
+        Map<Integer, ItemStack> slots = new HashMap<>();
 
         for (Map.Entry<PlayerStat, PlayerInfo> entry : data.entrySet()) {
 
             PlayerStat statType = entry.getKey();
             PlayerInfo statInfo = entry.getValue();
 
-            System.out.println(count + ": " + statType);
+            //System.out.println(count + ": " + statType);
 
             // Get icon of this stat type
             Material iconMaterial = statType.getIconMaterial();
@@ -91,6 +91,8 @@ public class GUIManager implements Listener {
 
             if (results.isEmpty()) {
                 messages.add(ChatColor.RED + "No information about you yet!");
+                // Don't do anything when result is empty.
+                continue;
             } else {
 
                 String totalDescription = descriptionMatcher.getTotalDescription(statInfo, statType);
@@ -109,9 +111,18 @@ public class GUIManager implements Listener {
 
             itemStack.setItemMeta(itemMeta);
 
-            inv.setItem(count, itemStack);
+            // Store in slots.
+            slots.put(count, itemStack);
+
+            //inv.setItem(count, itemStack);
 
             count++;
+        }
+
+        Inventory inv = Bukkit.createInventory(null, (slots.size() + 8) / 9 * 9, "Statistics of " + ChatColor.RED + player.getName());
+
+        for (Map.Entry<Integer, ItemStack> entry : slots.entrySet()) {
+            inv.setItem(entry.getKey(), entry.getValue());
         }
 
         return inv;
@@ -135,7 +146,7 @@ public class GUIManager implements Listener {
                 break;
             }
 
-            System.out.println(count + ": " + query);
+            //System.out.println(count + ": " + query);
 
             // Get icon of this stat type
             Material iconMaterial = statType.getIconMaterial();//randomEnum(Material.class);
