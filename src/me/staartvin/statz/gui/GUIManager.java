@@ -1,21 +1,19 @@
 package me.staartvin.statz.gui;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.language.DescriptionMatcher;
 import me.staartvin.statz.util.StatzUtil;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -41,9 +39,11 @@ public class GUIManager implements Listener {
         instance.getServer().getPluginManager().registerEvents(this, instance);
     }
 
-    public void showInventory(Player player, Inventory inv) {
+    private String inventoryTitle = "Statistics of ";
 
-        if (player == null) {
+    public void showInventory(Player viewer, Inventory inv) {
+
+        if (viewer == null) {
             throw new IllegalArgumentException("Player is null!");
         }
 
@@ -51,12 +51,12 @@ public class GUIManager implements Listener {
             throw new IllegalArgumentException("Inventory is null!");
         }
 
-        player.openInventory(inv);
+        viewer.openInventory(inv);
     }
 
-    public Inventory getStatisticsListInventory(Player player) {
+    public Inventory getStatisticsListInventory(UUID uuid, String playerName) {
 
-        Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(player);
+        Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(uuid);
 
         int count = 0;
 
@@ -119,7 +119,8 @@ public class GUIManager implements Listener {
             count++;
         }
 
-        Inventory inv = Bukkit.createInventory(null, (slots.size() + 8) / 9 * 9, "Statistics of " + ChatColor.RED + player.getName());
+        Inventory inv = Bukkit.createInventory(null, (slots.size() + 8) / 9 * 9,
+                inventoryTitle + ChatColor.RED + playerName);
 
         for (Map.Entry<Integer, ItemStack> entry : slots.entrySet()) {
             inv.setItem(entry.getKey(), entry.getValue());
@@ -128,15 +129,15 @@ public class GUIManager implements Listener {
         return inv;
     }
 
-    public Inventory getSpecificStatisticInventory(Player player, PlayerStat statType) {
+    public Inventory getSpecificStatisticInventory(UUID uuid, PlayerStat statType, String playerName) {
 
-        PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), statType);
+        PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
         List<Query> results = info.getResults();
 
         int invSize = (results.size() + 8) / 9 * 9 > 63 ? 63 : (results.size() + 8) / 9 * 9;
 
-        Inventory inv = Bukkit.createInventory(null, invSize, "Statistics of " + ChatColor.RED + player.getName());
+        Inventory inv = Bukkit.createInventory(null, invSize, inventoryTitle + ChatColor.RED + playerName);
 
         int count = 0;
 
@@ -185,9 +186,7 @@ public class GUIManager implements Listener {
         return inv;
     }
 
-    private Map<PlayerStat, PlayerInfo> getPlayerStatistics(Player player) {
-
-        UUID uuid = player.getUniqueId();
+    private Map<PlayerStat, PlayerInfo> getPlayerStatistics(UUID uuid) {
 
         Map<PlayerStat, PlayerInfo> statistics = new HashMap<>();
 
@@ -205,11 +204,6 @@ public class GUIManager implements Listener {
         return statistics;
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = new Random().nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onClickInvSlot(final InventoryClickEvent event) {
 
@@ -221,7 +215,13 @@ public class GUIManager implements Listener {
         }
 
         // Check if clicking a Statz GUI window
-        if (!inv.getTitle().contains("Statistics of ")) {
+        if (!inv.getTitle().contains(inventoryTitle)) {
+            return;
+        }
+
+        String targetPlayer = ChatColor.stripColor(inv.getTitle().replace(inventoryTitle, "").trim());
+
+        if (targetPlayer == null && targetPlayer.equalsIgnoreCase("")) {
             return;
         }
 
@@ -280,11 +280,22 @@ public class GUIManager implements Listener {
             return;
         }
 
+        // Get UUID of target player
+        UUID targetUUID;
+
+        OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(targetPlayer);
+
+        if (offlinePlayer == null || offlinePlayer.getUniqueId() == null) {
+            return;
+        }
+
+        targetUUID = offlinePlayer.getUniqueId();
+
         // Close currently opened inventory
         event.getWhoClicked().closeInventory();
 
         // Open stat specific inventory.
-        Inventory specificInv = getSpecificStatisticInventory((Player) event.getWhoClicked(), statType);
+        Inventory specificInv = getSpecificStatisticInventory(targetUUID, statType, targetPlayer);
 
         showInventory((Player) event.getWhoClicked(), specificInv);
     }
@@ -309,7 +320,7 @@ public class GUIManager implements Listener {
 
         StringBuilder line = new StringBuilder("");
 
-        for (String word: words) {
+        for (String word : words) {
             // Check if line with extra word is longer than max length
             if (line.length() + (word).length() <= maxLength) {
                 line.append(word + " ");
