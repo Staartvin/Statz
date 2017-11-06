@@ -1,10 +1,10 @@
 package me.staartvin.statz.commands.manager;
 
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+
+import java.util.List;
 
 /**
  * This class represents an Statz command, such as /ar check or /ar times.

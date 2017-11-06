@@ -1,16 +1,15 @@
 package me.staartvin.statz.commands;
 
-import java.util.List;
-
 import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.plugins.pluginlibrary.hooks.StatsHook;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.language.Lang;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 public class MigrateCommand extends StatzCommand {
 

@@ -1,11 +1,7 @@
 package me.staartvin.statz.database.datatype;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class represents a query that is sent or retrieved from the database of Statz.

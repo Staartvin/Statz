@@ -1,18 +1,16 @@
 package me.staartvin.statz.listeners;
 
-import java.util.UUID;
-
+import com.vexsoftware.votifier.model.VotifierEvent;
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import com.vexsoftware.votifier.model.VotifierEvent;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import java.util.UUID;
 
 public class VotesListener implements Listener {
 

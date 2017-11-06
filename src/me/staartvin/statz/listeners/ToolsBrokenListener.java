@@ -1,15 +1,14 @@
 package me.staartvin.statz.listeners;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
 
 public class ToolsBrokenListener implements Listener {
 

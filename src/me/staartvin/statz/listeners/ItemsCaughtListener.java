@@ -1,5 +1,8 @@
 package me.staartvin.statz.listeners;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -9,10 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemStack;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
 
 public class ItemsCaughtListener implements Listener {
 

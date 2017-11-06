@@ -1,13 +1,5 @@
 package me.staartvin.statz.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.database.DatabaseConnector;
@@ -16,6 +8,13 @@ import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
 import me.staartvin.statz.datamanager.PlayerStat;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransferCommand extends StatzCommand {
 

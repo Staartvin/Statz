@@ -1,31 +1,20 @@
 package me.staartvin.statz.commands.manager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.commands.HelpCommand;
-import me.staartvin.statz.commands.HooksCommand;
-import me.staartvin.statz.commands.ListCommand;
-import me.staartvin.statz.commands.MigrateCommand;
-import me.staartvin.statz.commands.PurgeCommand;
-import me.staartvin.statz.commands.TransferCommand;
+import me.staartvin.statz.commands.*;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * This class will manage all incoming command requests.

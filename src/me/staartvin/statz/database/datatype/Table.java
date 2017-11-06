@@ -1,9 +1,9 @@
 package me.staartvin.statz.database.datatype;
 
+import me.staartvin.statz.database.SQLiteConnector;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import me.staartvin.statz.database.SQLiteConnector;
 
 /**
  * Used to store a table and its columns

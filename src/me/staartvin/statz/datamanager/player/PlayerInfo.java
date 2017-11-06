@@ -1,12 +1,12 @@
 package me.staartvin.statz.datamanager.player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.util.StatzUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Statistics about a player recorded by Statz

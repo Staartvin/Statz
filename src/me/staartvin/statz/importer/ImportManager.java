@@ -1,49 +1,22 @@
 package me.staartvin.statz.importer;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.plugins.pluginlibrary.hooks.StatsHook;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import nl.lolmewn.stats.api.stat.Stat;
 import nl.lolmewn.stats.api.stat.StatEntry;
 import nl.lolmewn.stats.api.user.StatsHolder;
-import nl.lolmewn.stats.stats.Arrows;
-import nl.lolmewn.stats.stats.BedEnter;
-import nl.lolmewn.stats.stats.BlockBreak;
-import nl.lolmewn.stats.stats.BlockPlace;
-import nl.lolmewn.stats.stats.BucketEmpty;
-import nl.lolmewn.stats.stats.BucketFill;
-import nl.lolmewn.stats.stats.CommandsDone;
-import nl.lolmewn.stats.stats.DamageTaken;
-import nl.lolmewn.stats.stats.Death;
-import nl.lolmewn.stats.stats.EggsThrown;
-import nl.lolmewn.stats.stats.FishCaught;
-import nl.lolmewn.stats.stats.ItemsCrafted;
-import nl.lolmewn.stats.stats.ItemsDropped;
-import nl.lolmewn.stats.stats.ItemsPickedUp;
-import nl.lolmewn.stats.stats.Joins;
-import nl.lolmewn.stats.stats.Kill;
-import nl.lolmewn.stats.stats.Move;
-import nl.lolmewn.stats.stats.Omnomnom;
-import nl.lolmewn.stats.stats.PVP;
-import nl.lolmewn.stats.stats.Playtime;
-import nl.lolmewn.stats.stats.Shears;
-import nl.lolmewn.stats.stats.Teleports;
-import nl.lolmewn.stats.stats.TimesKicked;
-import nl.lolmewn.stats.stats.ToolsBroken;
-import nl.lolmewn.stats.stats.Trades;
-import nl.lolmewn.stats.stats.WorldChanged;
-import nl.lolmewn.stats.stats.XpGained;
+import nl.lolmewn.stats.stats.*;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This class can import data into Statz' database from other plugins.

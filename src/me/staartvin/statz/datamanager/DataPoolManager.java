@@ -1,18 +1,17 @@
 package me.staartvin.statz.datamanager;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.api.events.UpdateDataEvent;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.Table;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.api.events.UpdateDataEvent;
-import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.database.datatype.Table;
 
 /**
  * Since Statz is event-driven, a lot of queries are made to the database in sequential order. 

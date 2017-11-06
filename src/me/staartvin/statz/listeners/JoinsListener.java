@@ -1,8 +1,8 @@
 package me.staartvin.statz.listeners;
 
-import java.util.HashMap;
-import java.util.UUID;
-
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,9 +11,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class JoinsListener implements Listener {
 
