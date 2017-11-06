@@ -305,31 +305,25 @@ public class GUIManager implements Listener {
         int maxLength = 40; // x chars
         List<String> list = new ArrayList<>();
 
-        int numberOfStrings = (int) Math.ceil(message.length() / (maxLength * 1.0));
+        String[] words = message.split(" ");
 
-        if (message.length() <= maxLength) {
-            list.add(message);
-            return list;
+        StringBuilder line = new StringBuilder("");
+
+        for (String word: words) {
+            // Check if line with extra word is longer than max length
+            if (line.length() + (word).length() <= maxLength) {
+                line.append(word + " ");
+            } else { // It is longer, so create a new line instead.
+                // Add previous line to list
+                list.add(line.toString());
+
+                // Create a new empty line
+                line = new StringBuilder(word + " ");
+            }
         }
-//
-//        System.out.println("Length of message: " + message.length());
-//        System.out.println("Divided lenght: " + (message.length() / (maxLength * 1.0)));
-//        System.out.println("CEIL: " + Math.ceil(message.length() / (maxLength * 1.0)));
-//        System.out.println("Number of strings: " + numberOfStrings);
-//        System.out.println("Original message:" + message);
 
-        for (int i = 0; i < numberOfStrings; i++) {
-
-            int beginIndex = i * maxLength;
-            // Add max length to begin index, or length
-            int endIndex = i * maxLength + maxLength > message.length() ? message.length() - 1: i * maxLength + maxLength;
-
-            String subMessage = message.substring(beginIndex, endIndex);
-            //System.out.println("MESSAGE " + i + ": " + subMessage);
-
-            list.add(subMessage.trim());
-
-        }
+        // Add the last line as well
+        list.add(line.toString());
 
         return list;
     }
