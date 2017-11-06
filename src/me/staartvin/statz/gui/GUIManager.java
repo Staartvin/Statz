@@ -41,6 +41,13 @@ public class GUIManager implements Listener {
 
     private String inventoryTitle = "Statistics of ";
 
+    /**
+     * Show an inventory to the given player.
+     *
+     * @param viewer Player to show the inventory to
+     * @param inv    Inventory to show
+     * @throws IllegalArgumentException When player or inventory is null
+     */
     public void showInventory(Player viewer, Inventory inv) {
 
         if (viewer == null) {
@@ -54,6 +61,13 @@ public class GUIManager implements Listener {
         viewer.openInventory(inv);
     }
 
+    /**
+     * Get an inventory that represents the graphical form of /statz list.
+     * It includes all data that has been recorded by Statz grouped per stat.
+     * @param uuid UUID of the player to check
+     * @param playerName Name of the player to check
+     * @return An inventory that shows the data of the given player.
+     */
     public Inventory getStatisticsListInventory(UUID uuid, String playerName) {
 
         Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(uuid);
@@ -129,6 +143,14 @@ public class GUIManager implements Listener {
         return inv;
     }
 
+    /**
+     * Much like {@link #getSpecificStatisticInventory(UUID, PlayerStat, String)}}, this method provides an inventory
+     * that shows the data of a specific stat type.
+     * @param uuid UUID of the player to view
+     * @param statType Type of stat to view
+     * @param playerName Name of the player to view
+     * @return an inventory that represents the data Statz has collected of the given player.
+     */
     public Inventory getSpecificStatisticInventory(UUID uuid, PlayerStat statType, String playerName) {
 
         PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
@@ -147,10 +169,8 @@ public class GUIManager implements Listener {
                 break;
             }
 
-            //System.out.println(count + ": " + query);
-
             // Get icon of this stat type
-            Material iconMaterial = statType.getIconMaterial();//randomEnum(Material.class);
+            Material iconMaterial = statType.getIconMaterial();
 
             // Create an itemstack to show in the inventory
             ItemStack itemStack = new ItemStack(iconMaterial);
@@ -171,7 +191,6 @@ public class GUIManager implements Listener {
 
             if (highDetailDescription != null) {
                 messages.addAll(fitTextToScreen(highDetailDescription));
-                //messages.add(ChatColor.YELLOW + highDetailDescription);
             }
 
             itemMeta.setLore(messages);
@@ -186,6 +205,11 @@ public class GUIManager implements Listener {
         return inv;
     }
 
+    /**
+     * Get all statistics of a player, except the players table.
+     * @param uuid UUID of the player
+     * @return all PlayerInfo per stat type of the given player.
+     */
     private Map<PlayerStat, PlayerInfo> getPlayerStatistics(UUID uuid) {
 
         Map<PlayerStat, PlayerInfo> statistics = new HashMap<>();
@@ -204,6 +228,10 @@ public class GUIManager implements Listener {
         return statistics;
     }
 
+    /**
+     * Redirect Player to correct inventory if he/she clicks on an ItemStack.
+     * @param event
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onClickInvSlot(final InventoryClickEvent event) {
 
@@ -221,6 +249,7 @@ public class GUIManager implements Listener {
 
         String targetPlayer = ChatColor.stripColor(inv.getTitle().replace(inventoryTitle, "").trim());
 
+        // Check if we can find the target player of this inventory.
         if (targetPlayer == null && targetPlayer.equalsIgnoreCase("")) {
             return;
         }
@@ -312,6 +341,13 @@ public class GUIManager implements Listener {
         return messages;
     }
 
+    /**
+     * Convert a string into substrings where each substring can only have up to 40 characters.
+     * This method will split the original string into different strings based on the words. If a word does not fit
+     * on a line, a new line is created.
+     * @param message Original message to fit.
+     * @return A list of strings with the original message split over different lines.
+     */
     private List<String> fitTextToScreen(String message) {
         int maxLength = 40; // x chars
         List<String> list = new ArrayList<>();
