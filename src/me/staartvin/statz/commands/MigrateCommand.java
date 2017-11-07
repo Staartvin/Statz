@@ -32,8 +32,8 @@ public class MigrateCommand extends StatzCommand {
 			return true;
 		}
 
-		// Start migrating entries on seperate thread.
-		sender.sendMessage(ChatColor.YELLOW + "Start migrating data from Stats 3 to Statz!");
+        // Start migrating entries on separate thread.
+        sender.sendMessage(ChatColor.YELLOW + "Start migrating data from Stats 3 to Statz!");
 		sender.sendMessage(ChatColor.RED + "This may take a while.");
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
