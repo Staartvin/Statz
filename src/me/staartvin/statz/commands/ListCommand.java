@@ -250,8 +250,20 @@ public class ListCommand extends StatzCommand {
 
 		if (args.length == 3) {
 			// Sender entered /statz l <name> ", so we add the player stats as suggestions
-			for (PlayerStat stat : PlayerStat.values()) {
-				tabCompletions.add(stat.toString().toLowerCase());
+            String statType = args[2].trim().toLowerCase();
+
+            for (PlayerStat stat : PlayerStat.values()) {
+                String statName = stat.toString().toLowerCase();
+
+                // Show all tab completed items
+			    if (statType == "") {
+                    tabCompletions.add(statName);
+                } else {
+			        // Only show tab completions if it matches the already given string.
+			        if (statName.startsWith(statType)) {
+                        tabCompletions.add(statName);
+                    }
+                }
 			}
 		}
 
