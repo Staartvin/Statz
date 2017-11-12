@@ -6,6 +6,7 @@ import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,6 +42,11 @@ public class DisableManager {
      * @return true if it is disabled on this location, false otherwise.
      */
     public boolean isStatDisabledLocation(Location loc, PlayerStat stat) {
+
+        // We cannot check if PluginLibrary is not available.
+        if (!plugin.getDependencyManager().isAvailable(StatzDependency.PLUGINLIBRARY)) {
+            return false;
+        }
 
         LibraryHook worldGuardHook = plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
 
