@@ -50,6 +50,8 @@ public class DataPoolManager {
 	// What queries were most recently written to the database?
 	private HashMap<PlayerStat, List<Query>> lastWrittenQueries = new HashMap<>();
 
+    private static boolean isForcingPool = false;
+
 	public DataPoolManager(Statz plugin) {
 		this.plugin = plugin;
 	}
@@ -239,11 +241,19 @@ public class DataPoolManager {
 	 */
 	public void forceSendPool() {
 
+        long startingTime = System.currentTimeMillis();
+
 		if (plugin.getConfigHandler().shouldShowDatabaseSave()) {
 			plugin.debugMessage(ChatColor.BLUE + "Save Statz database.");
 		}
-		
-		HashMap<PlayerStat, List<Query>> currentPool = this.getCompletePool();
+
+        if (isForcingPool) {
+            return;
+        }
+
+        isForcingPool = true;
+
+        HashMap<PlayerStat, List<Query>> currentPool = this.getCompletePool();
 		
 		//this.printPool();
 
@@ -259,8 +269,11 @@ public class DataPoolManager {
 				continue;
 			}
 
-			//Update in batch.
-			plugin.getDatabaseConnector().setBatchObjects(table, queries, 2);
+            plugin.getLogsManager().writeToLogFile("Updating database with " + stat.getTableName() + " (" + queries.size
+                    () + " queries)");
+
+            //Update in batch.
+            plugin.getDatabaseConnector().setBatchObjects(table, queries, 2);
 
 			//System.out.println("In pool: " + queries.size() + " for stat " + stat.getTableName());
 
@@ -280,11 +293,12 @@ public class DataPoolManager {
 
 				if (conflicts != null && !conflicts.isEmpty()) {
 					// Override last written query if one conflicts
-					for (Query conflict : conflicts) {
-						//System.out.println("Remove from last written: " + conflict);
-						lastWritten.remove(conflict);
-					}
-				}
+                    lastWritten.removeAll(conflicts);
+//					for (Query conflict : conflicts) {
+//						//System.out.println("Remove from last written: " + conflict);
+//						lastWritten.remove(conflict);
+//					}
+                }
 
 				//System.out.println("Add to last written: " + query);
 				lastWritten.add(query);
@@ -315,7 +329,12 @@ public class DataPoolManager {
 		
 		// Call event to show that data has changed.
 		Bukkit.getServer().getPluginManager().callEvent(event);
-	}
+
+        isForcingPool = false;
+
+        plugin.getLogsManager().writeToLogFile("Database has been updated with queries in the pool (after " +
+                ((System.currentTimeMillis() - startingTime) / 1000.0) + " seconds).");
+    }
 
 	/**
 	 * Get the queries that were last performed (from the pool) on the database.
