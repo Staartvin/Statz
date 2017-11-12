@@ -311,11 +311,18 @@ public class Statz extends JavaPlugin {
 	 * @return true if we should track the stat, false otherwise.
 	 */
 	public boolean doGeneralCheck(Player player, PlayerStat stat) {
-		if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
+        // Check if player is NPC.
+        if (player.hasMetadata("NPC")) {
+            return false;
+        }
+
+        // Check if we should register players in CREATIVE
+        if (this.getConfigHandler().shouldIgnoreCreative() && player.getGameMode() == GameMode.CREATIVE) {
 			return false;
 		}
 
-		if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
+        // Check if we should track in the player's current position.
+        if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
 			return false;
 		}
 
