@@ -57,29 +57,17 @@ public class DataManager {
 	 * @return a {@link PlayerInfo} class that contains the results of the performed action on the database.
 	 */
 	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) {
-		//System.out.println("----------------------");
 		final PlayerInfo info = new PlayerInfo(uuid);
 
 		// Get results from database
 		List<Query> results = plugin.getDatabaseConnector().getObjects(statType.getTableName(),
 				StatzUtil.makeQuery("uuid", uuid.toString()));
 
-//		System.out.println("--------------");
-//		System.out.println("Table: " + statType);
-//		
-//		for (Query map : results) {
-//			System.out.println("RESULT: " + map);
-//		}
-
 		// Get a list of queries currently in the pool
 		List<Query> pooledQueries = plugin.getDataPoolManager().getStoredQueries(statType);
 
 		// If we have queries in the pool, check for conflicting ones.
 		if (pooledQueries != null && !pooledQueries.isEmpty()) {
-
-			//			for (HashMap<String, String> store : storedQueries) {
-			//				System.out.println("STORED: "  + store);
-			//			}
 
 			// There ARE stored queries and since the pool is more up to date, we have to override the old ones.
 			for (Query pooledQuery : pooledQueries) {
@@ -90,8 +78,6 @@ public class DataManager {
 
 				// There is no data of this stat in the database, so storedQueries are always more up to date. (IF the UUIDs match)
 				if (results == null || results.isEmpty()) {
-					//					System.out.println("Stored query " + StatzUtil.printQuery(storedQuery)
-					//							+ " was more up to date since there is no record in database");
 					results.add(pooledQuery);
 					continue;
 				}
@@ -101,18 +87,13 @@ public class DataManager {
 
 				// No conflicts found, yeah!!
 				if (conflictingQueries == null || conflictingQueries.isEmpty()) {
-					//					System.out.println(
-					//							"No conflicts found between " + StatzUtil.printQuery(storedQuery) + " and " + results);
 					results.add(pooledQuery);
 					continue;
 				}
 
 				// We found conflicting queries.
 				for (Query conflictingQuery : conflictingQueries) {
-					//System.out.println("Stored query " + pooledQuery + " conflicts with " + conflictingQuery);
 					// Remove old data from results and add new (more updated data) to the results pool.
-					//results.remove(conflictingQuery);
-					//results.add(pooledQuery);
 					conflictingQuery.addValue("value", pooledQuery.getValue());
 					
 				}
@@ -129,10 +110,6 @@ public class DataManager {
 
 			info.setResults(results);
 		}
-		//		
-		//				for (Query map : results) {
-		//					System.out.println("END RESULT: " + map);
-		//				}
 
 		return info;
 	}
@@ -958,8 +935,6 @@ public class DataManager {
 			pageNumber = 0;
 		}
 
-		//for (int i = 0; i < pages; i++) {
-
 		sender.sendMessage(
 				ChatColor.YELLOW + "---------------- [Statz of " + playerName + "] ----------------");
 		for (int j = 0; j < messagesPerPage; j++) {
@@ -975,8 +950,6 @@ public class DataManager {
 					break;
 				}
 			}
-
-			//System.out.println("index: " + index);
 
 			if (sender instanceof Player) {
 				Player p = (Player) sender;

@@ -81,8 +81,6 @@ public class GUIManager implements Listener {
             PlayerStat statType = entry.getKey();
             PlayerInfo statInfo = entry.getValue();
 
-            //System.out.println(count + ": " + statType);
-
             // Get icon of this stat type
             Material iconMaterial = statType.getIconMaterial();
 

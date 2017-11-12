@@ -777,8 +777,6 @@ public class SQLiteConnector extends DatabaseConnector {
             try {
                 if (ps != null)
                     ps.close();
-                //if (conn != null)
-                //conn.close();
             } catch (final SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
             }
@@ -849,9 +847,6 @@ public class SQLiteConnector extends DatabaseConnector {
                             + " VALUES " + resultNames + ";";
                 }
 
-                //System.out.println("UPDATE Query: " + update);
-                //System.out.println("Update query two: " + updateTwo);
-
                 try {
                     conn = getConnection();
                     ps = conn.prepareStatement(update);
@@ -869,8 +864,6 @@ public class SQLiteConnector extends DatabaseConnector {
                     try {
                         if (ps != null)
                             ps.close();
-                        //if (conn != null)
-                        //conn.close();
                     } catch (final SQLException ex) {
                         plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
                     }
@@ -887,7 +880,6 @@ public class SQLiteConnector extends DatabaseConnector {
         Statement stmt = null;
 
         try {
-            //conn.setAutoCommit(false);
             stmt = conn.createStatement();
 
             for (Query query : queries) {
@@ -943,9 +935,6 @@ public class SQLiteConnector extends DatabaseConnector {
                             + " VALUES " + resultNames + ";";
                 }
 
-                //System.out.println("UPDATE Query: " + update);
-                //System.out.println("Update query two: " + updateTwo);
-
                 stmt.addBatch(update);
                 if (updateTwo != null) {
                     stmt.addBatch(updateTwo);
@@ -954,7 +943,6 @@ public class SQLiteConnector extends DatabaseConnector {
 
             @SuppressWarnings("unused")
             int[] updateCounts = stmt.executeBatch();
-            //System.out.println("Updated " + updateCounts.length + " rows");
 
             if (!conn.getAutoCommit()) {
                 conn.commit();

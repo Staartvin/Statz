@@ -66,9 +66,6 @@ public class DataPoolManager {
 
 		List<Query> queries = this.getStoredQueries(stat);
 
-		//System.out.println("------------------");
-		//System.out.println("Query: " + query);
-
 		if (queries == null) {
 			queries = new ArrayList<>();
 		}
@@ -78,7 +75,6 @@ public class DataPoolManager {
 			queries.add(query);
 			pool.put(stat, queries);
 
-			//System.out.println("Add to pool (because empty): " + query);
 			return true;
 		}
 
@@ -88,22 +84,16 @@ public class DataPoolManager {
 		if (conflictsQuery == null || conflictsQuery.isEmpty()) {
 			queries.add(query);
 			pool.put(stat, queries);
-			//System.out.println("Add to pool (because no conflict): " + query);
 			return true;
 		}
 
 		for (Query conflict : conflictsQuery) {
-			//System.out.println("Conflicting query: " + conflict);
 
 			if (!conflict.hasKey("value")) {
 				continue;
 			}
 
-			//System.out.println("Add " + conflict.getValue() + " to " + query.getValue());
-
 			query.addValue("value", conflict.getValue());
-
-			//System.out.println("Updated value: " + query.getValue());		
 		}
 
 		// Shit, we found a conflicting query. Remove conflicting ones and add a new query.
@@ -111,8 +101,6 @@ public class DataPoolManager {
 
 		// Add new query
 		queries.add(query);
-
-		//System.out.println("Add to pool (after conflict): " + query);
 
 		// Update pool with new queries
 		pool.put(stat, queries);
@@ -274,8 +262,6 @@ public class DataPoolManager {
 
             //Update in batch.
             plugin.getDatabaseConnector().setBatchObjects(table, queries, 2);
-
-			//System.out.println("In pool: " + queries.size() + " for stat " + stat.getTableName());
 
 			// Add to last written query
 			List<Query> lastWritten = lastWrittenQueries.get(stat);

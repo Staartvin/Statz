@@ -101,7 +101,6 @@ public class MySQLConnector extends DatabaseConnector {
 
                     // Run all statements to create tables
                     for (final String statement : createTablesStatement()) {
-                        // System.out.println("Performing " + statement);
                         s.executeUpdate(statement);
                     }
 
@@ -138,9 +137,6 @@ public class MySQLConnector extends DatabaseConnector {
             // For each column in the table, add it to the table.
             for (final Column column : table.getColumns()) {
 
-                // System.out.println("Column: " + column.getColumnName());
-                // System.out.println("Column unique: " + column.isUnique());
-
                 if (column.getDataType().equals(SQLDataType.INT)) {
                     statement.append("" + column.getColumnName() + " BIGINT");
                 } else if (column.getDataType().equals(SQLDataType.TEXT)) {
@@ -171,12 +167,6 @@ public class MySQLConnector extends DatabaseConnector {
 
             }
 
-            /*
-             * if (table.getPrimaryKey() == null) { // Remove last comma
-             * statement = new StringBuilder(statement.substring(0,
-             * statement.lastIndexOf(","))); }
-             */
-
             if (!table.getUniqueMatched().isEmpty()) {
 
                 statement.append("UNIQUE (");
@@ -192,7 +182,6 @@ public class MySQLConnector extends DatabaseConnector {
             }
 
             statement.append(");");
-            // System.out.println("Statement: " + statement.toString());
 
             statements.add(statement.toString());
 
@@ -865,8 +854,6 @@ public class MySQLConnector extends DatabaseConnector {
 
                 update += onDuplicate;
 
-                // System.out.println("UPDATE Query: " + update);
-
                 try {
                     conn = getConnection();
                     ps = conn.prepareStatement(update);
@@ -879,8 +866,6 @@ public class MySQLConnector extends DatabaseConnector {
                     try {
                         if (ps != null)
                             ps.close();
-                        // if (conn != null)
-                        // conn.close();
                     } catch (final SQLException ex) {
                         plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
                     }
@@ -959,10 +944,6 @@ public class MySQLConnector extends DatabaseConnector {
                 }
 
                 update += onDuplicate;
-
-                // System.out.println("UPDATE: "+ update);
-
-                // System.out.println("UPDATE Query: " + update);
 
                 stmt.addBatch(update);
             }
