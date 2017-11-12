@@ -1,13 +1,11 @@
 package me.staartvin.statz.hooks.handlers;
 
+import com.vexsoftware.votifier.Votifier;
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.hooks.DependencyHandler;
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
-
-import com.vexsoftware.votifier.Votifier;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.StatzDependency;
-import me.staartvin.statz.hooks.DependencyHandler;
 
 /**
  * Handles all connections with Votifier

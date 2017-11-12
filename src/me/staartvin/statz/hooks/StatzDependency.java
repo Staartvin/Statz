@@ -1,11 +1,10 @@
 package me.staartvin.statz.hooks;
 
-import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
-import org.bukkit.Bukkit;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.handlers.NuVotifierHandler;
+import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
 import me.staartvin.statz.hooks.handlers.VotifierHandler;
+import org.bukkit.Bukkit;
 
 public enum StatzDependency {
 

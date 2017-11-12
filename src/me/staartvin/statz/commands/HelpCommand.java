@@ -1,19 +1,14 @@
 package me.staartvin.statz.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.PluginLibrary;
-import me.staartvin.plugins.pluginlibrary.hooks.QuestsHook;
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.commands.manager.StatzCommand;
+import me.staartvin.statz.language.Lang;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.commands.manager.StatzCommand;
-import me.staartvin.statz.language.Lang;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpCommand extends StatzCommand {
 

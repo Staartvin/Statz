@@ -3,8 +3,8 @@ package me.staartvin.statz.hooks.handlers;
 import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.plugins.pluginlibrary.PluginLibrary;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
-import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.hooks.DependencyHandler;
+import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 

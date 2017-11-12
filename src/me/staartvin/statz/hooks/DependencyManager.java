@@ -1,15 +1,15 @@
 package me.staartvin.statz.hooks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
 import net.md_5.bungee.api.ChatColor;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * This class is used for loading all the dependencies Statz has. <br>

@@ -2,8 +2,6 @@ package me.staartvin.statz.datamanager;
 
 import org.bukkit.Material;
 
-import java.util.List;
-
 /**
  * Stats that are recorded for a player by Statz
  * <p>

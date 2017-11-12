@@ -1,5 +1,11 @@
 package me.staartvin.statz.database;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.Table;
+import me.staartvin.statz.datamanager.PlayerStat;
+import org.bukkit.ChatColor;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,13 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.database.datatype.Table;
-import me.staartvin.statz.datamanager.PlayerStat;
 
 public abstract class DatabaseConnector {
 	private final Statz plugin;

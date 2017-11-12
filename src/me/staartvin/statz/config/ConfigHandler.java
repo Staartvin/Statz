@@ -1,11 +1,11 @@
 package me.staartvin.statz.config;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
 
 public class ConfigHandler {
 

@@ -1,5 +1,10 @@
 package me.staartvin.statz.logger;
 
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.datamanager.PlayerStat;
+import net.md_5.bungee.api.ChatColor;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,11 +13,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  * This class handles all the data that should be written to a log file.

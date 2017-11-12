@@ -1,21 +1,19 @@
 package me.staartvin.statz.gui;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.language.DescriptionMatcher;
 import me.staartvin.statz.util.StatzUtil;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -41,9 +39,18 @@ public class GUIManager implements Listener {
         instance.getServer().getPluginManager().registerEvents(this, instance);
     }
 
-    public void showInventory(Player player, Inventory inv) {
+    private String inventoryTitle = "Statistics of ";
 
-        if (player == null) {
+    /**
+     * Show an inventory to the given player.
+     *
+     * @param viewer Player to show the inventory to
+     * @param inv    Inventory to show
+     * @throws IllegalArgumentException When player or inventory is null
+     */
+    public void showInventory(Player viewer, Inventory inv) {
+
+        if (viewer == null) {
             throw new IllegalArgumentException("Player is null!");
         }
 
@@ -51,12 +58,19 @@ public class GUIManager implements Listener {
             throw new IllegalArgumentException("Inventory is null!");
         }
 
-        player.openInventory(inv);
+        viewer.openInventory(inv);
     }
 
-    public Inventory getStatisticsListInventory(Player player) {
+    /**
+     * Get an inventory that represents the graphical form of /statz list.
+     * It includes all data that has been recorded by Statz grouped per stat.
+     * @param uuid UUID of the player to check
+     * @param playerName Name of the player to check
+     * @return An inventory that shows the data of the given player.
+     */
+    public Inventory getStatisticsListInventory(UUID uuid, String playerName) {
 
-        Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(player);
+        Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(uuid);
 
         int count = 0;
 
@@ -119,7 +133,8 @@ public class GUIManager implements Listener {
             count++;
         }
 
-        Inventory inv = Bukkit.createInventory(null, (slots.size() + 8) / 9 * 9, "Statistics of " + ChatColor.RED + player.getName());
+        Inventory inv = Bukkit.createInventory(null, (slots.size() + 8) / 9 * 9,
+                inventoryTitle + ChatColor.RED + playerName);
 
         for (Map.Entry<Integer, ItemStack> entry : slots.entrySet()) {
             inv.setItem(entry.getKey(), entry.getValue());
@@ -128,15 +143,23 @@ public class GUIManager implements Listener {
         return inv;
     }
 
-    public Inventory getSpecificStatisticInventory(Player player, PlayerStat statType) {
+    /**
+     * Much like {@link #getSpecificStatisticInventory(UUID, PlayerStat, String)}}, this method provides an inventory
+     * that shows the data of a specific stat type.
+     * @param uuid UUID of the player to view
+     * @param statType Type of stat to view
+     * @param playerName Name of the player to view
+     * @return an inventory that represents the data Statz has collected of the given player.
+     */
+    public Inventory getSpecificStatisticInventory(UUID uuid, PlayerStat statType, String playerName) {
 
-        PlayerInfo info = plugin.getDataManager().getPlayerInfo(player.getUniqueId(), statType);
+        PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
         List<Query> results = info.getResults();
 
         int invSize = (results.size() + 8) / 9 * 9 > 63 ? 63 : (results.size() + 8) / 9 * 9;
 
-        Inventory inv = Bukkit.createInventory(null, invSize, "Statistics of " + ChatColor.RED + player.getName());
+        Inventory inv = Bukkit.createInventory(null, invSize, inventoryTitle + ChatColor.RED + playerName);
 
         int count = 0;
 
@@ -146,10 +169,8 @@ public class GUIManager implements Listener {
                 break;
             }
 
-            //System.out.println(count + ": " + query);
-
             // Get icon of this stat type
-            Material iconMaterial = statType.getIconMaterial();//randomEnum(Material.class);
+            Material iconMaterial = statType.getIconMaterial();
 
             // Create an itemstack to show in the inventory
             ItemStack itemStack = new ItemStack(iconMaterial);
@@ -170,7 +191,6 @@ public class GUIManager implements Listener {
 
             if (highDetailDescription != null) {
                 messages.addAll(fitTextToScreen(highDetailDescription));
-                //messages.add(ChatColor.YELLOW + highDetailDescription);
             }
 
             itemMeta.setLore(messages);
@@ -185,9 +205,12 @@ public class GUIManager implements Listener {
         return inv;
     }
 
-    private Map<PlayerStat, PlayerInfo> getPlayerStatistics(Player player) {
-
-        UUID uuid = player.getUniqueId();
+    /**
+     * Get all statistics of a player, except the players table.
+     * @param uuid UUID of the player
+     * @return all PlayerInfo per stat type of the given player.
+     */
+    private Map<PlayerStat, PlayerInfo> getPlayerStatistics(UUID uuid) {
 
         Map<PlayerStat, PlayerInfo> statistics = new HashMap<>();
 
@@ -205,11 +228,10 @@ public class GUIManager implements Listener {
         return statistics;
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = new Random().nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
+    /**
+     * Redirect Player to correct inventory if he/she clicks on an ItemStack.
+     * @param event
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onClickInvSlot(final InventoryClickEvent event) {
 
@@ -221,7 +243,14 @@ public class GUIManager implements Listener {
         }
 
         // Check if clicking a Statz GUI window
-        if (!inv.getTitle().contains("Statistics of ")) {
+        if (!inv.getTitle().contains(inventoryTitle)) {
+            return;
+        }
+
+        String targetPlayer = ChatColor.stripColor(inv.getTitle().replace(inventoryTitle, "").trim());
+
+        // Check if we can find the target player of this inventory.
+        if (targetPlayer == null && targetPlayer.equalsIgnoreCase("")) {
             return;
         }
 
@@ -280,11 +309,22 @@ public class GUIManager implements Listener {
             return;
         }
 
+        // Get UUID of target player
+        UUID targetUUID;
+
+        OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(targetPlayer);
+
+        if (offlinePlayer == null || offlinePlayer.getUniqueId() == null) {
+            return;
+        }
+
+        targetUUID = offlinePlayer.getUniqueId();
+
         // Close currently opened inventory
         event.getWhoClicked().closeInventory();
 
         // Open stat specific inventory.
-        Inventory specificInv = getSpecificStatisticInventory((Player) event.getWhoClicked(), statType);
+        Inventory specificInv = getSpecificStatisticInventory(targetUUID, statType, targetPlayer);
 
         showInventory((Player) event.getWhoClicked(), specificInv);
     }
@@ -301,35 +341,36 @@ public class GUIManager implements Listener {
         return messages;
     }
 
+    /**
+     * Convert a string into substrings where each substring can only have up to 40 characters.
+     * This method will split the original string into different strings based on the words. If a word does not fit
+     * on a line, a new line is created.
+     * @param message Original message to fit.
+     * @return A list of strings with the original message split over different lines.
+     */
     private List<String> fitTextToScreen(String message) {
         int maxLength = 40; // x chars
         List<String> list = new ArrayList<>();
 
-        int numberOfStrings = (int) Math.ceil(message.length() / (maxLength * 1.0));
+        String[] words = message.split(" ");
 
-        if (message.length() <= maxLength) {
-            list.add(message);
-            return list;
+        StringBuilder line = new StringBuilder("");
+
+        for (String word : words) {
+            // Check if line with extra word is longer than max length
+            if (line.length() + (word).length() <= maxLength) {
+                line.append(word + " ");
+            } else { // It is longer, so create a new line instead.
+                // Add previous line to list
+                list.add(line.toString());
+
+                // Create a new empty line
+                line = new StringBuilder(word + " ");
+            }
         }
-//
-//        System.out.println("Length of message: " + message.length());
-//        System.out.println("Divided lenght: " + (message.length() / (maxLength * 1.0)));
-//        System.out.println("CEIL: " + Math.ceil(message.length() / (maxLength * 1.0)));
-//        System.out.println("Number of strings: " + numberOfStrings);
-//        System.out.println("Original message:" + message);
 
-        for (int i = 0; i < numberOfStrings; i++) {
-
-            int beginIndex = i * maxLength;
-            // Add max length to begin index, or length
-            int endIndex = i * maxLength + maxLength > message.length() ? message.length() - 1: i * maxLength + maxLength;
-
-            String subMessage = message.substring(beginIndex, endIndex);
-            //System.out.println("MESSAGE " + i + ": " + subMessage);
-
-            list.add(subMessage.trim());
-
-        }
+        // Add the last line as well
+        list.add(line.toString());
 
         return list;
     }

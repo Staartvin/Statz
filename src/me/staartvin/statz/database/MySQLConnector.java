@@ -1,21 +1,5 @@
 package me.staartvin.statz.database;
 
-import java.sql.BatchUpdateException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Column;
 import me.staartvin.statz.database.datatype.Query;
@@ -24,6 +8,15 @@ import me.staartvin.statz.database.datatype.Table.SQLDataType;
 import me.staartvin.statz.database.datatype.mysql.MySQLTable;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
+import org.bukkit.ChatColor;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class MySQLConnector extends DatabaseConnector {
 

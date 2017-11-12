@@ -1,17 +1,16 @@
 package me.staartvin.statz.api;
 
-import java.util.List;
-import java.util.UUID;
-
-import me.staartvin.statz.hooks.StatzDependency;
-import org.bukkit.Statistic;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.hooks.DependencyHandler;
+import me.staartvin.statz.hooks.StatzDependency;
+import org.bukkit.Statistic;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * API class of Statz that other plugins can use to retrieve information from Statz.

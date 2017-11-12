@@ -1,9 +1,9 @@
 package me.staartvin.statz.patches;
 
+import me.staartvin.statz.Statz;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import me.staartvin.statz.Statz;
 
 public class PatchManager {
 

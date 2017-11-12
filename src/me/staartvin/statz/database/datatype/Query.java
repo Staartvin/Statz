@@ -1,11 +1,7 @@
 package me.staartvin.statz.database.datatype;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class represents a query that is sent or retrieved from the database of Statz.
@@ -132,6 +128,11 @@ public class Query {
 
 			Query comparedQuery = queries.get(i);
 
+            // Query is invalid.
+            if (comparedQuery == null) {
+                continue;
+            }
+
 			boolean isSame = true;
 
 			for (Entry<String, String> entry : data.entrySet()) {
@@ -142,15 +143,17 @@ public class Query {
 					continue;
 				}
 
-				// Stored query does not have value that the given query has -> this cannot conflict
-				if (!comparedQuery.hasKey(columnName)) {
-					isSame = false;
-					break;
-				}
+                Object valueOfComparedQuery = comparedQuery.getValue(columnName);
+
+                // Stored query does not have value that the given query has -> this cannot conflict
+                if (valueOfComparedQuery == null) {
+                    isSame = false;
+                    break;
+                }
 
 				// If value of condition in stored query is not the same as the given query, they cannot conflict. 
-				if (!comparedQuery.getValue(columnName).toString().equalsIgnoreCase(columnValue)) {
-					isSame = false;
+                if (!valueOfComparedQuery.toString().equalsIgnoreCase(columnValue)) {
+                    isSame = false;
 					break;
 				}
 			}

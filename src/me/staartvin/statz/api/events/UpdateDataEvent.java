@@ -1,17 +1,16 @@
 package me.staartvin.statz.api.events;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This event is fired when changes are made to the Statz database. 

@@ -1,22 +1,22 @@
 package me.staartvin.statz.statsdisabler;
 
+import me.staartvin.plugins.pluginlibrary.Library;
+import me.staartvin.plugins.pluginlibrary.hooks.GriefPreventionHook;
+import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
+import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.hooks.StatzDependency;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-
-import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.hooks.GriefPreventionHook;
-import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
-import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
 
 /**
  * This class reads from the disabled-stats.yml and has methods to check whether a statistic should be tracked in a certain area.
@@ -42,6 +42,11 @@ public class DisableManager {
      * @return true if it is disabled on this location, false otherwise.
      */
     public boolean isStatDisabledLocation(Location loc, PlayerStat stat) {
+
+        // We cannot check if PluginLibrary is not available.
+        if (!plugin.getDependencyManager().isAvailable(StatzDependency.PLUGINLIBRARY)) {
+            return false;
+        }
 
         LibraryHook worldGuardHook = plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
 
