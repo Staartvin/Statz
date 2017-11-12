@@ -1,7 +1,6 @@
 package me.staartvin.statz.commands;
 
 import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.hooks.StatsHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.language.Lang;
@@ -13,61 +12,63 @@ import java.util.List;
 
 public class MigrateCommand extends StatzCommand {
 
-	private final Statz plugin;
+    private final Statz plugin;
 
-	public MigrateCommand(final Statz instance) {
-		this.setUsage("/statz migrate");
-		this.setDesc("Imports data from Stats 3 into Statz's database");
-		this.setPermission("statz.migrate");
+    public MigrateCommand(final Statz instance) {
+        this.setUsage("/statz migrate <type>");
+        this.setDesc("Migrates data from a database into Statz's database");
+        this.setPermission("statz.migrate");
 
-		plugin = instance;
-	}
+        plugin = instance;
+    }
 
-	@Override
-	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
-		// Could not find Stats 3 - abort mission
-		if (!plugin.getDependencyManager().isAvailable(Library.STATS)) {
-			sender.sendMessage(Lang.DID_NOT_FIND_DEPENDENCY.getConfigValue("Stats 3"));
-			return true;
-		}
+        if (args.length < 2) {
+            sender.sendMessage(Lang.INCORRECT_COMMAND_USAGE.getConfigValue(this.getUsage()));
+            return true;
+        }
 
-        // Start migrating entries on separate thread.
-        sender.sendMessage(ChatColor.YELLOW + "Start migrating data from Stats 3 to Statz!");
-		sender.sendMessage(ChatColor.RED + "This may take a while.");
+        if (args[1].equalsIgnoreCase("stats3")) {
+            // Could not find Stats 3 - abort mission
+            if (!plugin.getDependencyManager().isAvailable(Library.STATS)) {
+                sender.sendMessage(Lang.DID_NOT_FIND_DEPENDENCY.getConfigValue("Stats 3"));
+                return true;
+            }
 
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			public void run() {
-				int changes = plugin.getImportManager().importFromStats3();
+            // Start migrating entries on separate thread.
+            sender.sendMessage(ChatColor.YELLOW + "Start migrating data from Stats 3 to Statz!");
+            sender.sendMessage(ChatColor.RED + "This may take a while.");
 
-				while (changes == 0) {
-					try {
-						// Sleep for 10 seconds and then try again - Stats takes a while to load people
-						// For each user that is logged, wait 0.5 seconds.
-						Thread.sleep(((StatsHook) plugin.getDependencyManager().getLibraryHook(Library.STATS))
-								.getLoggedPlayers().size() * 500);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+                public void run() {
+                    int changes = plugin.getImportManager().importFromStats3();
 
-					changes = plugin.getImportManager().importFromStats3();
-				}
+                    plugin.getLogsManager().writeToLogFile("Done importing from Stats 3 database. It may still take a" +
+                            " while for Statz to update its database.");
 
-				sender.sendMessage(ChatColor.GREEN + "Imported " + changes + " entries from Stats 3 database.");
-			}
-		});
+                    sender.sendMessage(ChatColor.GREEN + "Imported " + changes + " entries from Stats 3 database.");
+                }
+            });
+        } else if (args[1].equalsIgnoreCase("minecraft")) {
+            sender.sendMessage(org.bukkit.ChatColor.RED + "NOT IMPLEMENTED YET.");
+        } else {
+            sender.sendMessage(org.bukkit.ChatColor.RED + "You provided an invalid migration type. You can only use " +
+                    "'stats3' or 'minecraft'.");
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/* (non-Javadoc)
-	 * @see me.staartvin.statz.commands.manager.StatzCommand#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-	 */
-	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
-			final String[] args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see me.staartvin.statz.commands.manager.StatzCommand#onTabComplete(org.bukkit.command.CommandSender, org
+     * .bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
+                                      final String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
