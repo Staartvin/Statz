@@ -4,10 +4,10 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.*;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -161,9 +161,12 @@ public class CommandsManager implements TabExecutor {
 		sender.sendMessage(Lang.COMMAND_NOT_RECOGNIZED.getConfigValue());
 		
 		if (!bestSuggestions.isEmpty()) {
-			BaseComponent[] builder = new ComponentBuilder("Did you perhaps mean ").color(ChatColor.DARK_AQUA)
-					.append("/statz ").color(ChatColor.GREEN).append(StatzUtil.seperateList(bestSuggestions, "or")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("These are suggestions based on your input.").create()))
-					.append("?").color(ChatColor.DARK_AQUA).create();
+            BaseComponent[] builder = new ComponentBuilder("Did you perhaps mean ").color(net.md_5.bungee.api
+                    .ChatColor.DARK_AQUA)
+                    .append("/statz ").color(net.md_5.bungee.api.ChatColor.GREEN).append(StatzUtil.seperateList
+                            (bestSuggestions, "or")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new
+                            ComponentBuilder("These are suggestions based on your input.").create()))
+                    .append("?").color(net.md_5.bungee.api.ChatColor.DARK_AQUA).create();
 			
 			if (sender instanceof Player) {
 				Player p = (Player) sender;

@@ -3,7 +3,7 @@ package me.staartvin.statz.logger;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 import java.io.BufferedWriter;
 import java.io.File;

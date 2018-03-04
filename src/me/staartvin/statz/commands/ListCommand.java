@@ -7,8 +7,8 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -140,7 +140,7 @@ public class ListCommand extends StatzCommand {
             }
 
             if (targetPlayer.isOnline()) {
-                Player player = (Player) targetPlayer.getPlayer();
+                Player player = targetPlayer.getPlayer();
 
                 playerName = player.getName();
                 uuid = player.getUniqueId();

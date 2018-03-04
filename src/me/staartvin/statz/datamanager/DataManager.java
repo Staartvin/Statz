@@ -5,8 +5,8 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 import me.staartvin.statz.util.StatzUtil.Time;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -207,13 +207,13 @@ public class DataManager {
 				case JOINS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has joined ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -221,7 +221,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -233,13 +233,13 @@ public class DataManager {
 				case DEATHS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has died ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -247,7 +247,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -259,13 +259,13 @@ public class DataManager {
 				case ITEMS_CAUGHT:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has caught ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" items while fishing");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -273,7 +273,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -285,13 +285,13 @@ public class DataManager {
 				case BLOCKS_PLACED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has placed ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" blocks");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -299,7 +299,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -311,13 +311,13 @@ public class DataManager {
 				case BLOCKS_BROKEN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has broken ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" blocks");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -325,7 +325,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -337,13 +338,13 @@ public class DataManager {
 				case KILLS_MOBS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has killed ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" mobs");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -351,7 +352,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -363,13 +365,13 @@ public class DataManager {
 				case KILLS_PLAYERS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has killed ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" players");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -377,7 +379,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -389,14 +391,14 @@ public class DataManager {
 				case TIME_PLAYED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has played for ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent(
 								StatzUtil.timeToString((int) info.getTotalValue(), Time.MINUTES));
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent("");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -404,7 +406,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -416,13 +418,13 @@ public class DataManager {
 				case FOOD_EATEN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has eaten ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -430,7 +432,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -442,13 +444,13 @@ public class DataManager {
 				case DAMAGE_TAKEN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has taken ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" points of damage");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -456,7 +458,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -468,13 +471,13 @@ public class DataManager {
 				case TIMES_SHORN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has shorn ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" sheep");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -482,7 +485,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -494,13 +497,13 @@ public class DataManager {
 				case DISTANCE_TRAVELLED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has travelled ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent(info.getTotalValue(2) + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" blocks");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -508,7 +511,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -520,13 +524,13 @@ public class DataManager {
 				case ITEMS_CRAFTED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has crafted ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" items");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -534,7 +538,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -546,13 +550,13 @@ public class DataManager {
 				case XP_GAINED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has gained ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" exp");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -560,7 +564,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -572,13 +576,13 @@ public class DataManager {
 				case VOTES:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has voted ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -586,7 +590,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -598,13 +602,13 @@ public class DataManager {
 				case ARROWS_SHOT:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has fired ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" arrows");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -612,7 +616,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -624,13 +628,13 @@ public class DataManager {
 				case ENTERED_BEDS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " went sleepy sleepy in ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" beds");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -638,7 +642,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -650,13 +655,13 @@ public class DataManager {
 				case COMMANDS_PERFORMED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has performed ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" commands");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -664,7 +669,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -676,13 +682,13 @@ public class DataManager {
 				case TIMES_KICKED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has been kicked ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -690,7 +696,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -702,13 +709,13 @@ public class DataManager {
 				case TOOLS_BROKEN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has broken ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" tools");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -716,7 +723,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -728,13 +735,13 @@ public class DataManager {
 				case EGGS_THROWN:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has thrown ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" unborn chickens (eggs)");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -742,7 +749,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -754,13 +761,13 @@ public class DataManager {
 				case WORLDS_CHANGED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has changed worlds ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -768,7 +775,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -780,13 +787,13 @@ public class DataManager {
 				case BUCKETS_FILLED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has filled ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" buckets");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -794,7 +801,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -806,13 +813,13 @@ public class DataManager {
 				case BUCKETS_EMPTIED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has emptied ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" buckets");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -820,7 +827,8 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create
+                                        ()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -832,13 +840,13 @@ public class DataManager {
 				case ITEMS_PICKED_UP:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has picked up ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" items");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -846,7 +854,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -858,13 +866,13 @@ public class DataManager {
 				case ITEMS_DROPPED:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has dropped ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" items");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -872,7 +880,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -884,13 +892,13 @@ public class DataManager {
 				case TELEPORTS:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has teleported ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -898,7 +906,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -910,13 +918,13 @@ public class DataManager {
 				case VILLAGER_TRADES:
 					if (sender instanceof Player) {
 						TextComponent message = new TextComponent(playerName + " has traded ");
-						message.setColor(ChatColor.DARK_AQUA);
+                        message.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						TextComponent partTwo = new TextComponent((int) info.getTotalValue() + "");
-						partTwo.setColor(ChatColor.GREEN);
+                        partTwo.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
 						TextComponent partThree = new TextComponent(" times with villagers");
-						partThree.setColor(ChatColor.DARK_AQUA);
+                        partThree.setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA);
 
 						message.addExtra(partTwo);
 						message.addExtra(partThree);
@@ -924,7 +932,7 @@ public class DataManager {
 								"/statz list " + playerName + " " + statType.toString()));
 						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click on me for more info about ")
-										.append(statType.toString()).color(ChatColor.GOLD).create()));
+                                        .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
 						messagesSpigot.add(message);
 					} else {
@@ -989,11 +997,11 @@ public class DataManager {
 		}
 
 		// Create page clicker
-		BaseComponent[] pageClicker = new ComponentBuilder("<<< ").color(ChatColor.GOLD)
+        BaseComponent[] pageClicker = new ComponentBuilder("<<< ").color(net.md_5.bungee.api.ChatColor.GOLD)
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 						"/statz list " + playerName + " " + (pageNumber < 0 ? 0 : pageNumber)))
-				.append("Page ").color(ChatColor.DARK_AQUA).append(pageNumber + 1 + "").color(ChatColor.GREEN)
-				.append(" of " + pages).color(ChatColor.DARK_AQUA).append(" >>>").color(ChatColor.GOLD)
+                .append("Page ").color(net.md_5.bungee.api.ChatColor.DARK_AQUA).append(pageNumber + 1 + "").color(net.md_5.bungee.api.ChatColor.GREEN)
+                .append(" of " + pages).color(net.md_5.bungee.api.ChatColor.DARK_AQUA).append(" >>>").color(net.md_5.bungee.api.ChatColor.GOLD)
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 						"/statz list " + playerName + " " + (pageNumber + 2 > pages ? pages
 								: pageNumber + 2)))
