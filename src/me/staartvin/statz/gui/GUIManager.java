@@ -30,8 +30,6 @@ public class GUIManager implements Listener {
 
     private Statz plugin;
 
-    private DescriptionMatcher descriptionMatcher = new DescriptionMatcher();
-
     public GUIManager(Statz instance) {
         this.plugin = instance;
 
@@ -109,13 +107,14 @@ public class GUIManager implements Listener {
                 continue;
             } else {
 
-                String totalDescription = descriptionMatcher.getTotalDescription(statInfo, statType);
+                String totalDescription = ChatColor.stripColor(DescriptionMatcher.getTotalDescription(statInfo,
+                        statType));
 
                 if (totalDescription != null) {
                     messages.add(ChatColor.YELLOW + totalDescription);
                 }
 
-                if (statType != statType.JOINS && statType != statType.VOTES) {
+                if (statType != PlayerStat.JOINS && statType != PlayerStat.VOTES) {
                     messages.add("");
                     messages.add(ChatColor.RED + "Click me for more info!");
                 }
@@ -187,7 +186,8 @@ public class GUIManager implements Listener {
             // Create a list of messages shown when hovering over the item
             List<String> messages = new ArrayList<>();
 
-            String highDetailDescription = descriptionMatcher.getHighDetailDescription(query, statType);
+            String highDetailDescription = ChatColor.stripColor(DescriptionMatcher.getHighDetailDescription(query,
+                    statType));
 
             if (highDetailDescription != null) {
                 messages.addAll(fitTextToScreen(highDetailDescription));
@@ -250,7 +250,7 @@ public class GUIManager implements Listener {
         String targetPlayer = ChatColor.stripColor(inv.getTitle().replace(inventoryTitle, "").trim());
 
         // Check if we can find the target player of this inventory.
-        if (targetPlayer == null && targetPlayer.equalsIgnoreCase("")) {
+        if (targetPlayer == null || targetPlayer.equalsIgnoreCase("")) {
             return;
         }
 
@@ -359,7 +359,7 @@ public class GUIManager implements Listener {
         for (String word : words) {
             // Check if line with extra word is longer than max length
             if (line.length() + (word).length() <= maxLength) {
-                line.append(word + " ");
+                line.append(word).append(" ");
             } else { // It is longer, so create a new line instead.
                 // Add previous line to list
                 list.add(line.toString());
