@@ -241,7 +241,7 @@ public class ListCommand extends StatzCommand {
                         return;
                     }
 
-                    for (Query query : info.getResults()) {
+                    for (Query query : info.getDataOfPlayerStat(statType)) {
                         // Invalid query
                         if (query == null)
                             continue;

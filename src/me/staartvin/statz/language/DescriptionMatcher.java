@@ -19,9 +19,10 @@ public class DescriptionMatcher {
         String description = "";
 
         if (statType == PlayerStat.TIME_PLAYED) {
-            description = descriptionEnum.getTotalDescription(StatzUtil.timeToString((int) info.getTotalValue(), StatzUtil.Time.MINUTES));
+            description = descriptionEnum.getTotalDescription(StatzUtil.timeToString((int) info.getTotalValue(statType),
+                    StatzUtil.Time.MINUTES));
         } else {
-            description = descriptionEnum.getTotalDescription((int) info.getTotalValue());
+            description = descriptionEnum.getTotalDescription((int) info.getTotalValue(statType));
         }
 
 

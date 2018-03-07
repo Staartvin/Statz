@@ -1,6 +1,7 @@
 package me.staartvin.statz;
 
 import me.staartvin.statz.api.API;
+import me.staartvin.statz.cache.CachingManager;
 import me.staartvin.statz.commands.manager.CommandsManager;
 import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
@@ -51,6 +52,8 @@ public class Statz extends JavaPlugin {
 	private DisableManager disableManager;
 	private PatchManager patchManager;
 	private GUIManager guiManager;
+
+    private CachingManager cachingManager;
 
 	@Override
 	public void onEnable() {
@@ -148,6 +151,8 @@ public class Statz extends JavaPlugin {
             // Disable Statz.
             this.getServer().getPluginManager().disablePlugin(this);
         }
+
+        this.setCachingManager(new CachingManager());
 	}
 
 	@Override
@@ -423,7 +428,7 @@ public class Statz extends JavaPlugin {
 
 					// Check if it is valid!
 					if (info.isValid()) {
-						currentValue += info.getTotalValue();
+                        currentValue += info.getTotalValue(stat);
 					}
 
 					//debugMessage("Current value: " + currentValue);
@@ -561,5 +566,13 @@ public class Statz extends JavaPlugin {
 
     public void setGUIManager(GUIManager guiManager) {
         this.guiManager = guiManager;
+    }
+
+    public CachingManager getCachingManager() {
+        return cachingManager;
+    }
+
+    public void setCachingManager(CachingManager cachingManager) {
+        this.cachingManager = cachingManager;
     }
 }

@@ -835,7 +835,7 @@ public class SQLiteConnector extends DatabaseConnector {
                 String update;
                 String updateTwo = null;
 
-                if (mode == 1 || !results.hasKey("value")) {
+                if (mode == 1 || !results.hasColumn("value")) {
                     // Override value
                     update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
                             + " VALUES " + resultNames;
@@ -923,7 +923,7 @@ public class SQLiteConnector extends DatabaseConnector {
                 String update;
                 String updateTwo = null;
 
-                if (mode == 1 || !query.hasKey("value")) {
+                if (mode == 1 || !query.hasColumn("value")) {
                     // Override value
                     update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
                             + " VALUES " + resultNames;

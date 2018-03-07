@@ -43,7 +43,7 @@ public class API {
 
 		double value = 0;
 
-		List<Query> results = info.getResults();
+        List<Query> results = info.getDataOfPlayerStat(statType);
 
 		if (results == null || results.isEmpty())
 			return value;
@@ -87,7 +87,7 @@ public class API {
 			return null;
 		}
 
-		return info.getTotalValue(conditions);
+        return info.getTotalValue(statType, conditions);
 	}
 
 	/**

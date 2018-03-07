@@ -89,7 +89,7 @@ public class DataPoolManager {
 
 		for (Query conflict : conflictsQuery) {
 
-			if (!conflict.hasKey("value")) {
+            if (!conflict.hasColumn("value")) {
 				continue;
 			}
 

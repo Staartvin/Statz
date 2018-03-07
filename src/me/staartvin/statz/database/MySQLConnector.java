@@ -839,7 +839,7 @@ public class MySQLConnector extends DatabaseConnector {
 
                 String onDuplicate = "";
 
-                if (results.hasKey("value")) {
+                if (results.hasColumn("value")) {
                     if (mode == 1) {
                         // Override current value
                         onDuplicate = " ON DUPLICATE KEY UPDATE value=" + results.getValue();
@@ -931,7 +931,7 @@ public class MySQLConnector extends DatabaseConnector {
 
                 String onDuplicate = "";
 
-                if (query.hasKey("value")) {
+                if (query.hasColumn("value")) {
                     if (mode == 1) {
                         // Override current value
                         onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();

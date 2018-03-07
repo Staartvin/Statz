@@ -129,9 +129,9 @@ public class DataManager {
 		if (info.isValid()) {
 			List<Query> deletedQueries = new ArrayList<>();
 
-			for (Query map : info.getResults()) {
+            for (Query map : info.getDataOfPlayerStat(statType)) {
 				for (Entry<String, String> entry : conditions.getEntrySet()) {
-					if (!map.hasKey(entry.getKey())) {
+                    if (!map.hasColumn(entry.getKey())) {
 						deletedQueries.add(map);
 						break;
 					}
@@ -161,12 +161,18 @@ public class DataManager {
 	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
 
 		// If the query does not have a UUID, add it in manually.
-		if (!results.hasKey("uuid")) {
+        if (!results.hasColumn("uuid")) {
 			results.setValue("uuid", uuid);
 		}
 		
 		// Add query to the pool.
 		plugin.getDataPoolManager().addQuery(statType, results);
+
+        PlayerInfo info = new PlayerInfo(uuid);
+
+        //info.addRow(results);
+
+        plugin.getCachingManager().registerCachedData(uuid, info);
 	}
 	
 	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {

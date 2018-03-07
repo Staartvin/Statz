@@ -1,6 +1,7 @@
 package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
@@ -42,10 +43,13 @@ public class CommandsPerformedListener implements Listener {
 		} else {
 			command = message.trim();
 		}
-		
+
+        Query query = StatzUtil.makeQuery("uuid",
+                player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "command", command,
+                "arguments", arguments);
+
 		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "command", command, "arguments", arguments));
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, query);
 
 	}
 }
