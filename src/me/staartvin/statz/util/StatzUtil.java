@@ -2,8 +2,8 @@ package me.staartvin.statz.util;
 
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Rabbit.Type;
@@ -18,8 +18,52 @@ import java.util.regex.Pattern;
 
 public class StatzUtil {
 
-    public static enum Time {
-        DAYS, HOURS, MINUTES, SECONDS
+    /**
+     * Checks whether the current version is higher than the given version
+     *
+     * @param versionCheck Version to check
+     * @return true if the current version on this server is higher than the given version
+     */
+    public static boolean isHigherVersion(String versionCheck) {
+        String currentVersion = getMinecraftVersion();
+
+        if (currentVersion.equalsIgnoreCase("Unknown") || !currentVersion.contains(".") || versionCheck == null
+                || !versionCheck.contains("."))
+            return false;
+
+        List<String> splitCur = new ArrayList<>();
+        Collections.addAll(splitCur, currentVersion.split("\\."));
+
+        List<String> splitCheck = new ArrayList<>();
+        Collections.addAll(splitCheck, versionCheck.split("\\."));
+
+        if (splitCur.size() < 1 || splitCheck.size() < 1) {
+            return false;
+        }
+
+        if (Integer.parseInt(splitCheck.get(0)) > Integer.parseInt(splitCur.get(0))) {
+            return false;
+        }
+
+        if (splitCur.size() == 1) {
+            splitCur.add("0");
+            splitCur.add("0");
+        } else if (splitCur.size() == 2) {
+            splitCur.add("0");
+        }
+
+        if (splitCheck.size() == 1) {
+            splitCheck.add("0");
+            splitCheck.add("0");
+        } else if (splitCheck.size() == 2) {
+            splitCheck.add("0");
+        }
+
+        if (Integer.parseInt(splitCheck.get(1)) > Integer.parseInt(splitCur.get(1))) {
+            return false;
+        }
+
+        return Integer.parseInt(splitCheck.get(2)) <= Integer.parseInt(splitCur.get(2));
     }
 
     // This is true if player is gliding with an elytra
@@ -615,56 +659,8 @@ public class StatzUtil {
         return version;
     }
 
-    /**
-     * Checks whether the current version is higher than the given version
-     *
-     * @param versionCheck Version to check
-     * @return true if the current version on this server is higher than the given version
-     */
-    public static boolean isHigherVersion(String versionCheck) {
-        String currentVersion = getMinecraftVersion();
-
-        if (currentVersion.equalsIgnoreCase("Unknown") || !currentVersion.contains(".") || versionCheck == null
-                || !versionCheck.contains("."))
-            return false;
-
-        List<String> splitCur = new ArrayList<>();
-        Collections.addAll(splitCur, currentVersion.split("\\."));
-
-        List<String> splitCheck = new ArrayList<>();
-        Collections.addAll(splitCheck, versionCheck.split("\\."));
-
-        if (splitCur.size() < 1 || splitCheck.size() < 1) {
-            return false;
-        }
-
-        if (Integer.parseInt(splitCheck.get(0)) > Integer.parseInt(splitCur.get(0))) {
-            return false;
-        }
-
-        if (splitCur.size() == 1) {
-            splitCur.add("0");
-            splitCur.add("0");
-        } else if (splitCur.size() == 2) {
-            splitCur.add("0");
-        }
-
-        if (splitCheck.size() == 1) {
-            splitCheck.add("0");
-            splitCheck.add("0");
-        } else if (splitCheck.size() == 2) {
-            splitCheck.add("0");
-        }
-
-        if (Integer.parseInt(splitCheck.get(1)) > Integer.parseInt(splitCur.get(1))) {
-            return false;
-        }
-
-        if (Integer.parseInt(splitCheck.get(2)) > Integer.parseInt(splitCur.get(2))) {
-            return false;
-        }
-
-        return true;
+    public enum Time {
+        DAYS, HOURS, MINUTES, SECONDS
     }
 
     public static String getMobType(Entity e) {

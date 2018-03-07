@@ -2,7 +2,7 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.TransferCommand;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -12,13 +12,13 @@ import me.staartvin.statz.util.StatzUtil;
  */
 public class DescriptionMatcher {
 
-    public String getTotalDescription(PlayerInfo info, PlayerStat statType) {
+    public static String getTotalDescription(PlayerInfo info, PlayerStat statType) {
 
         StatisticDescription descriptionEnum = StatisticDescription.valueOf(statType.toString());
 
         String description = "";
 
-        if (statType == statType.TIME_PLAYED) {
+        if (statType == PlayerStat.TIME_PLAYED) {
             description = descriptionEnum.getTotalDescription(StatzUtil.timeToString((int) info.getTotalValue(), StatzUtil.Time.MINUTES));
         } else {
             description = descriptionEnum.getTotalDescription((int) info.getTotalValue());
@@ -28,14 +28,10 @@ public class DescriptionMatcher {
         return description;
     }
 
-    public String getHighDetailDescription(Query query, PlayerStat statType) {
+    public static String getHighDetailDescription(Query query, PlayerStat statType) {
         String description = "";
 
         StatisticDescription descriptionEnum = StatisticDescription.valueOf(statType.toString());
-
-        if (descriptionEnum == null) {
-            return null;
-        }
 
         switch (statType) {
             case JOINS:

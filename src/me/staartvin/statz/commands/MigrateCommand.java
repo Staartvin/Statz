@@ -4,7 +4,7 @@ import me.staartvin.plugins.pluginlibrary.Library;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.language.Lang;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

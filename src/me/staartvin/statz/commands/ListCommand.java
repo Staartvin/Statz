@@ -7,8 +7,8 @@ import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.language.Lang;
 import me.staartvin.statz.util.StatzUtil;
-import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -140,7 +140,7 @@ public class ListCommand extends StatzCommand {
             }
 
             if (targetPlayer.isOnline()) {
-                Player player = (Player) targetPlayer.getPlayer();
+                Player player = targetPlayer.getPlayer();
 
                 playerName = player.getName();
                 uuid = player.getUniqueId();
@@ -270,12 +270,24 @@ public class ListCommand extends StatzCommand {
 
         List<String> tabCompletions = new ArrayList<String>();
 
-        if (args.length == 3) {
-            // Sender entered /statz l <name> ", so we add the player stats as suggestions
+		if (args.length == 3) {
+			// Sender entered /statz l <name> ", so we add the player stats as suggestions
+            String statType = args[2].trim().toLowerCase();
+
             for (PlayerStat stat : PlayerStat.values()) {
-                tabCompletions.add(stat.toString().toLowerCase());
-            }
-        }
+                String statName = stat.toString().toLowerCase();
+
+                // Show all tab completed items
+			    if (statType == "") {
+                    tabCompletions.add(statName);
+                } else {
+			        // Only show tab completions if it matches the already given string.
+			        if (statName.startsWith(statType)) {
+                        tabCompletions.add(statName);
+                    }
+                }
+			}
+		}
 
         if (!tabCompletions.isEmpty()) {
             return tabCompletions;
