@@ -3,6 +3,7 @@ package me.staartvin.statz.datamanager.player;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 
 import java.util.*;
 
@@ -164,19 +165,80 @@ public class PlayerInfo {
 		return value;
 	}
 
-	public void setResults(List<Query> result) {
-        //this.results = result;
+    /**
+     * Set the data for a specific statistic.
+     *
+     * @param statType Type of statistic
+     * @param rows     Data to set
+     *
+     * @throws IllegalArgumentException if statType or rows is invalid.
+     */
+    public void setData(PlayerStat statType, List<Query> rows) throws IllegalArgumentException {
+
+        if (statType == null) {
+            throw new IllegalArgumentException("Stat cannot be null.");
+        }
+
+        if (rows == null) {
+            throw new IllegalArgumentException("Given rows cannot be null");
+        }
+
+        statistics.put(statType, rows);
     }
 
-    public void addRow(PlayerStat statType, Query row) {
+    /**
+     * Add a row to data of a specific statistic.
+     *
+     * @param statType Type of statistic.
+     * @param row      Row to add.
+     *
+     * @throws IllegalArgumentException if statistic is null or the row is null.
+     */
+    public void addRow(PlayerStat statType, Query row) throws IllegalArgumentException {
+
+        if (statType == null) {
+            throw new IllegalArgumentException("Stat cannot be null.");
+        }
+
+        if (row == null) {
+            throw new IllegalArgumentException("Row cannot be null");
+        }
+
         List<Query> rows = this.getDataOfPlayerStat(statType);
 
+        rows.add(row);
 
-	}
+        this.setData(statType, rows);
+    }
 
-	public void removeResult(Query map) {
-        //this.results.remove(map);
-	}
+    /**
+     * Remove a row from data of a specific statistic.
+     *
+     * @param statType Type of statistic.
+     * @param row      Row to remove.
+     *
+     * @throws IllegalArgumentException if statistic is null or row is null.
+     */
+    public void removeResult(PlayerStat statType, Query row) throws IllegalArgumentException {
+        if (statType == null) {
+            throw new IllegalArgumentException("Stat cannot be null");
+        }
+
+        if (row == null) {
+            throw new IllegalArgumentException("Row cannot be null");
+        }
+
+        // No row to be removed
+        if (!this.hasDataOfPlayerStat(statType)) {
+            return;
+        }
+
+        List<Query> rows = this.getDataOfPlayerStat(statType);
+
+        rows.remove(row);
+
+        this.setData(statType, rows);
+    }
 
 	/**
 	 * Get the total value of the 'value' column. This method sums up all the values from the 'value' column in each row.
@@ -195,33 +257,47 @@ public class PlayerInfo {
 	/**
 	 * Get the total value but round to given decimal places.
 	 * @param roundedDecimals How many decimal places to round to.
-	 * @return the same as {@link #getTotalValue()}, but rounded to given decimal places.
+     * @return the same as {@link #getTotalValue(PlayerStat)}, but rounded to given decimal places.
      */
-	/*public double getTotalValue(int roundedDecimals) {
-		double value = getTotalValue();
+    public double getTotalValue(PlayerStat statType, int roundedDecimals) {
+		double value = getTotalValue(statType);
 		
 		return StatzUtil.roundDouble(value, roundedDecimals);
 	}
 	
-	/*@Override
+	@Override
 	public String toString() {
 		StringBuilder endString = new StringBuilder("PlayerInfo of " + this.getUUID() + ": {");
-		
-		for (Query q : this.results) {
-			endString.append(q.toString() + ", ");
-		}
-		
-		int lastComma = endString.lastIndexOf(",");
-		
-		if (lastComma >= 0) {
-			endString.deleteCharAt(lastComma);
-		}
+
+        StringBuilder queryString;
+
+        for (Map.Entry<PlayerStat, List<Query>> entry : statistics.entrySet()) {
+            PlayerStat statType = entry.getKey();
+            List<Query> queries = entry.getValue();
+
+            queryString = new StringBuilder(statType + ": {");
+
+            for (Query q : queries) {
+                queryString.append(q.toString() + ", ");
+                System.out.println(queryString.toString());
+            }
+
+            int lastComma = queryString.lastIndexOf(",");
+
+            if (lastComma >= 0) {
+                queryString.deleteCharAt(lastComma);
+            }
+
+            queryString.append("}, ");
+            System.out.println("QUERYYSTRING END: " + queryString.toString().trim());
+            endString.append(queryString.toString().trim());
+        }
 		
 		endString = new StringBuilder(endString.toString().trim());
 		
 		endString.append("}");
 		
 		return endString.toString();
-	}*/
+	}
 
 }

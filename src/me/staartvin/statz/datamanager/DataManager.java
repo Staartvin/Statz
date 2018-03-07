@@ -108,7 +108,7 @@ public class DataManager {
 		if (results != null && !results.isEmpty()) {
 			info.setValid(true);
 
-			info.setResults(results);
+            info.setData(statType, results);
 		}
 
 		return info;
@@ -145,7 +145,7 @@ public class DataManager {
 
 			// Remove queries that are not relevant.
 			for (Query q : deletedQueries) {
-				info.removeResult(q);
+                info.removeResult(statType, q);
 			}
 		}
 

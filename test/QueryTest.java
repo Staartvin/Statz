@@ -1,7 +1,13 @@
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.util.StatzUtil;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class QueryTest {
 
@@ -246,6 +252,16 @@ public class QueryTest {
         Query queryB = StatzUtil.makeQuery(
                 "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
                 "mob", "COW");
+
+        PlayerInfo info = new PlayerInfo(UUID.fromString("3657b9cc-2518-4265-ad69-323e11286ce2"));
+        List<Query> list = new ArrayList<>();
+        list.add(queryA);
+        list.add(queryB);
+
+        info.setData(PlayerStat.KILLS_MOBS, list);
+        info.setData(PlayerStat.ITEMS_DROPPED, list);
+
+        System.out.println(info.toString());
 
         queryA.resolveConflict(queryB).getValue();
     }
