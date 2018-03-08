@@ -234,6 +234,8 @@ public class Statz extends JavaPlugin {
 			this.getServer().getPluginManager().registerEvents(new XPGainedListener(this), this);
 		}
 
+		// Important listeners that should always be on.
+		this.getServer().getPluginManager().registerEvents(new JoinPlayerListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
 		if (this.getDependencyManager().isAvailable(StatzDependency.VOTIFIER)

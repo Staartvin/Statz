@@ -3,11 +3,13 @@ package me.staartvin.statz.tasks;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
 
-public class UpdatePlayerCacheTask implements Runnable {
+public class UpdatePlayerCacheTask extends BukkitRunnable {
 
     private UUID uuid;
     private Statz plugin;
@@ -20,17 +22,31 @@ public class UpdatePlayerCacheTask implements Runnable {
     @Override
     public void run() {
 
-        System.out.println("-----------------");
+        // Stop task if player is not found anymore.
+        if (Bukkit.getServer().getPlayer(uuid) == null) {
+            System.out.println("Killing task as " + uuid + " is not online anymore.");
+            this.cancel();
+            return;
+        }
+
+        PlayerInfo cachedData = new PlayerInfo(uuid);
+
         for (PlayerStat statType : PlayerStat.values()) {
             long startTime = System.currentTimeMillis();
 
-            System.out.println(String.format("Update cache of %s for stat %s!", uuid, statType));
             PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-            System.out.println("Got info: " + info);
-            System.out.println(String.format("Took %d ms.", System.currentTimeMillis() - startTime));
+            startTime = System.currentTimeMillis();
+
+            // Find conflicts
+            cachedData = cachedData.resolveConflicts(info);
+
         }
 
+        System.out.println("Storing new data in cache for " + uuid + " with " + cachedData.getNumberOfStatistics() +
+                " lists.");
+        // Store into cache.
+        plugin.getCachingManager().registerCachedData(uuid, cachedData);
 
     }
 }

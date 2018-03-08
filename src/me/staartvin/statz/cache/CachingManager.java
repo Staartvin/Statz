@@ -27,6 +27,17 @@ public class CachingManager {
         cachedPlayerData.put(uuid, dataToCache);
     }
 
+    /**
+     * Add new data to the cache. The new data will be merged with the already existing cached data.
+     * The merging of cached and new data can be a quite intensive process and so should preferably be run
+     * asynchronously.
+     * <br>
+     * If no cached data exists, this will just store the given data as new data.
+     *
+     * @param uuid        UUID of player that the data is for
+     * @param dataToCache new data to store
+     * @throws IllegalArgumentException if given data is null
+     */
     public void addCachedData(UUID uuid, PlayerInfo dataToCache) throws IllegalArgumentException {
         if (dataToCache == null) {
             throw new IllegalArgumentException("Data to cache is null.");
@@ -40,9 +51,11 @@ public class CachingManager {
             return;
         }
 
-        PlayerInfo newCachedData = new PlayerInfo(uuid);
+        // Resolve conflicts and update cache.
+        PlayerInfo resolvedCache = cachedData.resolveConflicts(dataToCache);
 
-
+        // Update cache with new cached data.
+        this.registerCachedData(uuid, resolvedCache);
     }
 
     /**

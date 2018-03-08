@@ -87,8 +87,6 @@ public class PlayerInfoTest {
 
         // Verify that value is correct
         Assert.assertEquals(19, nonConflictingPlayerInfo.getTotalValue(statType), 0);
-
-        System.out.println(nonConflictingPlayerInfo);
     }
 
     // Test two conflicting (of same statType) and one non conflicting (of another statType).
