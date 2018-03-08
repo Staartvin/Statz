@@ -72,7 +72,7 @@ public class PlayerInfo {
      * given type of statistic, an empty list will be returned.
 	 */
     public List<Query> getDataOfPlayerStat(PlayerStat statType) {
-        if (this.hasDataOfPlayerStat(statType)) {
+		if (!this.hasDataOfPlayerStat(statType)) {
             return new ArrayList<>();
         }
 
@@ -95,6 +95,27 @@ public class PlayerInfo {
 
         return rows.get(rowNumber);
     }
+
+	/**
+	 * Get the number of rows that are stored for a statistic.
+	 *
+	 * @param statType Type of statistic
+	 * @return number of rows that are stored. If no rows are stored, zero is returned.
+	 */
+	public int getNumberOfRows(PlayerStat statType) {
+		List<Query> rows = this.getDataOfPlayerStat(statType);
+
+		return rows.size();
+	}
+
+	/**
+	 * Get the number of different statistics are stored in this PlayerInfo object.
+	 *
+	 * @return number of statistics stored.
+	 */
+	public int getNumberOfStatistics() {
+		return statistics.size();
+	}
 
     /**
      * Check whether data for a given statistic is available.
@@ -145,12 +166,11 @@ public class PlayerInfo {
         for (Query row : rows) {
 			boolean isValid = true;
 
-			for (int i = 0; i < reqs.length; i++) {
+			for (RowRequirement req : reqs) {
 
-				RowRequirement req = reqs[i];
 				// Check if each condition that was given is true.
-                if (row.getValue(req.getColumnName()) == null
-                        || !row.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
+				if (row.getValue(req.getColumnName()) == null
+						|| !row.getValue(req.getColumnName()).toString().equalsIgnoreCase(req.getColumnValue())) {
 					isValid = false;
 					break;
 				}
@@ -269,35 +289,103 @@ public class PlayerInfo {
 	public String toString() {
 		StringBuilder endString = new StringBuilder("PlayerInfo of " + this.getUUID() + ": {");
 
-        StringBuilder queryString;
+		StringBuilder queryString;
 
-        for (Map.Entry<PlayerStat, List<Query>> entry : statistics.entrySet()) {
-            PlayerStat statType = entry.getKey();
-            List<Query> queries = entry.getValue();
+		for (Map.Entry<PlayerStat, List<Query>> entry : statistics.entrySet()) {
+			PlayerStat statType = entry.getKey();
+			List<Query> queries = entry.getValue();
 
-            queryString = new StringBuilder(statType + ": {");
+			queryString = new StringBuilder(statType + ": {");
 
-            for (Query q : queries) {
-                queryString.append(q.toString() + ", ");
-                System.out.println(queryString.toString());
-            }
+			for (Query q : queries) {
+				queryString.append(q.toString()).append(", ");
+			}
 
-            int lastComma = queryString.lastIndexOf(",");
+			int lastComma = queryString.lastIndexOf(",");
 
-            if (lastComma >= 0) {
-                queryString.deleteCharAt(lastComma);
-            }
+			if (lastComma >= 0) {
+				queryString.deleteCharAt(lastComma);
+			}
 
-            queryString.append("}, ");
-            System.out.println("QUERYYSTRING END: " + queryString.toString().trim());
-            endString.append(queryString.toString().trim());
-        }
-		
+			queryString.append("}, ");
+			endString.append(queryString.toString().trim());
+		}
+
 		endString = new StringBuilder(endString.toString().trim());
-		
+
 		endString.append("}");
-		
+
 		return endString.toString();
+	}
+
+	/**
+	 * Get a PlayerInfo object from this PlayerInfo object that will not conflict with the given comparePlayerInfo
+	 * object.
+	 *
+	 * @param comparePlayerInfo Given PlayerInfo object
+	 * @return non conflicting PlayerInfo object that contains all data from this PlayerInfo object and the given
+	 * PlayerInfo object.
+	 */
+	public PlayerInfo resolveConflicts(PlayerInfo comparePlayerInfo) {
+		PlayerInfo nonConflictingPlayerInfo = new PlayerInfo(this.getUUID());
+
+		for (PlayerStat statType : PlayerStat.values()) {
+			List<Query> rows = this.getDataOfPlayerStat(statType);
+
+			List<Query> comparedRows = comparePlayerInfo.getDataOfPlayerStat(statType);
+
+			List<Query> conflictingQueries = new ArrayList<>();
+
+			List<Query> nonConflictingQueries = new ArrayList<>();
+
+			// If one of the lists is empty, the other will never conflict and so we can safely add all queries.
+			if (comparedRows.isEmpty()) {
+				nonConflictingQueries.addAll(rows);
+			} else if (rows.isEmpty()) {
+				nonConflictingQueries.addAll(comparedRows);
+			} else {
+				for (Query row : rows) {
+					for (Query comparedRow : comparedRows) {
+						// If rows conflict, add their non conflicting counterpart and put both rows on a list of
+						// conflicting queries.
+						if (row.conflicts(comparedRow)) {
+							nonConflictingQueries.add(row.resolveConflict(comparedRow));
+
+							// We store all queries that conflict.
+							conflictingQueries.add(row);
+							conflictingQueries.add(comparedRow);
+						}
+					}
+				}
+
+
+				// Now, we add all queries that have not conflicted in some way. This means that we add the negation of
+				// conflictingQueries.
+
+				// Loop over both lists and add queries that do not conflict.
+				for (Query row : rows) {
+					if (!conflictingQueries.contains(row)) {
+						nonConflictingQueries.add(row);
+					}
+				}
+
+				for (Query comparedRow : comparedRows) {
+					if (!conflictingQueries.contains(comparedRow)) {
+						nonConflictingQueries.add(comparedRow);
+					}
+				}
+			}
+
+			// If the list is empty, we do not need to add it.
+			if (nonConflictingQueries.isEmpty()) {
+				continue;
+			}
+
+			// We've built up all queries that are non-conflicting. Hence, we should add this to the PlayerInfo object.
+			nonConflictingPlayerInfo.setData(statType, nonConflictingQueries);
+		}
+
+		return nonConflictingPlayerInfo;
 	}
 
 }

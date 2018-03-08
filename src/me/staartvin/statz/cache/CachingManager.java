@@ -10,7 +10,7 @@ public class CachingManager {
     private ConcurrentHashMap<UUID, PlayerInfo> cachedPlayerData = new ConcurrentHashMap<>();
 
     /**
-     * Register cached data for a player
+     * Register cached data for a player. It will overwrite any current data.
      *
      * @param uuid        UUID of the player.
      * @param dataToCache Data to store.
@@ -25,6 +25,24 @@ public class CachingManager {
 
         // Store data in cache, overwriting previous data
         cachedPlayerData.put(uuid, dataToCache);
+    }
+
+    public void addCachedData(UUID uuid, PlayerInfo dataToCache) throws IllegalArgumentException {
+        if (dataToCache == null) {
+            throw new IllegalArgumentException("Data to cache is null.");
+        }
+
+        PlayerInfo cachedData = getCachedPlayerData(uuid);
+
+        // There is no cached data, so we just register new data.
+        if (cachedData == null) {
+            registerCachedData(uuid, dataToCache);
+            return;
+        }
+
+        PlayerInfo newCachedData = new PlayerInfo(uuid);
+
+
     }
 
     /**

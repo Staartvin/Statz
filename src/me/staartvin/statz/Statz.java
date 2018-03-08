@@ -20,6 +20,7 @@ import me.staartvin.statz.listeners.*;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
 import me.staartvin.statz.statsdisabler.DisableManager;
+import me.staartvin.statz.tasks.TaskManager;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -54,6 +55,7 @@ public class Statz extends JavaPlugin {
 	private GUIManager guiManager;
 
     private CachingManager cachingManager;
+    private TaskManager taskManager;
 
 	@Override
 	public void onEnable() {
@@ -152,7 +154,11 @@ public class Statz extends JavaPlugin {
             this.getServer().getPluginManager().disablePlugin(this);
         }
 
+        // Set up caching manager
         this.setCachingManager(new CachingManager());
+
+        this.setTaskManager(new TaskManager(this));
+
 	}
 
 	@Override
@@ -327,11 +333,7 @@ public class Statz extends JavaPlugin {
 		}
 
         // Check if we should track in the player's current position.
-        if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
-			return false;
-		}
-
-		return true;
+        return !this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat);
 	}
 
 	public void doPerformanceTest() {
@@ -574,5 +576,13 @@ public class Statz extends JavaPlugin {
 
     public void setCachingManager(CachingManager cachingManager) {
         this.cachingManager = cachingManager;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
+
+    public void setTaskManager(TaskManager taskManager) {
+        this.taskManager = taskManager;
     }
 }
