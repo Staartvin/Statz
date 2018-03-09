@@ -32,15 +32,8 @@ public class UpdatePlayerCacheTask extends BukkitRunnable {
         PlayerInfo cachedData = new PlayerInfo(uuid);
 
         for (PlayerStat statType : PlayerStat.values()) {
-            long startTime = System.currentTimeMillis();
-
-            PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
-
-            startTime = System.currentTimeMillis();
-
-            // Find conflicts
-            cachedData = cachedData.resolveConflicts(info);
-
+            // Find conflicts and resolve them.
+            cachedData = cachedData.resolveConflicts(plugin.getDataManager().getPlayerInfo(uuid, statType));
         }
 
         System.out.println("Storing new data in cache for " + uuid + " with " + cachedData.getNumberOfStatistics() +
