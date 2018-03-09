@@ -10,7 +10,7 @@ public class CachingManager {
     private ConcurrentHashMap<UUID, PlayerInfo> cachedPlayerData = new ConcurrentHashMap<>();
 
     /**
-     * Register cached data for a player. It will overwrite any current data.
+     * Register cached data for a player. It will overwrite any current cached data.
      *
      * @param uuid        UUID of the player.
      * @param dataToCache Data to store.
