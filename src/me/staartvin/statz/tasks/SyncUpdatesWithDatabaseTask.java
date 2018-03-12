@@ -1,0 +1,81 @@
+package me.staartvin.statz.tasks;
+
+import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.datamanager.PlayerStat;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
+public class SyncUpdatesWithDatabaseTask extends BukkitRunnable {
+
+    private Statz plugin;
+
+    public SyncUpdatesWithDatabaseTask(Statz instance) {
+        this.plugin = instance;
+    }
+
+    @Override
+    public void run() {
+
+        System.out.println("-----------------------------------");
+
+        System.out.println("Grabbing updates that need to be synced.");
+
+        for (PlayerStat statType : PlayerStat.values()) {
+            // Grab updates that have happened since the last sync.
+            List<Query> updates = plugin.getUpdatePoolManager().getUpdateQueriesCopy(statType);
+
+            if (updates.isEmpty()) {
+                continue;
+            }
+
+            // Store queries that have already been converted
+            List<Query> convertedQueries = new ArrayList<>();
+
+            // Queries that should be send to the database
+            List<Query> resultingQueries = new ArrayList<>();
+
+            // Loop over all queries and remove duplicate queries.
+            for (Iterator<Query> iterator = updates.iterator(); iterator.hasNext(); ) {
+
+                // Get a query.
+                Query query = iterator.next();
+
+                // If we've already converted it, skip it.
+                if (convertedQueries.contains(query)) {
+                    continue;
+                }
+
+                // Remove the current query so it doesn't conflict with itself.
+                iterator.remove();
+
+                // Find queries that conflict with the current query
+                List<Query> conflictingQueries = query.findConflicts(updates);
+
+                // Add queries that were conflicting to converted queries, so we don't count them again.
+                convertedQueries.addAll(conflictingQueries);
+
+                // Calculate sum of all conflicting queries.
+                Query sumQuery = query.resolveConflicts(conflictingQueries);
+
+                // Store the final query
+                resultingQueries.add(sumQuery);
+
+                System.out.println(String.format("Gathered queries for %s and build: %s", statType, sumQuery));
+            }
+
+            // Update database with new data.
+            plugin.getDatabaseConnector().setBatchObjects(plugin.getDatabaseConnector().getTable(statType),
+                    resultingQueries, 2);
+
+            plugin.getUpdatePoolManager().clearUpdateQueries(statType);
+        }
+
+
+    }
+
+}

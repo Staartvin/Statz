@@ -58,4 +58,9 @@ public class TaskManager {
         // Remove task id from hashmap.
         cacheUpdateTask.remove(uuid);
     }
+
+    public void startSyncDatabaseTask() {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new SyncUpdatesWithDatabaseTask(plugin),
+                0, 20 * 10);
+    }
 }
