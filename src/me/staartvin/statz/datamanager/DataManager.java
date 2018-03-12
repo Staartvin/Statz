@@ -2,18 +2,15 @@ package me.staartvin.statz.datamanager;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.language.DescriptionMatcher;
-import me.staartvin.statz.util.StatzUtil;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class handles all incoming data queries from other plugins (and from
@@ -54,64 +51,21 @@ public class DataManager {
 	 * that we are performing a database save. In this way, this method will ensure you'll always get the most recent info. 
 	 * @param uuid UUID of the player to search for
 	 * @param statType Type of stat to get the data of.
-	 * @return a {@link PlayerInfo} class that contains the results of the performed action on the database.
+	 * @throws IllegalArgumentException if the given uuid is null
+	 * @return a {@link PlayerInfo} class that contains the data of a player or null if no the player was not loaded
+	 * in the cache yet.
 	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) {
-		final PlayerInfo info = new PlayerInfo(uuid);
+	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) throws IllegalArgumentException {
 
-		// Get results from database
-		List<Query> results = plugin.getDatabaseConnector().getObjects(statType.getTableName(),
-				StatzUtil.makeQuery("uuid", uuid.toString()));
-
-		// Get a list of queries currently in the pool
-		List<Query> pooledQueries = plugin.getDataPoolManager().getStoredQueries(statType);
-
-		// If we have queries in the pool, check for conflicting ones.
-		if (pooledQueries != null && !pooledQueries.isEmpty()) {
-
-			// There ARE stored queries and since the pool is more up to date, we have to override the old ones.
-			for (Query pooledQuery : pooledQueries) {
-				// If UUID of query in the pool is not matching with uuid of player, don't add it.
-				if (!pooledQuery.getValue("uuid").toString().equalsIgnoreCase(uuid.toString())) {
-					continue;
-				}
-
-				// There is no data of this stat in the database, so storedQueries are always more up to date. (IF the UUIDs match)
-				if (results == null || results.isEmpty()) {
-					results.add(pooledQuery);
-					continue;
-				}
-
-				// Get the queries of the pool that conflict with the 'old' database results.
-				List<Query> conflictingQueries = pooledQuery.findConflicts(results);
-
-				// No conflicts found, yeah!!
-				if (conflictingQueries == null || conflictingQueries.isEmpty()) {
-					results.add(pooledQuery);
-					continue;
-				}
-
-				// We found conflicting queries.
-				for (Query conflictingQuery : conflictingQueries) {
-					// Remove old data from results and add new (more updated data) to the results pool.
-					conflictingQuery.addValue("value", pooledQuery.getValue());
-					
-				}
-
-			}
-
-		} else {
-			// No queries in the pool
+		if (uuid == null) {
+			throw new IllegalArgumentException("UUID cannot be null.");
 		}
 
-		// Result is not null, so this is a valid player info.
-		if (results != null && !results.isEmpty()) {
-			info.setValid(true);
-
-            info.setData(statType, results);
+		if (!plugin.getCachingManager().isPlayerCacheLoaded(uuid)) {
+			return null;
 		}
 
-		return info;
+		return plugin.getCachingManager().getCachedPlayerData(uuid);
 	}
 
 	/**
@@ -120,32 +74,23 @@ public class DataManager {
 	 * provide the statType and add a Query condition with StatzUtil.makeQuery().
 	 * @param uuid UUID of the player
 	 * @param statType Type of stat to get player info of.
-	 * @param conditions Extra conditions that need to apply.
+	 * @param requirements Extra conditions that need to apply. See {@link RowRequirement}.
 	 * @return a {@link PlayerInfo} object.
 	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType, Query conditions) {
+	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType, RowRequirement... requirements) {
 		PlayerInfo info = this.getPlayerInfo(uuid, statType);
 
-		if (info.isValid()) {
-			List<Query> deletedQueries = new ArrayList<>();
+		// There are no requirement, so we don't need to check any data.
+		if (requirements == null || requirements.length == 0) {
+			return info;
+		}
 
-            for (Query map : info.getDataOfPlayerStat(statType)) {
-				for (Entry<String, String> entry : conditions.getEntrySet()) {
-                    if (!map.hasColumn(entry.getKey())) {
-						deletedQueries.add(map);
-						break;
-					}
+		for (Iterator<Query> it = info.getDataOfPlayerStat(statType).iterator(); it.hasNext(); ) {
+			Query query = it.next();
 
-					if (!map.getValue(entry.getKey()).equals(entry.getValue())) {
-						deletedQueries.add(map);
-						break;
-					}
-				}
-			}
-
-			// Remove queries that are not relevant.
-			for (Query q : deletedQueries) {
-                info.removeResult(statType, q);
+			// Remove query if it does not meet the given requirements.
+			if (!query.meetsAllRequirements(Arrays.asList(requirements))) {
+				it.remove();
 			}
 		}
 
@@ -166,13 +111,10 @@ public class DataManager {
 		}
 		
 		// Add query to the pool.
-		plugin.getDataPoolManager().addQuery(statType, results);
+		//plugin.getDataPoolManager().addQuery(statType, results);
 
-        PlayerInfo info = new PlayerInfo(uuid);
-
-        //info.addRow(results);
-
-        plugin.getCachingManager().registerCachedData(uuid, info);
+		// Add query to pool of updates
+		plugin.getUpdatePoolManager().registerNewUpdateQuery(results, statType, uuid);
 	}
 	
 	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {
