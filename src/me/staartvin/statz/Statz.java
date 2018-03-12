@@ -7,6 +7,7 @@ import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
@@ -21,6 +22,7 @@ import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
 import me.staartvin.statz.statsdisabler.DisableManager;
 import me.staartvin.statz.tasks.TaskManager;
+import me.staartvin.statz.update.UpdatePoolManager;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -56,6 +58,7 @@ public class Statz extends JavaPlugin {
 
     private CachingManager cachingManager;
     private TaskManager taskManager;
+	private UpdatePoolManager updatePoolManager;
 
 	@Override
 	public void onEnable() {
@@ -157,8 +160,14 @@ public class Statz extends JavaPlugin {
         // Set up caching manager
         this.setCachingManager(new CachingManager());
 
+		// Start update pool manager.
+		this.setUpdatePoolManager(new UpdatePoolManager(this));
+
+		// Create task manager for starting and stopping tasks.
         this.setTaskManager(new TaskManager(this));
 
+		// Run task to sync database with update list.
+		this.getTaskManager().startSyncDatabaseTask();
 	}
 
 	@Override
@@ -424,8 +433,8 @@ public class Statz extends JavaPlugin {
 					}
 
 					// Get player info.
-					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat,
-							StatzUtil.makeQuery("world", "world", "moveType", movementType));
+					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat, new RowRequirement("world",
+							"world"), new RowRequirement("moveType", movementType));
 
 					// Get current value of stat.
 					int currentValue = 0;
@@ -587,4 +596,12 @@ public class Statz extends JavaPlugin {
     public void setTaskManager(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
+
+	public UpdatePoolManager getUpdatePoolManager() {
+		return updatePoolManager;
+	}
+
+	public void setUpdatePoolManager(UpdatePoolManager updatePoolManager) {
+		this.updatePoolManager = updatePoolManager;
+	}
 }
