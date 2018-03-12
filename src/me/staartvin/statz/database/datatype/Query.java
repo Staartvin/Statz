@@ -55,7 +55,6 @@ public class Query {
      * Get the value of the column name in this query.
      *
      * @param columnName Name of the column to get info of.
-     *
      * @return value of the column of this query. Null if the query does not have this info.
      */
     public Object getValue(String columnName) {
@@ -69,7 +68,6 @@ public class Query {
      * See {@link Query#getValue(String columnName)}.
      *
      * @param columnName Name of the column
-     *
      * @return integer value of this column or 0 if there is no value.
      */
     public int getIntValue(String columnName) {
@@ -87,7 +85,6 @@ public class Query {
      * See {@link Query#getValue(String columnName)}.
      *
      * @param columnName Name of the column
-     *
      * @return double value of this column of 0 if there is no value.
      */
     public Double getDoubleValue(String columnName) {
@@ -117,7 +114,6 @@ public class Query {
      * Check to see if this query contains a column with the given column name.
      *
      * @param columnName Column name to check
-     *
      * @return true if this query contains the column and the value is not null. False otherwise.
      */
     public boolean hasColumn(String columnName) {
@@ -129,7 +125,6 @@ public class Query {
      * is a value of a pair that matches the given value.
      *
      * @param value Value to check if it exists in this query.
-     *
      * @return true if it exists, false otherwise.
      */
     public boolean hasValue(Object value) {
@@ -179,8 +174,7 @@ public class Query {
      * it ought to be different for different columns).
      *
      * @param queries A list of queries to check whether they conflict with this query.
-     *
-     * @return a list of queries (from the given queries list) that conflict with this query or null if no conflicts
+     * @return a list of queries (from the given queries list) that conflict with this query or an empty if no conflicts
      * were found.
      */
     public List<Query> findConflicts(List<Query> queries) {
@@ -209,12 +203,8 @@ public class Query {
             }
         }
 
-        // No conflicting query found
-        if (conflictingQueries.isEmpty()) {
-            return null;
-        } else {
-            return conflictingQueries;
-        }
+        return conflictingQueries;
+
     }
 
     /**
@@ -225,7 +215,6 @@ public class Query {
      * it ought to be different for different columns).
      *
      * @param compareQuery Query to compare with this.query
-     *
      * @return true if it conflicts, false otherwise.
      */
     public boolean conflicts(Query compareQuery) {
@@ -300,7 +289,6 @@ public class Query {
      *
      * @param columnName Name of the column
      * @param value      Value to add to the current value of the column
-     *
      * @throws IllegalArgumentException if you are trying to add a value to a column that does not exist.
      * @throws NullPointerException     if given value is null
      */
@@ -361,7 +349,6 @@ public class Query {
      * This can be used to get a copy of a query with only relevant information.
      *
      * @param columnName Names of the columns to be removed.
-     *
      * @return a copy of the query with the given column names removed.
      */
     public Query getFilteredCopy(String... columnName) {
@@ -379,9 +366,7 @@ public class Query {
      * set to the sum of the conflicting queries.
      *
      * @param compareQuery query to resolve conflicts with
-     *
      * @return query that has does not conflict with either of the two queries (this.query and query.compare).
-     *
      * @throws IllegalArgumentException if the given query does not conflict with this query or when there is a
      *                                  'value' column missing in one (or both) of the queries.
      */
@@ -389,10 +374,6 @@ public class Query {
 
         if (!this.conflicts(compareQuery)) {
             throw new IllegalArgumentException("Queries do not conflict!");
-        }
-
-        if (!this.hasColumn("value")) {
-            throw new IllegalArgumentException(String.format("Query '%s' does not have a 'value' column", this));
         }
 
         if (!compareQuery.hasColumn("value")) {
@@ -408,5 +389,65 @@ public class Query {
         nonConflictingQuery.addValue("value", compareQuery.getValue());
 
         return nonConflictingQuery;
+    }
+
+    /**
+     * Get the non-conflicting query of this.query and a list of other queries.
+     * See {@link #resolveConflict(Query)} for more info. If a query in the given list does not conflict, it will not
+     * be used to create the resulting query.
+     *
+     * @param conflictingQueries List of queries that possibly conflict with this query.
+     * @return a non-conflicting query that does not conflict with any of the queries.
+     */
+    public Query resolveConflicts(List<Query> conflictingQueries) {
+
+        Query nonConflictingQuery = this;
+
+        for (Query conflictingQuery : conflictingQueries) {
+            if (nonConflictingQuery.conflicts(conflictingQuery)) {
+                nonConflictingQuery = nonConflictingQuery.resolveConflict(conflictingQuery);
+            }
+        }
+
+        return nonConflictingQuery;
+    }
+
+    /**
+     * Check whether this query meets a given requirement. A query matches a requirement when it has the column
+     * specified in the requirement and the value of that column specified in the requirement.
+     *
+     * @param requirement Requirement to validate
+     * @return true if the requirement is met by this query, false otherwise.
+     * @throws IllegalArgumentException if the requirement is null.
+     */
+    public boolean meetsRequirement(RowRequirement requirement) throws IllegalArgumentException {
+        if (requirement == null) {
+            throw new IllegalArgumentException("RowRequirement cannot be null.");
+        }
+
+        // This query does not have a column that is specified in the requirement, so it does not meet this requirement.
+        if (!this.hasColumn(requirement.getColumnName())) {
+            return false;
+        }
+
+        // This query does not have the same value as specified by the requirement, so it does not meet the requirement.
+        return this.getValue(requirement.getColumnName()).equals(requirement.getColumnValue());
+    }
+
+    /**
+     * Check whether this query meets all given requirements. See {@link #meetsRequirement(RowRequirement)} for more
+     * information about meeting a requirement.
+     *
+     * @param requirements List of requirements that should be checked.
+     * @return true if this query matches the list of given requirements.
+     */
+    public boolean meetsAllRequirements(Collection<RowRequirement> requirements) {
+        for (RowRequirement requirement : requirements) {
+            if (!this.meetsRequirement(requirement)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
