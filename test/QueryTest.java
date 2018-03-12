@@ -265,4 +265,125 @@ public class QueryTest {
 
         queryA.resolveConflict(queryB).getValue();
     }
+
+    @Test
+    public void testMultipleConflictingQueries() {
+        Query queryA = StatzUtil.makeQuery(
+                "UUID", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryB = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryC = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 200);
+
+        Query queryD = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 500);
+
+        Query queryE = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        List<Query> conflictingQueries = new ArrayList<>();
+        conflictingQueries.add(queryB);
+        conflictingQueries.add(queryC);
+        conflictingQueries.add(queryD);
+        conflictingQueries.add(queryE);
+
+        Query nonConflictingQuery = queryA.resolveConflicts(conflictingQueries);
+
+        Assert.assertEquals(1000, nonConflictingQuery.getValue(), 0);
+    }
+
+    @Test
+    public void testMultipleConflictingQueries2() {
+        Query queryA = StatzUtil.makeQuery(
+                "UUID", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryB = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryC = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 200);
+
+        Query queryD = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 500);
+
+        Query queryE = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryF = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "PIG",
+                "value", 100);
+
+        List<Query> conflictingQueries = new ArrayList<>();
+        conflictingQueries.add(queryB);
+        conflictingQueries.add(queryC);
+        conflictingQueries.add(queryD);
+        conflictingQueries.add(queryE);
+        conflictingQueries.add(queryF);
+
+        Query nonConflictingQuery = queryA.resolveConflicts(conflictingQueries);
+
+        Assert.assertEquals(1000, nonConflictingQuery.getValue(), 0);
+    }
+
+    @Test
+    public void testMultipleConflictingQueries3() {
+        Query queryA = StatzUtil.makeQuery(
+                "UUID", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", -100);
+
+        Query queryB = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        Query queryC = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", -200);
+
+        Query queryD = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 500);
+
+        Query queryE = StatzUtil.makeQuery(
+                "uuid", "3657b9cc-2518-4265-ad69-323e11286ce2",
+                "mob", "COW",
+                "value", 100);
+
+        List<Query> conflictingQueries = new ArrayList<>();
+        conflictingQueries.add(queryB);
+        conflictingQueries.add(queryC);
+        conflictingQueries.add(queryD);
+        conflictingQueries.add(queryE);
+
+        Query nonConflictingQuery = queryA.resolveConflicts(conflictingQueries);
+
+        Assert.assertEquals(400, nonConflictingQuery.getValue(), 0);
+    }
+
 }
