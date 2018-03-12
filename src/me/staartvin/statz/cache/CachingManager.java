@@ -1,5 +1,7 @@
 package me.staartvin.statz.cache;
 
+import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 
 import java.util.UUID;
@@ -73,6 +75,44 @@ public class CachingManager {
         }
 
         return cachedPlayerData.get(uuid);
+    }
+
+
+    /**
+     * Add a single query to the cache of a player.
+     *
+     * @param statType   Type of statistic the query belongs to
+     * @param queryToAdd Query to add
+     * @param uuid       UUID of the player
+     * @throws IllegalArgumentException if the given query is null or the uuid is null.
+     */
+    public void addCachedQuery(PlayerStat statType, Query queryToAdd, UUID uuid) throws IllegalArgumentException {
+
+        if (queryToAdd == null) {
+            throw new IllegalArgumentException("Query cannot be null.");
+        }
+
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID cannot be null.");
+        }
+
+        System.out.println("Adding new query to cache of " + uuid + ": " + queryToAdd);
+
+        PlayerInfo info = new PlayerInfo(uuid);
+
+        info.addRow(statType, queryToAdd);
+
+        this.addCachedData(uuid, info);
+    }
+
+    /**
+     * Check whether a player's data is loaded into the cache.
+     *
+     * @param uuid UUID of player
+     * @return true if there is cached data about the given player. False otherwise.
+     */
+    public boolean isPlayerCacheLoaded(UUID uuid) {
+        return cachedPlayerData.containsKey(uuid) && cachedPlayerData.get(uuid) != null;
     }
 
 
