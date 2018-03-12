@@ -9,7 +9,6 @@ import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
-import me.staartvin.statz.datamanager.DataPoolManager;
 import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.gui.GUIManager;
@@ -45,7 +44,6 @@ public class Statz extends JavaPlugin {
 	private DatabaseConnector connector;
 	private DataManager dataManager;
 	private API statzAPI;
-	private DataPoolManager dataPoolManager;
 	private DependencyManager depManager;
 	private ConfigHandler configHandler;
 	private CommandsManager commandsManager;
@@ -84,9 +82,6 @@ public class Statz extends JavaPlugin {
 		// Create patch manager and send patches
 		this.setPatchManager(new PatchManager(this));
 
-		// Set up Data Pool Manager
-		this.setDataPoolManager(new DataPoolManager(this));
-
 		// Load tables into hashmap
 		this.getDatabaseConnector().loadTables();
 
@@ -98,15 +93,6 @@ public class Statz extends JavaPlugin {
 
 		// Load API
 		this.setStatzAPI(new API(this));
-
-		// Send pool update every 10 seconds
-		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
-			public void run() {
-
-				getDataPoolManager().sendPool();
-
-			}
-		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
 
 		// Do performance test
 		//this.doPerformanceTest();
@@ -167,16 +153,14 @@ public class Statz extends JavaPlugin {
         this.setTaskManager(new TaskManager(this));
 
 		// Run task to sync database with update list.
-		this.getTaskManager().startSyncDatabaseTask();
+        this.getTaskManager().startUpdateDatabaseTask();
 	}
 
 	@Override
 	public void onDisable() {
+        // TODO: Send pool if server is closed.
 
 		debugMessage(ChatColor.RED + "Saving updates to database!");
-
-		// Send the complete pool.
-		this.getDataPoolManager().forceSendPool();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
 
@@ -499,14 +483,6 @@ public class Statz extends JavaPlugin {
 
 	public void setStatzAPI(API statzAPI) {
 		this.statzAPI = statzAPI;
-	}
-
-	public DataPoolManager getDataPoolManager() {
-		return dataPoolManager;
-	}
-
-	public void setDataPoolManager(DataPoolManager dataPoolManager) {
-		this.dataPoolManager = dataPoolManager;
 	}
 
 	public DependencyManager getDependencyManager() {
