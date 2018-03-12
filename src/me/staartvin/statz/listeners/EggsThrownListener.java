@@ -1,7 +1,7 @@
 package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +23,7 @@ public class EggsThrownListener implements Listener {
 		final PlayerStat stat = PlayerStat.EGGS_THROWN;
 
 		// Get player
-		final Player player = (Player) event.getPlayer();
+        final Player player = event.getPlayer();
 
 		// Do general check
 		if (!plugin.doGeneralCheck(player, stat))

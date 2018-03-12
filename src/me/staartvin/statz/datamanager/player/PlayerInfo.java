@@ -2,7 +2,6 @@ package me.staartvin.statz.datamanager.player;
 
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
 import java.util.*;
@@ -323,10 +322,16 @@ public class PlayerInfo {
 	 * object.
 	 *
 	 * @param comparePlayerInfo Given PlayerInfo object
-	 * @return non conflicting PlayerInfo object that contains all data from this PlayerInfo object and the given
+     * @throws IllegalArgumentException if given PlayerInfo object is null.
+     * @return non conflicting PlayerInfo object that contains all data from this PlayerInfo object and the given
 	 * PlayerInfo object.
 	 */
-	public PlayerInfo resolveConflicts(PlayerInfo comparePlayerInfo) {
+    public PlayerInfo resolveConflicts(PlayerInfo comparePlayerInfo) throws IllegalArgumentException {
+
+        if (comparePlayerInfo == null) {
+            throw new IllegalArgumentException("PlayerInfo object cannot be null!");
+        }
+
 		PlayerInfo nonConflictingPlayerInfo = new PlayerInfo(this.getUUID());
 
 		for (PlayerStat statType : PlayerStat.values()) {

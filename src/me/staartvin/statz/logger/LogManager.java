@@ -2,7 +2,7 @@ package me.staartvin.statz.logger;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 
 import java.io.BufferedWriter;

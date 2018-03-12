@@ -1,8 +1,8 @@
 package me.staartvin.statz.tasks;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -32,7 +32,14 @@ public class UpdatePlayerCacheTask extends BukkitRunnable {
                 continue;
             }
 
-            cachedData = cachedData.resolveConflicts(plugin.getDataManager().getPlayerInfo(uuid, statType));
+            PlayerInfo databaseInfo = plugin.getDataManager().getFreshPlayerInfo(uuid, statType);
+
+            // User is not loaded, or there is no cache so we don't bother overwriting the cache.
+            if (databaseInfo == null) {
+                continue;
+            }
+
+            cachedData = cachedData.resolveConflicts(databaseInfo);
         }
 
         System.out.println("Updated cache of " + uuid);

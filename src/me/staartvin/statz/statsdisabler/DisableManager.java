@@ -5,7 +5,7 @@ import me.staartvin.plugins.pluginlibrary.hooks.GriefPreventionHook;
 import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

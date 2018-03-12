@@ -2,8 +2,8 @@ package me.staartvin.statz.gui;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.language.DescriptionMatcher;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.Bukkit;

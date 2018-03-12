@@ -3,11 +3,11 @@ package me.staartvin.statz.database;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Column;
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.database.datatype.Table;
 import me.staartvin.statz.database.datatype.Table.SQLDataType;
 import me.staartvin.statz.database.datatype.sqlite.SQLiteTable;
-import me.staartvin.statz.datamanager.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 
 import java.io.File;
@@ -98,6 +98,76 @@ public class SQLiteConnector extends DatabaseConnector {
                 plugin.getPatchManager().applyPatches();
             }
         });
+    }
+
+    @Override
+    public List<Query> getObjects(Table table, RowRequirement... requirements) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        final List<Query> results = new ArrayList<>();
+
+        try {
+            connection = getConnection();
+
+            // Create SQL query to retrieve data
+            if (requirements == null || requirements.length == 0) {
+                // No requirements, so we can grab all data in the table.
+                ps = connection.prepareStatement("SELECT * FROM " + table.getTableName() + ";");
+            } else {
+                // We have requirements, so we need to filter the data using WHERE clause of SQL.
+                StringBuilder builder = new StringBuilder(String.format("SELECT * FROM %s WHERE ", table.getTableName
+                        ()));
+
+                // Create a SQL WHERE string.
+                for (int i = 0; i < requirements.length; i++) {
+                    RowRequirement requirement = requirements[i];
+                    if (i == requirements.length - 1) {
+                        builder.append(String.format("%s = '%s';", requirement.getColumnName(), requirement
+                                .getColumnValue()));
+                    } else {
+                        builder.append(String.format("%s = '%s' AND ", requirement.getColumnName(), requirement
+                                .getColumnValue()));
+                    }
+                }
+
+                System.out.println("Final query: " + builder.toString());
+
+                ps = connection.prepareStatement(builder.toString());
+            }
+
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+
+                final HashMap<String, String> result = new HashMap<>();
+
+                // Populate hashmap
+                for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                    final String columnName = rs.getMetaData().getColumnName(i + 1);
+                    final String value = rs.getObject(i + 1).toString();
+
+                    // Put value in hashmap if not null, otherwise just put
+                    // empty string
+                    result.put(columnName, (value != null ? value : ""));
+                }
+
+                results.add(new Query(result));
+            }
+
+
+        } catch (final SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+            return results;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (final SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
+            }
+        }
+        return results;
     }
 
     /**
@@ -734,54 +804,6 @@ public class SQLiteConnector extends DatabaseConnector {
 
         this.addTable(newTable);
 
-    }
-
-    @Override
-    public List<Query> getObjects(Table table, Query queries) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        final List<Query> results = new ArrayList<>();
-
-        try {
-            conn = getConnection();
-            if (queries != null) {
-                ps = conn.prepareStatement(
-                        "SELECT * FROM " + table.getTableName() + " WHERE " + StatzUtil.convertQuery(queries) + ";");
-            } else {
-                ps = conn.prepareStatement("SELECT * FROM " + table.getTableName());
-            }
-
-            rs = ps.executeQuery();
-            while (rs.next()) {
-
-                final HashMap<String, String> result = new HashMap<>();
-
-                // Populate hashmap
-                for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                    final String columnName = rs.getMetaData().getColumnName(i + 1);
-                    final String value = rs.getObject(i + 1).toString();
-
-                    // Put value in hashmap if not null, otherwise just put
-                    // empty string
-                    result.put(columnName, (value != null ? value : ""));
-                }
-
-                results.add(new Query(result));
-            }
-        } catch (final SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
-            return results;
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-            } catch (final SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to close SQLite connection: ", ex);
-            }
-        }
-        return results;
     }
 
     @Override

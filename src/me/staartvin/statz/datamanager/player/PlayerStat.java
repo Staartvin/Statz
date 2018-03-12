@@ -1,4 +1,4 @@
-package me.staartvin.statz.datamanager;
+package me.staartvin.statz.datamanager.player;
 
 import org.bukkit.Material;
 

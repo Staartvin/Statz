@@ -2,7 +2,7 @@ package me.staartvin.statz.update;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.util.ArrayList;
 import java.util.List;

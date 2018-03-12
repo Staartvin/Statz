@@ -1,7 +1,7 @@
 package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;

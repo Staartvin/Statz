@@ -1,8 +1,8 @@
 package me.staartvin.statz.cache;
 
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

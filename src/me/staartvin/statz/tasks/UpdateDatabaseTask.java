@@ -1,8 +1,9 @@
 package me.staartvin.statz.tasks;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.update.UpdatePoolManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -82,7 +83,7 @@ public class UpdateDatabaseTask extends BukkitRunnable {
             }
 
             // Update database with new data.
-            plugin.getDatabaseConnector().setBatchObjects(plugin.getDatabaseConnector().getTable(statType),
+            plugin.getDatabaseConnector().setBatchObjects(DatabaseConnector.getTable(statType),
                     resultingQueries, 2);
 
             plugin.getUpdatePoolManager().clearUpdateQueries(statType);

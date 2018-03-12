@@ -1,9 +1,12 @@
 package me.staartvin.statz.datamanager;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
+import me.staartvin.statz.database.datatype.Table;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.language.DescriptionMatcher;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.ChatColor;
@@ -24,7 +27,8 @@ import java.util.*;
  * <br>
  * <br>
  * <h2>Updating data</h2>
- * To update a player's data, you can use the {@link #setPlayerInfo(UUID, PlayerStat, Query)} method. Note that the
+ * To update a player's data, you can use the
+ * {@link #setPlayerInfo(UUID, me.staartvin.statz.datamanager.player.PlayerStat, Query)} method. Note that the
  * update will be cached immediately and will be sent to the database after a while. Whenever you update the player's
  * data, the changes will immediately appear in the cache.
  *
@@ -47,7 +51,8 @@ public class DataManager {
 	 * @return a {@link PlayerInfo} class that contains the data of a player or null if no the player was not loaded
 	 * in the cache yet.
 	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType) throws IllegalArgumentException {
+	public PlayerInfo getPlayerInfo(final UUID uuid, final me.staartvin.statz.datamanager.player.PlayerStat statType)
+			throws IllegalArgumentException {
 
 		if (uuid == null) {
 			throw new IllegalArgumentException("UUID cannot be null.");
@@ -61,7 +66,39 @@ public class DataManager {
 	}
 
 	/**
-	 * Get Player info like {@link #getPlayerInfo(UUID, PlayerStat)}, but check for additional conditions.
+	 * Get data of a player for a given statistic. This method will obtain 'fresh' data from the database, meaning
+	 * that it will ignore cached data. Hence, this method will block the thread it is ran on. It is therefore
+	 * advised to run this method asynchronously.
+	 * <br>
+	 * <br>
+	 * It is recommended to use another method to obtain the data of a player when it is not loaded into the cache
+	 * yet: using {@link #loadPlayerData(UUID, PlayerStat)}, the retrieved data will also be stored in the cache, so
+	 * you can retrieve it the next time without making an expensive call to the database.
+	 *
+	 * @param uuid     UUID of the player.
+	 * @param statType Type of statistic.
+	 * @return fresh player data in the form of a {@link PlayerInfo} object.
+	 * @throws IllegalArgumentException if the given uuid is null.
+	 */
+	public PlayerInfo getFreshPlayerInfo(UUID uuid, PlayerStat statType) throws IllegalArgumentException {
+
+		if (uuid == null) {
+			throw new IllegalArgumentException("UUID cannot be null.");
+		}
+
+		Table table = DatabaseConnector.getTable(statType);
+
+		List<Query> databaseRows = plugin.getDatabaseConnector().getObjects(table);
+
+		PlayerInfo info = new PlayerInfo(uuid);
+
+		info.setData(statType, databaseRows);
+
+		return info;
+	}
+
+	/**
+	 * Get Player info like {@link #getPlayerInfo(UUID, me.staartvin.statz.datamanager.player.PlayerStat)}, but check for additional conditions.
 	 * Let's say you want to get all the player info for a player on world 'world'. You would call this method with the player's UUID, 
 	 * provide the statType and add a Query condition with StatzUtil.makeQuery().
 	 * @param uuid UUID of the player
@@ -69,7 +106,7 @@ public class DataManager {
 	 * @param requirements Extra conditions that need to apply. See {@link RowRequirement}.
 	 * @return a {@link PlayerInfo} object.
 	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType, RowRequirement... requirements) {
+	public PlayerInfo getPlayerInfo(final UUID uuid, final me.staartvin.statz.datamanager.player.PlayerStat statType, RowRequirement... requirements) {
 		PlayerInfo info = this.getPlayerInfo(uuid, statType);
 
 		// There are no requirement, so we don't need to check any data.
@@ -95,9 +132,32 @@ public class DataManager {
      * @param uuid UUID of the player
      * @return true if there is cached data about a player, false otherwise.
      */
-    public boolean isPlayerLoaded(UUID uuid) {
-        return plugin.getCachingManager().isPlayerCacheLoaded(uuid);
-    }
+	public boolean isPlayerLoaded(UUID uuid) {
+		return plugin.getCachingManager().isPlayerCacheLoaded(uuid);
+	}
+
+	/**
+	 * Load the data of a player of a given statistic into the cache, so it can be retrieved.
+	 * Note that this method will block the thread it is on and so it should be run asynchronously.
+	 *
+	 * @param uuid     UUID of the player
+	 * @param statType Type of statistic.
+	 * @return the PlayerInfo data that was loaded into the cache, ready for use.
+	 * @throws IllegalArgumentException if the given uuid is null
+	 */
+	public PlayerInfo loadPlayerData(UUID uuid, PlayerStat statType) throws IllegalArgumentException {
+		if (uuid == null) {
+			throw new IllegalArgumentException("UUID cannot be null.");
+		}
+
+		// Retrieve info from database.
+		PlayerInfo info = this.getFreshPlayerInfo(uuid, statType);
+
+		// Put new data into cache.
+		plugin.getCachingManager().registerCachedData(uuid, info);
+
+		return info;
+	}
 
     /**
      * Update a player's data with a given query. Note that it may take a while before the data actually reaches the
@@ -106,9 +166,9 @@ public class DataManager {
      * relative, not absolute.
      * @param uuid UUID of the player
      * @param statType Type of statistic the given query belongs to
-     * @param updateQuery Query that contains updated data.
+	 * @param updateQuery Query that contains updated data.
 	 */
-    public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query updateQuery) {
+	public void setPlayerInfo(final UUID uuid, final me.staartvin.statz.datamanager.player.PlayerStat statType, Query updateQuery) {
 
 		// If the query does not have a UUID, add it in manually.
         if (!updateQuery.hasColumn("uuid")) {
@@ -118,32 +178,39 @@ public class DataManager {
 		// Add query to pool of updates
         plugin.getUpdatePoolManager().registerNewUpdateQuery(updateQuery, statType, uuid);
 	}
-	
-	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {
+
+	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<me.staartvin.statz.datamanager.player.PlayerStat> list) {
 		List<String> messages = new ArrayList<>();
 		List<TextComponent> messagesSpigot = new ArrayList<>();
 
 		for (PlayerStat statType : list) {
+
+			// Skip data of players table
+			if (statType.equals(PlayerStat.PLAYERS)) {
+				continue;
+			}
+
 			PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-			// Only use valid info.
-			if (!info.isValid() || statType == PlayerStat.PLAYERS)
+			// If data is empty, do not show it to the player.
+			if (info == null || info.getDataOfPlayerStat(statType).isEmpty()) {
 				continue;
+			}
 
-            String messageString = DescriptionMatcher.getTotalDescription(info, statType);
+			String messageString = DescriptionMatcher.getTotalDescription(info, statType);
 
-            if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
-                TextComponent spigotMessage = new TextComponent(messageString);
+			if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+				TextComponent spigotMessage = new TextComponent(messageString);
 
-                spigotMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                        "/statz list " + playerName + " " + statType.toString()));
-                spigotMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("Click on me for more info about ")
-                                .append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
+				spigotMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+						"/statz list " + playerName + " " + statType.toString()));
+				spigotMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder("Click on me for more info about ")
+								.append(statType.toString()).color(net.md_5.bungee.api.ChatColor.GOLD).create()));
 
-                messagesSpigot.add(spigotMessage);
-            } else {
-                messages.add(messageString);
+				messagesSpigot.add(spigotMessage);
+			} else {
+				messages.add(messageString);
 			}
 		}
 
