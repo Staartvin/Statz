@@ -13,6 +13,8 @@ import java.util.UUID;
  */
 public class TaskManager {
 
+    // TODO: Add a task that can retrieve
+
     private Statz plugin;
 
     /**
@@ -64,6 +66,8 @@ public class TaskManager {
         }
 
         int taskID = cacheUpdateTask.get(uuid);
+
+        System.out.println("Stopped update task of " + uuid);
 
         // Stop task
         plugin.getServer().getScheduler().cancelTask(taskID);
