@@ -15,6 +15,8 @@ public class UpdatePoolManager {
     private Map<PlayerStat, List<Query>> updateQueries = new ConcurrentHashMap<>();
     private Statz plugin;
 
+    public static boolean isForcingPool = false;
+
     public UpdatePoolManager(Statz instance) {
         this.plugin = instance;
     }

@@ -3,6 +3,7 @@ package me.staartvin.statz.tasks;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.update.UpdatePoolManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -21,9 +22,18 @@ public class SyncUpdatesWithDatabaseTask extends BukkitRunnable {
     @Override
     public void run() {
 
+        if (UpdatePoolManager.isForcingPool) {
+            // Skip call, as we are still busy.
+            System.out.println("Skip database sync as there is still one running.");
+            return;
+        }
+
         System.out.println("-----------------------------------");
 
         System.out.println("Grabbing updates that need to be synced.");
+
+        // Set lock so we can't accidentally run two sync tasks at the same time.
+        UpdatePoolManager.isForcingPool = true;
 
         for (PlayerStat statType : PlayerStat.values()) {
             // Grab updates that have happened since the last sync.
@@ -75,6 +85,8 @@ public class SyncUpdatesWithDatabaseTask extends BukkitRunnable {
             plugin.getUpdatePoolManager().clearUpdateQueries(statType);
         }
 
+        // Release lock
+        UpdatePoolManager.isForcingPool = false;
 
     }
 
