@@ -376,6 +376,11 @@ public class Query {
             throw new IllegalArgumentException("Queries do not conflict!");
         }
 
+        // A query that is of kind 'PLAYERS' cannot conflict.
+        if (compareQuery.hasColumn("playerName") && !compareQuery.hasColumn("value")) {
+            return this;
+        }
+
         if (!compareQuery.hasColumn("value")) {
             throw new IllegalArgumentException(String.format("Query '%s' does not have a 'value' column",
                     compareQuery));
