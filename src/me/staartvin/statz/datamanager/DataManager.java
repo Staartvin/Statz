@@ -13,15 +13,20 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 /**
- * This class handles all incoming data queries from other plugins (and from
- * internal calls).
+ * This class handles all requests for data of a player. Whenever you want to obtain data about a player (or update
+ * data about a player), you will need to use this manager.
  * <br>
- * Getting info of a player should be done here.
- * <p>
- * Date created: 15:03:12
- * 17 apr. 2016
- * 
- * @author "Staartvin"
+ * <br>
+ * <h2>Requesting data</h2>
+ * When you request data about a player, this manager will ask the caching manager for data about this player. If
+ * there is no cached data yet, you'll need to load the user in the cache first. Note that retrieving data from the
+ * database should be done asynchronously, as it blocks the thread it's working on.
+ * <br>
+ * <br>
+ * <h2>Updating data</h2>
+ * To update a player's data, you can use the {@link #setPlayerInfo(UUID, PlayerStat, Query)} method. Note that the
+ * update will be cached immediately and will be sent to the database after a while. Whenever you update the player's
+ * data, the changes will immediately appear in the cache.
  *
  */
 public class DataManager {
@@ -33,24 +38,11 @@ public class DataManager {
 	}
 
 	/**
-	 * This method will obtain all rows that are in the database table of the specific stat type. 
-	 * It will only give the rows of the given UUID. Since Statz uses a pool manager, it will obtain the data from the database
-	 * (which could be outdated if no update has occured yet) and it will match this data with the current queries in the pool.
-	 * When the queries in the pool are more up to date, it will override the outdated results of the database with the new data
-	 * from the queries in the pool.
-	 * 
-	 * <br>
-	 * <br>An extra safety mechanism was added that prevents data from accidentally overriding old data. Every x seconds, the queries
-	 * from the pool are executed on the database. However, this takes some small time (somewhere in milliseconds). When the query is executed,
-	 * it is removed from the pool to prevent it from executing again. However, when getPlayerInfo() is called at the same time when the query is
-	 * deleted, Statz will give back data from the database, since the pool is empty. The database is not yet updated and so the wrong data is
-	 * returned.
-	 * <br>
-	 * <br>This issue is solved by saving the last written actions (see {@link DataPoolManager#getLatestQueries(PlayerStat)}). This method returns the
-	 * last performed queries on the database. {@link #getPlayerInfo(UUID, PlayerStat)} will try use this info (if it is available) whenever it notices 
-	 * that we are performing a database save. In this way, this method will ensure you'll always get the most recent info. 
+     * This method will obtain all data that is known about a player for a given statistic. Note that this data is
+     * cached for performance reasons. When a player is not loaded into the cache, the method will return null. The
+     * player should first be loaded into the cache.
 	 * @param uuid UUID of the player to search for
-	 * @param statType Type of stat to get the data of.
+     * @param statType Type of stat to get the data of
 	 * @throws IllegalArgumentException if the given uuid is null
 	 * @return a {@link PlayerInfo} class that contains the data of a player or null if no the player was not loaded
 	 * in the cache yet.
@@ -61,7 +53,7 @@ public class DataManager {
 			throw new IllegalArgumentException("UUID cannot be null.");
 		}
 
-		if (!plugin.getCachingManager().isPlayerCacheLoaded(uuid)) {
+        if (!this.isPlayerLoaded(uuid)) {
 			return null;
 		}
 
@@ -98,23 +90,33 @@ public class DataManager {
 	}
 
 	/**
-	 * Set data of a player into the database. The query parameter can be build by using {@link me.staartvin.statz.util.StatzUtil#makeQuery(Object...)}
-	 * @param uuid
-	 * @param statType
-	 * @param results
+     * Check whether there is cached data of a player. If not, the player should first be loaded before trying to
+     * obtain data. Note that loading player data is asynchronous!
+     * @param uuid UUID of the player
+     * @return true if there is cached data about a player, false otherwise.
+     */
+    public boolean isPlayerLoaded(UUID uuid) {
+        return plugin.getCachingManager().isPlayerCacheLoaded(uuid);
+    }
+
+    /**
+     * Update a player's data with a given query. Note that it may take a while before the data actually reaches the
+     * database (due to the pooling system). Passing a query with new data means it will be added to the already
+     * existing value of the data, e.g. you cannot overwrite the data, merely add to it. Hence, updates should be
+     * relative, not absolute.
+     * @param uuid UUID of the player
+     * @param statType Type of statistic the given query belongs to
+     * @param updateQuery Query that contains updated data.
 	 */
-	public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query results) {
+    public void setPlayerInfo(final UUID uuid, final PlayerStat statType, Query updateQuery) {
 
 		// If the query does not have a UUID, add it in manually.
-        if (!results.hasColumn("uuid")) {
-			results.setValue("uuid", uuid);
+        if (!updateQuery.hasColumn("uuid")) {
+            updateQuery.setValue("uuid", uuid);
 		}
-		
-		// Add query to the pool.
-		//plugin.getDataPoolManager().addQuery(statType, results);
 
 		// Add query to pool of updates
-		plugin.getUpdatePoolManager().registerNewUpdateQuery(results, statType, uuid);
+        plugin.getUpdatePoolManager().registerNewUpdateQuery(updateQuery, statType, uuid);
 	}
 	
 	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {

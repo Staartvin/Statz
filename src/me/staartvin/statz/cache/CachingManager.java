@@ -7,6 +7,20 @@ import me.staartvin.statz.datamanager.player.PlayerInfo;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This class is responsible for keeping a record of cached data for a loaded player. Each time an update query is
+ * found from one of the listeners that act on player events, the cache is updated to include this data. Hence, the
+ * cache of a player should be up-to-date.
+ * <br>
+ * <br>
+ * The cache is used to provide statistics about a player. Whenever a player (or plugin) requires data about a
+ * player, the cache is asked to provide it first. If there is no data in the cache about the player, it should be
+ * retrieved from the database. Note that this has to occur asynchronously.
+ * <br>
+ * <br>
+ * Finally, there is task that runs periodically that grabs the data from the database and overwrites the cache. This
+ * happens to prevent a possible deviation between the real data (in the database) and the cache.
+ */
 public class CachingManager {
 
     private ConcurrentHashMap<UUID, PlayerInfo> cachedPlayerData = new ConcurrentHashMap<>();

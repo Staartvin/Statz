@@ -8,7 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
-
+/**
+ * This task grabs the data of a player from the database and overwrites the cache so that the cache is up-to-date.
+ */
 public class UpdatePlayerCacheTask extends BukkitRunnable {
 
     private UUID uuid;

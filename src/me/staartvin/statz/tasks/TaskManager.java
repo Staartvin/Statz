@@ -7,16 +7,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * This class is responsible for managing all tasks that need to be run (periodically or only once). It is preferred
+ * to run a task from instead of firing it yourself using the BukkitScheduler.
+ */
 public class TaskManager {
 
     private Statz plugin;
+
+    /**
+     * How often should the database be updated with queries from the pool (in seconds)?
+     */
+    public static int UPDATE_DATABASE_TASK_INTERVAL = 10;
+    /**
+     * How often should the cache of a player be validated with the database (in seconds)?
+     */
+    public static int UPDATE_PLAYER_CACHE_INTERVAL = 30;
+    // Store the task id of the 'update player cache' task for each player.
     private Map<UUID, Integer> cacheUpdateTask = new HashMap<>();
 
     public TaskManager(Statz instance) {
         this.plugin = instance;
     }
-
-    // Start update task that periodically updates the cache of a player
 
     /**
      * Start an update task that periodically updates the cache of a player
@@ -24,7 +36,8 @@ public class TaskManager {
      * @param uuid UUID of the player to start the task for.
      */
     public void startUpdatePlayerCacheTask(UUID uuid) {
-        BukkitTask task = new UpdatePlayerCacheTask(plugin, uuid).runTaskTimerAsynchronously(plugin, 0, 20 * 30);
+        BukkitTask task = new UpdatePlayerCacheTask(plugin, uuid).runTaskTimerAsynchronously(plugin, 0, 20 *
+                UPDATE_PLAYER_CACHE_INTERVAL);
 
         cacheUpdateTask.put(uuid, task.getTaskId());
 
@@ -59,8 +72,11 @@ public class TaskManager {
         cacheUpdateTask.remove(uuid);
     }
 
-    public void startSyncDatabaseTask() {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new SyncUpdatesWithDatabaseTask(plugin),
-                0, 20 * 10);
+    /**
+     * Starts the task that periodically updates the database with queries from the pools.
+     */
+    public void startUpdateDatabaseTask() {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new UpdateDatabaseTask(plugin),
+                0, 20 * UPDATE_DATABASE_TASK_INTERVAL);
     }
 }
