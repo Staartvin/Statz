@@ -168,6 +168,13 @@ public enum PlayerStat {
 	    this.setIconMaterial(material);
     }
 
+    /**
+     * Register a new PlayerStat.
+     *
+     * @param tableName         Name where data will be stored.
+     * @param material          Material of icon that will be shown in the GUI.
+     * @param humanFriendlyName Friendly name that reminds people what this statistic records.
+     */
     PlayerStat(final String tableName, final Material material, final String humanFriendlyName) {
         this.setTableName(tableName);
         this.setIconMaterial(material);
