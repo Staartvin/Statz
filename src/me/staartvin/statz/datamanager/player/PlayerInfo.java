@@ -207,7 +207,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Add a row to data of a specific statistic.
+	 * Add a row of data of a specific statistic.
      *
      * @param statType Type of statistic.
      * @param row      Row to add.
@@ -239,7 +239,7 @@ public class PlayerInfo {
      *
      * @throws IllegalArgumentException if statistic is null or row is null.
      */
-    public void removeResult(PlayerStat statType, Query row) throws IllegalArgumentException {
+	public void removeRow(PlayerStat statType, Query row) throws IllegalArgumentException {
         if (statType == null) {
             throw new IllegalArgumentException("Stat cannot be null");
         }
