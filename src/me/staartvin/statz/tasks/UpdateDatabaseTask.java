@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
-public class SyncUpdatesWithDatabaseTask extends BukkitRunnable {
+/**
+ * This task runs regularly and updates the database with the queries that are in the pool. Before the queries are
+ * actually send to the database, they are compressed.
+ */
+public class UpdateDatabaseTask extends BukkitRunnable {
 
     private Statz plugin;
 
-    public SyncUpdatesWithDatabaseTask(Statz instance) {
+    public UpdateDatabaseTask(Statz instance) {
         this.plugin = instance;
     }
 
