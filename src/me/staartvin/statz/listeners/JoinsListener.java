@@ -26,9 +26,6 @@ public class JoinsListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onJoin(final PlayerJoinEvent event) {
 
-
-		plugin.getTaskManager().startUpdatePlayerCacheTask(event.getPlayer().getUniqueId());
-
 		final PlayerStat stat = PlayerStat.JOINS;
 
 		// Get player
