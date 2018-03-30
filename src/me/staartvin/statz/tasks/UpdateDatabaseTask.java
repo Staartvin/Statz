@@ -5,7 +5,6 @@ import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.update.UpdatePoolManager;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,7 +14,7 @@ import java.util.List;
  * This task runs regularly and updates the database with the queries that are in the pool. Before the queries are
  * actually send to the database, they are compressed.
  */
-public class UpdateDatabaseTask extends BukkitRunnable {
+public class UpdateDatabaseTask implements Runnable {
 
     private Statz plugin;
 
