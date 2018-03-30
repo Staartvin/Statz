@@ -21,6 +21,7 @@ import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
 import me.staartvin.statz.statsdisabler.DisableManager;
 import me.staartvin.statz.tasks.TaskManager;
+import me.staartvin.statz.tasks.UpdateDatabaseTask;
 import me.staartvin.statz.update.UpdatePoolManager;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.ChatColor;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class of Statz Spigot/Bukkit plugin.
@@ -161,6 +164,11 @@ public class Statz extends JavaPlugin {
         // TODO: Send pool if server is closed.
 
 		debugMessage(ChatColor.RED + "Saving updates to database!");
+
+        // Schedule task to update database for the last time.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.execute(new UpdateDatabaseTask(this));
+        scheduler.shutdown();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
 
