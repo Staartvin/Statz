@@ -95,6 +95,21 @@ public class PlayerInfo {
         return rows.get(rowNumber);
     }
 
+    /**
+     * Get the total number of rows in this PlayerInfo object.
+     *
+     * @return total number of rows.
+     */
+    public int getTotalNumberOfRows() {
+        int totalSize = 0;
+
+        for (PlayerStat statType : PlayerStat.values()) {
+            totalSize += getNumberOfRows(statType);
+        }
+
+        return totalSize;
+    }
+
 	/**
 	 * Get the number of rows that are stored for a statistic.
 	 *

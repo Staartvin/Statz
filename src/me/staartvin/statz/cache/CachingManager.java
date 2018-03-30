@@ -23,6 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CachingManager {
 
+    // TODO: implement a way to check whether we already loaded a certain statistic. Now, when a player does not have
+    // anything stored in the database for a given statistic, the cache for that statistic is empty (as it should be)
+    // , but this means that it keeps loading fresh data from the database when cached data is requested. We should
+    // make a way to know when data has been cached but it is empty for a player.
+
+    // To keep track of the cached data
     private ConcurrentHashMap<UUID, PlayerInfo> cachedPlayerData = new ConcurrentHashMap<>();
 
     /**
@@ -69,7 +75,6 @@ public class CachingManager {
 
         // Resolve conflicts and update cache.
         PlayerInfo resolvedCache = cachedData.resolveConflicts(dataToCache);
-
         // Update cache with new cached data.
         this.registerCachedData(uuid, resolvedCache);
     }
@@ -110,8 +115,6 @@ public class CachingManager {
             throw new IllegalArgumentException("UUID cannot be null.");
         }
 
-        System.out.println("Adding new query to cache of " + uuid + ": " + queryToAdd);
-
         PlayerInfo info = new PlayerInfo(uuid);
 
         info.addRow(statType, queryToAdd);
@@ -120,13 +123,30 @@ public class CachingManager {
     }
 
     /**
-     * Check whether a player's data is loaded into the cache.
+     * Check whether a player's data is loaded in the cache.
      *
      * @param uuid UUID of player
      * @return true if there is cached data about the given player. False otherwise.
      */
     public boolean isPlayerCacheLoaded(UUID uuid) {
         return cachedPlayerData.containsKey(uuid) && cachedPlayerData.get(uuid) != null;
+    }
+
+    /**
+     * Check whether a player's data is loaded for a given statistic in the cache.
+     *
+     * @param uuid     UUID of the player
+     * @param statType Type of statistic to check
+     *
+     * @return true if data about the given statistic is loaded for the given player. False otherwise.
+     */
+    public boolean isPlayerCacheLoaded(UUID uuid, PlayerStat statType) {
+
+        if (!isPlayerCacheLoaded(uuid)) {
+            return false;
+        }
+
+        return cachedPlayerData.get(uuid).hasDataOfPlayerStat(statType);
     }
 
 

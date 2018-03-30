@@ -131,8 +131,6 @@ public class SQLiteConnector extends DatabaseConnector {
                     }
                 }
 
-                System.out.println("Final query: " + builder.toString());
-
                 ps = connection.prepareStatement(builder.toString());
             }
 

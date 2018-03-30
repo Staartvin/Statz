@@ -42,16 +42,15 @@ public class DataManager {
 	}
 
 	/**
-     * This method will obtain all data that is known about a player for a given statistic. Note that this data is
+     * This method will obtain all data that is known about a player. Note that this data is
      * cached for performance reasons. When a player is not loaded into the cache, the method will return null. The
      * player should first be loaded into the cache.
 	 * @param uuid UUID of the player to search for
-     * @param statType Type of stat to get the data of
 	 * @throws IllegalArgumentException if the given uuid is null
 	 * @return a {@link PlayerInfo} class that contains the data of a player or null if no the player was not loaded
 	 * in the cache yet.
 	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final me.staartvin.statz.datamanager.player.PlayerStat statType)
+    public PlayerInfo getPlayerInfo(final UUID uuid)
 			throws IllegalArgumentException {
 
 		if (uuid == null) {
@@ -64,6 +63,45 @@ public class DataManager {
 
 		return plugin.getCachingManager().getCachedPlayerData(uuid);
 	}
+
+    /**
+     * Get all known data of a player for a given statistic. This is different from {@link #getPlayerInfo(UUID)} as
+     * that method grabs all data of a player, while this method only retrieves data about a given statistic.
+     *
+     * @param uuid     UUID of the player
+     * @param statType Type of statistic to get data of
+     *
+     * @return PlayerInfo object with data of the requested player and the given statistic
+     *
+     * @throws IllegalArgumentException if the given uuid is null.
+     */
+    public PlayerInfo getPlayerInfo(UUID uuid, PlayerStat statType) throws IllegalArgumentException {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID cannot be null.");
+        }
+
+        if (!this.isPlayerLoaded(uuid, statType)) {
+            return null;
+        }
+
+        PlayerInfo info = this.getPlayerInfo(uuid);
+
+        if (info == null) {
+            return null;
+        }
+
+        // Create a new PlayerInfo object that only has the data of a given statistic.
+        PlayerInfo newInfo = new PlayerInfo(uuid);
+
+        List<Query> queriesStored = info.getDataOfPlayerStat(statType);
+
+        // Don't store data that is null or empty.
+        if (queriesStored != null && !queriesStored.isEmpty()) {
+            newInfo.setData(statType, info.getDataOfPlayerStat(statType));
+        }
+
+        return newInfo;
+    }
 
 	/**
 	 * Get data of a player for a given statistic. This method will obtain 'fresh' data from the database, meaning
@@ -88,25 +126,25 @@ public class DataManager {
 
 		Table table = DatabaseConnector.getTable(statType);
 
-		List<Query> databaseRows = plugin.getDatabaseConnector().getObjects(table);
+        List<Query> databaseRows = plugin.getDatabaseConnector().getObjects(table, new RowRequirement("uuid", uuid.toString()));
 
 		PlayerInfo info = new PlayerInfo(uuid);
 
 		info.setData(statType, databaseRows);
 
-		return info;
-	}
+        return info;
+    }
 
-	/**
-	 * Get Player info like {@link #getPlayerInfo(UUID, me.staartvin.statz.datamanager.player.PlayerStat)}, but check for additional conditions.
+    /**
+     * Get Player info like {@link #getPlayerInfo(UUID, PlayerStat)}, but check for additional conditions.
 	 * Let's say you want to get all the player info for a player on world 'world'. You would call this method with the player's UUID, 
 	 * provide the statType and add a Query condition with StatzUtil.makeQuery().
 	 * @param uuid UUID of the player
 	 * @param statType Type of stat to get player info of.
 	 * @param requirements Extra conditions that need to apply. See {@link RowRequirement}.
 	 * @return a {@link PlayerInfo} object.
-	 */
-	public PlayerInfo getPlayerInfo(final UUID uuid, final me.staartvin.statz.datamanager.player.PlayerStat statType, RowRequirement... requirements) {
+     */
+    public PlayerInfo getPlayerInfo(final UUID uuid, final PlayerStat statType, RowRequirement... requirements) {
 		PlayerInfo info = this.getPlayerInfo(uuid, statType);
 
 		// There are no requirement, so we don't need to check any data.
@@ -132,9 +170,22 @@ public class DataManager {
      * @param uuid UUID of the player
      * @return true if there is cached data about a player, false otherwise.
      */
-	public boolean isPlayerLoaded(UUID uuid) {
-		return plugin.getCachingManager().isPlayerCacheLoaded(uuid);
-	}
+    public boolean isPlayerLoaded(UUID uuid) {
+        return plugin.getCachingManager().isPlayerCacheLoaded(uuid);
+    }
+
+    /**
+     * Check whether there is cached data of a given statistic for a player. If not, the player should first be
+     * loaded before trying to obtain data. Note that loading player data is asynchronous!
+     *
+     * @param uuid     UUID of the player
+     * @param statType Type of statistic
+     *
+     * @return true if there is cached data regarding the given statistic loaded in the cache, false otherwise.
+     */
+    public boolean isPlayerLoaded(UUID uuid, PlayerStat statType) {
+        return plugin.getCachingManager().isPlayerCacheLoaded(uuid, statType);
+    }
 
 	/**
 	 * Load the data of a player of a given statistic into the cache, so it can be retrieved.
@@ -145,19 +196,49 @@ public class DataManager {
 	 * @return the PlayerInfo data that was loaded into the cache, ready for use.
 	 * @throws IllegalArgumentException if the given uuid is null
 	 */
-	public PlayerInfo loadPlayerData(UUID uuid, PlayerStat statType) throws IllegalArgumentException {
-		if (uuid == null) {
-			throw new IllegalArgumentException("UUID cannot be null.");
-		}
+    public PlayerInfo loadPlayerData(UUID uuid, PlayerStat statType) throws IllegalArgumentException {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID cannot be null.");
+        }
 
-		// Retrieve info from database.
-		PlayerInfo info = this.getFreshPlayerInfo(uuid, statType);
+        // Retrieve info from database.
+        PlayerInfo info = this.getFreshPlayerInfo(uuid, statType);
 
-		// Put new data into cache.
-		plugin.getCachingManager().registerCachedData(uuid, info);
+        // Put new data into cache.
+        plugin.getCachingManager().addCachedData(uuid, info);
 
-		return info;
-	}
+        return info;
+    }
+
+    /**
+     * Load all data of a player into the cache, so it can be retrieved.
+     * Note that this method will block the thread it is on and so it should be run asynchronously.
+     *
+     * @param uuid UUID of the player
+     *
+     * @return the PlayerInfo data that was loaded into the cache, ready for use.
+     *
+     * @throws IllegalArgumentException if the given uuid is null
+     */
+    public PlayerInfo loadPlayerData(UUID uuid) throws IllegalArgumentException {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID cannot be null.");
+        }
+
+        PlayerInfo info = new PlayerInfo(uuid);
+
+        // Load all data of a player
+        for (PlayerStat statType : PlayerStat.values()) {
+            PlayerInfo freshPlayerInfo = getFreshPlayerInfo(uuid, statType);
+
+            info.setData(statType, freshPlayerInfo.getDataOfPlayerStat(statType));
+        }
+
+        // Put new data into cache.
+        plugin.getCachingManager().registerCachedData(uuid, info);
+
+        return info;
+    }
 
     /**
      * Update a player's data with a given query. Note that it may take a while before the data actually reaches the
@@ -177,11 +258,13 @@ public class DataManager {
 
 		// Add query to pool of updates
         plugin.getUpdatePoolManager().registerNewUpdateQuery(updateQuery, statType, uuid);
-	}
+    }
 
-	public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<me.staartvin.statz.datamanager.player.PlayerStat> list) {
+    public void sendStatisticsList(CommandSender sender, String playerName, UUID uuid, int pageNumber, List<PlayerStat> list) {
 		List<String> messages = new ArrayList<>();
 		List<TextComponent> messagesSpigot = new ArrayList<>();
+
+        System.out.println("Searching stats of " + playerName + ": " + list);
 
 		for (PlayerStat statType : list) {
 
@@ -192,8 +275,16 @@ public class DataManager {
 
 			PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-			// If data is empty, do not show it to the player.
-			if (info == null || info.getDataOfPlayerStat(statType).isEmpty()) {
+            // Player is not loaded into cache yet, first load player into cache.
+            if (info == null) {
+                info = plugin.getDataManager().loadPlayerData(uuid, statType);
+                System.out.println(String.format("Loaded data (%s) of %s: %s", statType, playerName, info));
+            } else {
+                System.out.println(String.format("Data was already loaded (%s) of %s.", statType, playerName));
+            }
+
+            // If data is empty, we have no data about the player and so skip it.
+            if (info.getDataOfPlayerStat(statType).isEmpty()) {
 				continue;
 			}
 
