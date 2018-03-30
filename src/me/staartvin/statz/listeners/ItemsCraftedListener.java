@@ -33,7 +33,7 @@ public class ItemsCraftedListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", event.getCurrentItem().getAmount(), "world",
 						player.getWorld().getName(), "item", itemCrafted));
 
 	}
