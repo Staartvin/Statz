@@ -66,7 +66,10 @@ public class ItemsCaughtListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId().toString(), "value", 1, "caught", material, "world", player.getWorld().getName()));
+                player.getUniqueId().toString(), "value", item.getAmount(), "caught", material, "world", player
+                        .getWorld()
+                        .getName
+                                ()));
 
 	}
 }
