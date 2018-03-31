@@ -431,4 +431,33 @@ public class PlayerInfo {
         return statTypes;
     }
 
+    /**
+     * Get all rows in this PlayerInfo object for the given statistic.
+     *
+     * @param statType Type of statistic to get the rows for
+     *
+     * @return a list of rows or an empty list if this object does not store info about the requested statistic.
+     */
+    public List<Query> getRows(PlayerStat statType) {
+        if (!this.hasDataOfPlayerStat(statType)) {
+            return new ArrayList<>();
+        }
+
+        return this.statistics.get(statType);
+    }
+
+    /**
+     * Get all rows of this PlayerInfo object. The rows are not given in any particular order.
+     *
+     * @return a list of rows in the PlayerInfo object.
+     */
+    public List<Query> getRows() {
+        List<Query> rows = new ArrayList<>();
+
+        for (PlayerStat statType : PlayerStat.values()) {
+            rows.addAll(this.getRows(statType));
+        }
+
+        return rows;
+    }
 }
