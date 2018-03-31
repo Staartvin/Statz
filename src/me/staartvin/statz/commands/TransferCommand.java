@@ -160,7 +160,7 @@ public class TransferCommand extends StatzCommand {
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					// When using null as queries parameter, it will get all data in the table.
-					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
+                    List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName());
 
                     Table table = DatabaseConnector.getTable(stat.getTableName());
 					
@@ -203,7 +203,7 @@ public class TransferCommand extends StatzCommand {
 
 				for (PlayerStat stat : PlayerStat.values()) {
 					// When using null as queries parameter, it will get all data in the table.
-					List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName(), null);
+                    List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName());
 
 					// Remove ID column because SQLite automatically assigns id's to its tables.
 					for (Query q: storedMySQLQueries) {
