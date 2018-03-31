@@ -1,6 +1,7 @@
 package me.staartvin.statz.tasks;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -37,6 +38,11 @@ public class UpdatePlayerCacheTask extends BukkitRunnable {
             // User is not loaded, or there is no cache so we don't bother overwriting the cache.
             if (databaseInfo == null) {
                 continue;
+            }
+
+            // Remove all 'id' columns to prevent leakage from the database.
+            for (Query query : databaseInfo.getRows()) {
+                query.removeColumn("id");
             }
 
             cachedData = cachedData.resolveConflicts(databaseInfo);
