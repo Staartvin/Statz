@@ -192,8 +192,13 @@ public class ListCommand extends StatzCommand {
 
                     public void run() {
 
+                        long startTime = System.currentTimeMillis();
+
                         plugin.getDataManager().sendStatisticsList(sender, playerName, uuid, pageNumber,
                                 Arrays.asList(PlayerStat.values()));
+
+                        plugin.debugMessage("/statz list command took " + (System.currentTimeMillis() - startTime) +
+                                " ms.");
 
                     }
                 }.init(playerName, uuid, pageNumber));
@@ -229,6 +234,8 @@ public class ListCommand extends StatzCommand {
 
                 public void run() {
 
+                    long startTime = System.currentTimeMillis();
+
                     List<String> messages = new ArrayList<>();
 
                     PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
@@ -236,7 +243,7 @@ public class ListCommand extends StatzCommand {
                     sender.sendMessage(Lang.SPECIFIC_STAT_HEADER.getConfigValue(statType, playerName));
 
                     // Only use valid info.
-                    if (!info.isValid() || statType == PlayerStat.PLAYERS) {
+                    if (statType == PlayerStat.PLAYERS) {
                         sender.sendMessage(Lang.NO_STATISTICS_TO_SHOW.getConfigValue());
                         return;
                     }
@@ -252,6 +259,9 @@ public class ListCommand extends StatzCommand {
                     for (String message : messages) {
                         sender.sendMessage(message);
                     }
+
+                    plugin.debugMessage("/statz list command took " + (System.currentTimeMillis() - startTime) +
+                            " ms.");
                 }
             }.init(playerName, uuid, stat));
 
