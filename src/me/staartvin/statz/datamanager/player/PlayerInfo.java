@@ -54,13 +54,15 @@ public class PlayerInfo {
 	 * 
 	 * @return true if valid info, false otherwise.
 	 */
-	public boolean isValid() {
+    @Deprecated
+    public boolean isValid() {
 		return isValid;
 	}
 
-	public void setValid(final boolean isValid) {
-		this.isValid = isValid;
-	}
+    @Deprecated
+    public void setValid(final boolean isValid) {
+        this.isValid = isValid;
+    }
 
 	/**
      * Get data for a certain statistic of a player. It returns a list of {@link Query} objects that represent the
@@ -350,6 +352,12 @@ public class PlayerInfo {
 		PlayerInfo nonConflictingPlayerInfo = new PlayerInfo(this.getUUID());
 
 		for (PlayerStat statType : PlayerStat.values()) {
+
+            if (!this.hasDataOfPlayerStat(statType) && !comparePlayerInfo.hasDataOfPlayerStat(statType)) {
+                // If both PlayerInfo objects do not store data about this stat type, ignore it.
+                continue;
+            }
+
 			List<Query> rows = this.getDataOfPlayerStat(statType);
 
 			List<Query> comparedRows = comparePlayerInfo.getDataOfPlayerStat(statType);
@@ -398,7 +406,7 @@ public class PlayerInfo {
 
 			// If the list is empty, we do not need to add it.
 			if (nonConflictingQueries.isEmpty()) {
-				continue;
+                //continue;
 			}
 
 			// We've built up all queries that are non-conflicting. Hence, we should add this to the PlayerInfo object.
@@ -407,5 +415,20 @@ public class PlayerInfo {
 
 		return nonConflictingPlayerInfo;
 	}
+
+    /**
+     * Get all statistics that are stored in this PlayerInfo object.
+     *
+     * @return a list of statistics
+     */
+    public List<PlayerStat> getStatistics() {
+        List<PlayerStat> statTypes = new ArrayList<>();
+
+        for (PlayerStat statType : this.statistics.keySet()) {
+            statTypes.add(statType);
+        }
+
+        return statTypes;
+    }
 
 }
