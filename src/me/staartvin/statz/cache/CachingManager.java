@@ -142,12 +142,12 @@ public class CachingManager {
      */
     public boolean isPlayerCacheLoaded(UUID uuid, PlayerStat statType) {
 
+        // Check if we have at least one statistic stored for the player
         if (!isPlayerCacheLoaded(uuid)) {
             return false;
         }
 
+        // Check if the data has been loaded before (can be an empty list).
         return cachedPlayerData.get(uuid).hasDataOfPlayerStat(statType);
     }
-
-
 }
