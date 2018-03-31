@@ -30,6 +30,7 @@ public class TaskManager {
 
     public TaskManager(Statz instance) {
         this.plugin = instance;
+        UPDATE_DATABASE_TASK_INTERVAL = instance.getConfigHandler().getPeriodicSaveTime();
     }
 
     /**

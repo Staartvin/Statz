@@ -22,7 +22,9 @@ public class MySQLConnector extends DatabaseConnector {
 
     private final Statz plugin;
     private Connection connection;
-
+    private String hostname = "localhost:3306";
+    private String password = "";
+    private String username = "root";
     public MySQLConnector(final Statz instance) {
         super(instance);
         plugin = instance;
@@ -38,13 +40,9 @@ public class MySQLConnector extends DatabaseConnector {
         DatabaseConnector.databaseName = plugin.getConfigHandler().getMySQLDatabase();
     }
 
-    private String hostname = "localhost:3306";
-    private String password = "";
-    private String username = "root";
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see me.staartvin.statz.database.Database#getSQLConnection()
      */
     @Override
@@ -80,7 +78,7 @@ public class MySQLConnector extends DatabaseConnector {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see me.staartvin.statz.database.Database#load()
      */
     @Override
@@ -91,8 +89,8 @@ public class MySQLConnector extends DatabaseConnector {
 
                 // Did not properly connect to database
                 if (connection == null) {
-                    plugin.debugMessage(
-                            ChatColor.RED + "I could not connect to your database! Are your credentials correct?");
+                    plugin.debugMessage(ChatColor.RED + "I could not connect to your database! Are your credentials " +
+                            "correct?");
                     return;
                 }
 
