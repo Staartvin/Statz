@@ -27,13 +27,11 @@ public class UpdateDatabaseTask implements Runnable {
 
         if (UpdatePoolManager.isForcingPool) {
             // Skip call, as we are still busy.
-            System.out.println("Skip database sync as there is still one running.");
+            plugin.debugMessage("Skip database sync as there is still one running.");
             return;
         }
 
-        System.out.println("-----------------------------------");
-
-        System.out.println("Grabbing updates that need to be synced.");
+        plugin.debugMessage("Sending local data to database...");
 
         // Set lock so we can't accidentally run two sync tasks at the same time.
         UpdatePoolManager.isForcingPool = true;
@@ -77,8 +75,6 @@ public class UpdateDatabaseTask implements Runnable {
 
                 // Store the final query
                 resultingQueries.add(sumQuery);
-
-                System.out.println(String.format("Gathered queries for %s and build: %s", statType, sumQuery));
             }
 
             // Update database with new data.
@@ -90,6 +86,10 @@ public class UpdateDatabaseTask implements Runnable {
 
         // Release lock
         UpdatePoolManager.isForcingPool = false;
+
+        plugin.debugMessage("Successfully updated database with local data.");
+
+        plugin.getLogsManager().writeToLogFile("Updated database with local data.");
 
     }
 

@@ -42,7 +42,7 @@ public class UpdatePlayerCacheTask extends BukkitRunnable {
             cachedData = cachedData.resolveConflicts(databaseInfo);
         }
 
-        System.out.println("Updated cache of " + uuid);
+        plugin.debugMessage("Updated cache of " + uuid);
         // Store into cache.
         plugin.getCachingManager().registerCachedData(uuid, cachedData);
 

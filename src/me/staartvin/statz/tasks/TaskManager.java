@@ -67,7 +67,7 @@ public class TaskManager {
 
         int taskID = cacheUpdateTask.get(uuid);
 
-        System.out.println("Stopped update task of " + uuid);
+        plugin.debugMessage("Stopped update task of " + uuid);
 
         // Stop task
         plugin.getServer().getScheduler().cancelTask(taskID);
