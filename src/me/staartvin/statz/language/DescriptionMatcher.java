@@ -1,8 +1,8 @@
 package me.staartvin.statz.language;
 
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
 /**
@@ -19,9 +19,10 @@ public class DescriptionMatcher {
         String description = "";
 
         if (statType == PlayerStat.TIME_PLAYED) {
-            description = descriptionEnum.getTotalDescription(StatzUtil.timeToString((int) info.getTotalValue(), StatzUtil.Time.MINUTES));
+            description = descriptionEnum.getTotalDescription(StatzUtil.timeToString((int) info.getTotalValue(statType),
+                    StatzUtil.Time.MINUTES));
         } else {
-            description = descriptionEnum.getTotalDescription((int) info.getTotalValue());
+            description = descriptionEnum.getTotalDescription((int) info.getTotalValue(statType));
         }
 
 

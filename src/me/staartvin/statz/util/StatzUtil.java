@@ -1,7 +1,7 @@
 package me.staartvin.statz.util;
 
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

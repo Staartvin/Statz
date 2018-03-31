@@ -2,8 +2,8 @@ package me.staartvin.statz.gui;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.language.DescriptionMatcher;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.Bukkit;
@@ -97,7 +97,7 @@ public class GUIManager implements Listener {
             // Create a list of messages shown when hovering over the item
             List<String> messages = new ArrayList<>();
 
-            List<Query> results = statInfo.getResults();
+            List<Query> results = statInfo.getDataOfPlayerStat(statType);
 
             if (results.isEmpty()) {
                 messages.add(ChatColor.RED + "No information about you yet!");
@@ -152,7 +152,7 @@ public class GUIManager implements Listener {
 
         PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-        List<Query> results = info.getResults();
+        List<Query> results = info.getDataOfPlayerStat(statType);
 
         int invSize = (results.size() + 8) / 9 * 9 > 63 ? 63 : (results.size() + 8) / 9 * 9;
 
@@ -330,7 +330,7 @@ public class GUIManager implements Listener {
     private List<String> getStatisticMessages(PlayerStat stat, PlayerInfo info) {
         List<String> messages = new ArrayList<>();
 
-        List<Query> results = info.getResults();
+        List<Query> results = info.getDataOfPlayerStat(stat);
 
         for (Query q : results) {
             messages.add(StatzUtil.getInfoString(q, stat, "You"));

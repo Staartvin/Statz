@@ -28,6 +28,9 @@ public class QuitListener implements Listener {
 
 			JoinsListener.updateID.remove(player.getUniqueId());
 		}
+
+		// Stop task of periodically refreshing cache of a player, as they logged out.
+		plugin.getTaskManager().stopUpdatePlayerCacheTask(player.getUniqueId());
 	}
 
 }

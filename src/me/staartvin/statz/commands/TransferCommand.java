@@ -7,7 +7,7 @@ import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.Table;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -162,7 +162,7 @@ public class TransferCommand extends StatzCommand {
 					// When using null as queries parameter, it will get all data in the table.
 					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName(), null);
 
-					Table table = plugin.getDatabaseConnector().getTable(stat.getTableName());
+                    Table table = DatabaseConnector.getTable(stat.getTableName());
 					
 					// Write transferred items to log
 					plugin.getLogsManager().writeToLogFile(storedSQLiteQueries, stat);
@@ -207,15 +207,15 @@ public class TransferCommand extends StatzCommand {
 
 					// Remove ID column because SQLite automatically assigns id's to its tables.
 					for (Query q: storedMySQLQueries) {
-						if (q.hasKey("id")) {
+                        if (q.hasColumn("id")) {
 							q.removeColumn("id");
 						}
 					}
 					
 					// Write transferred items to log
 					plugin.getLogsManager().writeToLogFile(storedMySQLQueries, stat);
-					
-					Table table = plugin.getDatabaseConnector().getTable(stat.getTableName());
+
+                    Table table = DatabaseConnector.getTable(stat.getTableName());
 
 					plugin.getDatabaseConnector().setBatchObjects(table, storedMySQLQueries, 2);
 

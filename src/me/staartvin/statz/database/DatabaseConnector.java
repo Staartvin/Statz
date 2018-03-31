@@ -2,8 +2,9 @@ package me.staartvin.statz.database;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.database.datatype.Table;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 
 import java.sql.Connection;
@@ -19,7 +20,7 @@ public abstract class DatabaseConnector {
 	private final Statz plugin;
 
 	// All tables are stored here.
-	private List<Table> tables = new ArrayList<Table>();
+	private static List<Table> tables = new ArrayList<Table>();
 
 	// Make sure we have distinct tables
 	public static final String prefix = "statz_";
@@ -43,7 +44,7 @@ public abstract class DatabaseConnector {
 	 * @return Table object represented by that name or NULL if none was
 	 *         found.
 	 */
-	public Table getTable(String tableName) {
+	public static Table getTable(String tableName) {
 
 		tableName = SQLiteConnector.prefix + tableName;
 
@@ -61,8 +62,8 @@ public abstract class DatabaseConnector {
 	 * @param stat
 	 * @return
 	 */
-	public Table getTable(PlayerStat stat) {
-		return this.getTable(stat.getTableName());
+	public static Table getTable(PlayerStat stat) {
+		return getTable(stat.getTableName());
 	}
 
 	/**
@@ -105,33 +106,21 @@ public abstract class DatabaseConnector {
 	 * 
 	 * @param table
 	 *            Name of the table to get info from
-	 * @param queries
-	 *            A hashmap that will specify what queries should be applied.
-	 *            <br>
-	 *            You could call a hashmap with key: 'uuid' and value:
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-	 *            that we only search for the value of <i>columnName</i> with
-	 *            the condition that the 'uuid' column must be equal to
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-	 * @return a list of hashmaps where every key is a column and a key is the
-	 *         value of
-	 *         that column.
+	 * @param requirements
+	 *            Requirements that should be met for this data to retrieve it. See {@link RowRequirement} for more
+	 *            info about requirements.
+	 * @return a list of {@link Query} objects, each representing one row in the database.
 	 */
-	public abstract List<Query> getObjects(final Table table, final Query queries);
+	public abstract List<Query> getObjects(final Table table, final RowRequirement... requirements);
 
 	/**
-	 * @see #getObjects(Table, Query)
+	 * @see #getObjects(Table, RowRequirement...)
 	 * @param tableName Name of the table to get data from
-	 * @param queries Queries to execute
-	 * @return A hashmap that will specify what results should be applied.
-	 *            <br>
-	 *            You could call a hashmap with key: 'uuid' and value:
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-	 *            that we set the value of <i>uuid</i> to
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
+	 * @param requirements Requirements that the requested data should adhere to.
+	 * @return a list of {@link Query} objects, each representing one row in the database.
 	 */
-	public List<Query> getObjects(final String tableName, final Query queries) {
-		return this.getObjects(this.getTable(tableName), queries);
+	public List<Query> getObjects(final String tableName, final RowRequirement... requirements) {
+		return this.getObjects(getTable(tableName), requirements);
 	}
 
 	/**
@@ -171,7 +160,7 @@ public abstract class DatabaseConnector {
 	 * @param tables Tables to set the loaded list to.
 	 */
 	public void setTables(final List<Table> tables) {
-		this.tables = tables;
+		DatabaseConnector.tables = tables;
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.util.List;
 public class PatchManager {
 
     private Statz plugin;
+    private List<Patch> patches = new ArrayList<>();
 
     public PatchManager(Statz plugin) {
         this.plugin = plugin;
@@ -17,8 +18,6 @@ public class PatchManager {
         patches.add(new RenameWitherSkeletonPatch(plugin));
         patches.add(new RenameElderGuardianPatch(plugin));
     }
-
-    private List<Patch> patches = new ArrayList<>();
 
     public void applyPatches() {
         // Apply all patches in the correct order
@@ -59,9 +58,18 @@ public class PatchManager {
             }
 
             if (success) {
-                plugin.getLogger().info("Successfully applied patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
+                plugin.getLogger().info("Successfully applied patch '" + patch.getPatchName() + "' (id: " + patch
+                        .getPatchId() + ").");
+                plugin.getLogsManager().writeToLogFile("Successfully applied patch '" + patch.getPatchName() + "' " +
+                        "(id: " + patch
+                        .getPatchId()
+                        + ").");
             } else {
-                plugin.getLogger().info("Failed to apply patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
+                plugin.getLogger().info("Failed to apply patch '" + patch.getPatchName() + "' (id: " + patch
+                        .getPatchId() + ").");
+                plugin.getLogsManager().writeToLogFile("Failed to apply patch '" + patch.getPatchName() + "' (id: " +
+                        patch
+                                .getPatchId() + ").");
                 break;
             }
 

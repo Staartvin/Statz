@@ -1,7 +1,7 @@
 package me.staartvin.statz.patches;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -23,8 +23,7 @@ public class RenameWitherSkeletonPatch extends Patch {
         String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
         String tempName = "tempKillsMobsTable";
 
-        List<String> queries = Arrays.asList(new String[]{
-                "CREATE TABLE " + tempName + " AS " +
+        List<String> queries = Arrays.asList("CREATE TABLE " + tempName + " AS " +
                         "SELECT table1.id AS id, " +
                         "table1.uuid AS uuid, " +
                         "table1.value AS value, " +
@@ -44,7 +43,7 @@ public class RenameWitherSkeletonPatch extends Patch {
                         "table1.uuid = table2.uuid AND " +
                         "table1.world = table2.world AND " +
                         "table1.weapon = table2.weapon;",
-                "SELECT * FROM " + tempName + ";"});
+                "SELECT * FROM " + tempName + ";");
 
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);
@@ -114,8 +113,7 @@ public class RenameWitherSkeletonPatch extends Patch {
         String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
         String tempName = "tempKillsMobsTable";
 
-        List<String> queries = Arrays.asList(new String[]{
-                "CREATE TABLE " + tempName + " AS " +
+        List<String> queries = Arrays.asList("CREATE TABLE " + tempName + " AS " +
                         "SELECT * FROM " +
                         "(SELECT * FROM " + tableName + " WHERE mob='WITHER SKELETON') AS table1 " +
                         "INNER JOIN " +
@@ -123,7 +121,7 @@ public class RenameWitherSkeletonPatch extends Patch {
                         "table1.uuid = table2.uuid AND " +
                         "table1.world = table2.world AND " +
                         "table1.weapon = table2.weapon;",
-                "SELECT * FROM " + tempName + ";"});
+                "SELECT * FROM " + tempName + ";");
 
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);

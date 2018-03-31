@@ -1,7 +1,7 @@
 package me.staartvin.statz.patches;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +17,9 @@ public class WeaponColumnMobKillsPatch extends Patch {
 
         String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
 
-        List<String> queries = Arrays.asList(new String[] {
-                "ALTER TABLE " + tableName + " ADD weapon VARCHAR(255) NOT NULL", "ALTER TABLE " + tableName
-                        + " DROP INDEX `uuid`, ADD UNIQUE `uuid` (`uuid`, `mob`, `world`, `weapon`) USING BTREE;" });
+        List<String> queries = Arrays.asList("ALTER TABLE " + tableName + " ADD weapon VARCHAR(255) NOT NULL", "ALTER" +
+                " TABLE " + tableName
+                + " DROP INDEX `uuid`, ADD UNIQUE `uuid` (`uuid`, `mob`, `world`, `weapon`) USING BTREE;");
 
         try {
             this.getDatabaseConnector().sendQueries(queries, false);
@@ -56,8 +56,8 @@ public class WeaponColumnMobKillsPatch extends Patch {
         // Move all data from temp table to new table ->
         // Remove temp table ->
         // Done! :-)
-        List<String> queries = Arrays.asList(new String[] {
-                "ALTER TABLE " + tableName + " ADD COLUMN weapon TEXT DEFAULT('HAND') NOT NULL;",
+        List<String> queries = Arrays.asList("ALTER TABLE " + tableName + " ADD COLUMN weapon TEXT DEFAULT('HAND') NOT NULL;",
+
                 "CREATE TABLE " + tempName + " AS SELECT * FROM " + tableName + ";", "DROP TABLE " + tableName + ";",
                 "CREATE TABLE " + tableName
                         + " (id INTEGER PRIMARY KEY NOT NULL, uuid TEXT NOT NULL, value INTEGER NOT NULL, world TEXT NOT NULL,"
@@ -65,7 +65,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
                 "INSERT INTO " + tableName
                         + " (id, uuid, value, world, mob, weapon) SELECT id, uuid, value, world, mob, weapon FROM "
                         + tempName + ";",
-                "DROP TABLE " + tempName + ";" });
+                "DROP TABLE " + tempName + ";");
 
         try {
             this.getDatabaseConnector().sendQueries(queries, false);

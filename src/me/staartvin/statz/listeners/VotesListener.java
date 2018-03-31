@@ -2,7 +2,7 @@ package me.staartvin.statz.listeners;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class VotesListener implements Listener {
 		String userName = event.getVote().getUsername();
 
 		// Get player
-		final Player player = (Player) plugin.getServer().getPlayer(userName);
+        final Player player = plugin.getServer().getPlayer(userName);
 
 		UUID uuid = null;
 

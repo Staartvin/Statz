@@ -1,7 +1,7 @@
 package me.staartvin.statz.config;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.datamanager.PlayerStat;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,15 +1,16 @@
 package me.staartvin.statz;
 
 import me.staartvin.statz.api.API;
+import me.staartvin.statz.cache.CachingManager;
 import me.staartvin.statz.commands.manager.CommandsManager;
 import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.database.MySQLConnector;
 import me.staartvin.statz.database.SQLiteConnector;
+import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
-import me.staartvin.statz.datamanager.DataPoolManager;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.gui.GUIManager;
 import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.hooks.StatzDependency;
@@ -19,6 +20,9 @@ import me.staartvin.statz.listeners.*;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
 import me.staartvin.statz.statsdisabler.DisableManager;
+import me.staartvin.statz.tasks.TaskManager;
+import me.staartvin.statz.tasks.UpdateDatabaseTask;
+import me.staartvin.statz.update.UpdatePoolManager;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main class of Statz Spigot/Bukkit plugin.
@@ -41,7 +47,6 @@ public class Statz extends JavaPlugin {
 	private DatabaseConnector connector;
 	private DataManager dataManager;
 	private API statzAPI;
-	private DataPoolManager dataPoolManager;
 	private DependencyManager depManager;
 	private ConfigHandler configHandler;
 	private CommandsManager commandsManager;
@@ -51,6 +56,10 @@ public class Statz extends JavaPlugin {
 	private DisableManager disableManager;
 	private PatchManager patchManager;
 	private GUIManager guiManager;
+
+    private CachingManager cachingManager;
+    private TaskManager taskManager;
+	private UpdatePoolManager updatePoolManager;
 
 	@Override
 	public void onEnable() {
@@ -76,9 +85,6 @@ public class Statz extends JavaPlugin {
 		// Create patch manager and send patches
 		this.setPatchManager(new PatchManager(this));
 
-		// Set up Data Pool Manager
-		this.setDataPoolManager(new DataPoolManager(this));
-
 		// Load tables into hashmap
 		this.getDatabaseConnector().loadTables();
 
@@ -90,15 +96,6 @@ public class Statz extends JavaPlugin {
 
 		// Load API
 		this.setStatzAPI(new API(this));
-
-		// Send pool update every 10 seconds
-		this.getServer().getScheduler().runTaskTimer(this, new Runnable() {
-			public void run() {
-
-				getDataPoolManager().sendPool();
-
-			}
-		}, 20, 20 * this.getConfigHandler().getPeriodicSaveTime());
 
 		// Do performance test
 		//this.doPerformanceTest();
@@ -148,15 +145,30 @@ public class Statz extends JavaPlugin {
             // Disable Statz.
             this.getServer().getPluginManager().disablePlugin(this);
         }
+
+        // Set up caching manager
+        this.setCachingManager(new CachingManager());
+
+		// Start update pool manager.
+		this.setUpdatePoolManager(new UpdatePoolManager(this));
+
+		// Create task manager for starting and stopping tasks.
+        this.setTaskManager(new TaskManager(this));
+
+		// Run task to sync database with update list.
+        this.getTaskManager().startUpdateDatabaseTask();
 	}
 
 	@Override
 	public void onDisable() {
+        // TODO: Send pool if server is closed.
 
 		debugMessage(ChatColor.RED + "Saving updates to database!");
 
-		// Send the complete pool.
-		this.getDataPoolManager().forceSendPool();
+        // Schedule task to update database for the last time.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.execute(new UpdateDatabaseTask(this));
+        scheduler.shutdown();
 
 		this.getLogger().info(this.getDescription().getFullName() + " has been disabled!");
 
@@ -223,6 +235,8 @@ public class Statz extends JavaPlugin {
 			this.getServer().getPluginManager().registerEvents(new XPGainedListener(this), this);
 		}
 
+		// Important listeners that should always be on.
+		this.getServer().getPluginManager().registerEvents(new JoinPlayerListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
 		if (this.getDependencyManager().isAvailable(StatzDependency.VOTIFIER)
@@ -322,11 +336,7 @@ public class Statz extends JavaPlugin {
 		}
 
         // Check if we should track in the player's current position.
-        if (this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat)) {
-			return false;
-		}
-
-		return true;
+        return !this.getDisableManager().isStatDisabledLocation(player.getLocation(), stat);
 	}
 
 	public void doPerformanceTest() {
@@ -415,15 +425,15 @@ public class Statz extends JavaPlugin {
 					}
 
 					// Get player info.
-					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat,
-							StatzUtil.makeQuery("world", "world", "moveType", movementType));
+					final PlayerInfo info = getDataManager().getPlayerInfo(random, stat, new RowRequirement("world",
+							"world"), new RowRequirement("moveType", movementType));
 
 					// Get current value of stat.
 					int currentValue = 0;
 
 					// Check if it is valid!
 					if (info.isValid()) {
-						currentValue += info.getTotalValue();
+                        currentValue += info.getTotalValue(stat);
 					}
 
 					//debugMessage("Current value: " + currentValue);
@@ -481,14 +491,6 @@ public class Statz extends JavaPlugin {
 
 	public void setStatzAPI(API statzAPI) {
 		this.statzAPI = statzAPI;
-	}
-
-	public DataPoolManager getDataPoolManager() {
-		return dataPoolManager;
-	}
-
-	public void setDataPoolManager(DataPoolManager dataPoolManager) {
-		this.dataPoolManager = dataPoolManager;
 	}
 
 	public DependencyManager getDependencyManager() {
@@ -562,4 +564,28 @@ public class Statz extends JavaPlugin {
     public void setGUIManager(GUIManager guiManager) {
         this.guiManager = guiManager;
     }
+
+    public CachingManager getCachingManager() {
+        return cachingManager;
+    }
+
+    public void setCachingManager(CachingManager cachingManager) {
+        this.cachingManager = cachingManager;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
+
+    public void setTaskManager(TaskManager taskManager) {
+        this.taskManager = taskManager;
+    }
+
+	public UpdatePoolManager getUpdatePoolManager() {
+		return updatePoolManager;
+	}
+
+	public void setUpdatePoolManager(UpdatePoolManager updatePoolManager) {
+		this.updatePoolManager = updatePoolManager;
+	}
 }

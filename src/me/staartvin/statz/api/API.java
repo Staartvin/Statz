@@ -3,8 +3,8 @@ package me.staartvin.statz.api;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.database.datatype.RowRequirement;
-import me.staartvin.statz.datamanager.PlayerStat;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.hooks.DependencyHandler;
 import me.staartvin.statz.hooks.StatzDependency;
 import org.bukkit.Statistic;
@@ -43,7 +43,7 @@ public class API {
 
 		double value = 0;
 
-		List<Query> results = info.getResults();
+        List<Query> results = info.getDataOfPlayerStat(statType);
 
 		if (results == null || results.isEmpty())
 			return value;
@@ -87,7 +87,7 @@ public class API {
 			return null;
 		}
 
-		return info.getTotalValue(conditions);
+        return info.getTotalValue(statType, conditions);
 	}
 
 	/**
