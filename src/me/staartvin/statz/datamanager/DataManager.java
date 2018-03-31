@@ -264,8 +264,6 @@ public class DataManager {
 		List<String> messages = new ArrayList<>();
 		List<TextComponent> messagesSpigot = new ArrayList<>();
 
-        System.out.println("Searching stats of " + playerName + ": " + list);
-
 		for (PlayerStat statType : list) {
 
 			// Skip data of players table
@@ -275,12 +273,9 @@ public class DataManager {
 
 			PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-            // Player is not loaded into cache yet, first load player into cache.
+            // Player is not loaded into cache yet, first load player data into cache.
             if (info == null) {
                 info = plugin.getDataManager().loadPlayerData(uuid, statType);
-                System.out.println(String.format("Loaded data (%s) of %s: %s", statType, playerName, info));
-            } else {
-                System.out.println(String.format("Data was already loaded (%s) of %s.", statType, playerName));
             }
 
             // If data is empty, we have no data about the player and so skip it.
