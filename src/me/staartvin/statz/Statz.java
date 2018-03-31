@@ -16,6 +16,7 @@ import me.staartvin.statz.hooks.DependencyManager;
 import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
+import me.staartvin.statz.language.StatisticDescriptionConfig;
 import me.staartvin.statz.listeners.*;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
@@ -59,6 +60,8 @@ public class Statz extends JavaPlugin {
     private CachingManager cachingManager;
     private TaskManager taskManager;
     private UpdatePoolManager updatePoolManager;
+
+    private StatisticDescriptionConfig statisticDescriptionConfig;
 
     @Override
     public void onEnable() {
@@ -159,6 +162,12 @@ public class Statz extends JavaPlugin {
 
         // Run task to sync database with update list.
         this.getTaskManager().startUpdateDatabaseTask();
+
+        // Create Statistic Description handler
+        this.setStatisticDescriptionConfig(new StatisticDescriptionConfig(this));
+
+        // Load statistics.yml
+        this.getStatisticDescriptionConfig().createNewFile();
     }
 
     @Override
@@ -586,5 +595,13 @@ public class Statz extends JavaPlugin {
 
     public void setUpdatePoolManager(UpdatePoolManager updatePoolManager) {
         this.updatePoolManager = updatePoolManager;
+    }
+
+    public StatisticDescriptionConfig getStatisticDescriptionConfig() {
+        return statisticDescriptionConfig;
+    }
+
+    public void setStatisticDescriptionConfig(StatisticDescriptionConfig statisticDescriptionConfig) {
+        this.statisticDescriptionConfig = statisticDescriptionConfig;
     }
 }

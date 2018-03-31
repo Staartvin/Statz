@@ -1,5 +1,6 @@
 package me.staartvin.statz.language;
 
+import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,158 +20,217 @@ public enum StatisticDescription {
     /**
      * Joined the server {0} times.
      */
-    JOINS("statistic-joins", "Joined the server {0} times.", "&3Joined the server &2{0}&3 times."),
+    JOINS(PlayerStat.JOINS, "Joined the server {0} times.", "&3Joined the server &2{0}&3 times."),
 
     /**
      * Died {0} times on world '{1}'
      */
-    DEATHS("statistic-deaths", "Died {0} times on world '{1}'.", "&3Died &2{0}&3 times."),
+    DEATHS(PlayerStat.DEATHS, "Died {0} times on world '{1}'.", "&3Died &2{0}&3 times."),
 
     /**
      * Caught {0} {1} times on world '{2}'
      */
-    ITEMS_CAUGHT("statistic-items-caught", "Caught {0} {1} times on world '{2}'.", "&3Caught &2{0}&3 items."),
+    ITEMS_CAUGHT(PlayerStat.ITEMS_CAUGHT, "Caught {0} {1} times on world '{2}'.", "&3Caught" +
+            " &2{0}&3 " +
+            "items."),
 
     /**
      * Caught {0} {1} times on world '{2}'
      */
-    BLOCKS_PLACED("statistic-blocks-placed", "Placed {0} blocks of item id {1} and damage value {2} on world '{3}'.",
+    BLOCKS_PLACED(PlayerStat.BLOCKS_PLACED, "Placed {0} blocks of item id {1} and damage " +
+            "value {2} on " +
+            "world '{3}'.",
             "&3Placed &2{0}&3 blocks."),
 
     /**
      * Broke {0} blocks of item id {1} and damage value {2} on world '{3}'.
      */
-    BLOCKS_BROKEN("statistic-blocks-broken", "Broke {0} blocks of item id {1} and damage value {2} on world '{3}'.",
+    BLOCKS_BROKEN(PlayerStat.BLOCKS_BROKEN, "Broke {0} blocks of item id {1} and damage " +
+            "value {2} on " +
+            "world " +
+            "'{3}'.",
             "&3Broke &2{0}&3 blocks."),
 
     /**
      * Killed {0} {1}s on world '{2}'.
      */
-    KILLS_MOBS("statistic-kills-mobs", "Killed {0} {1}s on world '{2}'.", "&3Killed &2{0}&3 mobs."),
+    KILLS_MOBS(PlayerStat.KILLS_MOBS, "Killed {0} {1}s on world '{2}'.", "&3Killed &2{0}&3 " +
+            "mobs."),
 
     /**
-     *Killed {0} {1} times on world '{2}'.
+     * Killed {0} {1} times on world '{2}'.
      */
-    KILLS_PLAYERS("statistic-kills-players", "Killed {0} {1} times on world '{2}'.", "&3Killed &2{0}&3 players."),
+    KILLS_PLAYERS(PlayerStat.KILLS_PLAYERS, "Killed {0} {1} times on world '{2}'.",
+            "&3Killed &2{0}&3" +
+                    " players."),
 
     /**
      * Played for {0} on world '{1}'.
      */
-    TIME_PLAYED("statistic-time-played", "Played for {0} on world '{1}'.", "&3Played &2{0}&3."),
+    TIME_PLAYED(PlayerStat.TIME_PLAYED, "Played for {0} on world '{1}'.", "&3Played &2{0}&3."),
 
     /**
      * Eaten {0} {1} on world '{2}'.
      */
-    FOOD_EATEN("statistic-food-eaten", "Eaten {0} {1} on world '{2}'.", "&3Ate &2{0}&3 consumables."),
+    FOOD_EATEN(PlayerStat.FOOD_EATEN, "Eaten {0} {1} on world '{2}'.", "&3Ate &2{0}&3 " +
+            "consumables."),
 
     /**
      * Took {0} points of damage by {1} on world '{2}'.
      */
-    DAMAGE_TAKEN("statistic-damage-taken", "Took {0} points of damage by {1} on world '{2}'.", "&3Took &2{0}&3 " +
+    DAMAGE_TAKEN(PlayerStat.DAMAGE_TAKEN, "Took {0} points of damage by {1} on world '{2}'" +
+            ".", "&3Took " +
+            "&2{0}&3 " +
             "points of damage."),
 
     /**
      * Shorn {0} sheep on world '{1}'.
      */
-    TIMES_SHORN("statistic-times-shorn", "Shorn {0} sheep on world '{1}'.", "&3Shorn &2{0}&3 sheep."),
+    TIMES_SHORN(PlayerStat.TIMES_SHORN, "Shorn {0} sheep on world '{1}'.", "&3Shorn &2{0}&3 " +
+            "sheep."),
 
     /**
      * Travelled {0} blocks on world '{1}' by {2}.
      */
-    DISTANCE_TRAVELLED("statistic-distance-travelled", "Travelled {0} blocks on world '{1}' by {2}.", "&3Travelled " +
-            "&2{0}&3 blocks."),
+    DISTANCE_TRAVELLED(PlayerStat.DISTANCE_TRAVELLED, "Travelled {0} blocks on world " +
+            "'{1}' by {2}.",
+            "&3Travelled " +
+                    "&2{0}&3 blocks."),
 
     /**
      * Crafted {0} {1} times on world '{2}'.
      */
-    ITEMS_CRAFTED("statistic-items-crafted", "Crafted {0} {1} times on world '{2}'.", "&3Crafted &2{0}&3 items."),
+    ITEMS_CRAFTED(PlayerStat.ITEMS_CRAFTED, "Crafted {0} {1} times on world '{2}'.",
+            "&3Crafted " +
+                    "&2{0}&3 items."),
 
     /**
      * Gained {0} points of xp on world '{1}'
      */
-    XP_GAINED("statistic-xp-gained", "Gained {0} points of xp on world '{1}'.", "&3Gained &2{0}&3 points of xp."),
+    XP_GAINED(PlayerStat.XP_GAINED, "Gained {0} points of xp on world '{1}'.", "&3Gained " +
+            "&2{0}&3 " +
+            "points of xp" +
+            "."),
 
     /**
      * Voted {0} times
      */
-    VOTES("statistic-votes", "Voted {0} times.", "&3Voted &2{0}&3 times."),
+    VOTES(PlayerStat.VOTES, "Voted {0} times.", "&3Voted &2{0}&3 times."),
 
     /**
      * Shot {0} arrows with a force of {1} on world '{2}'.
      */
-    ARROWS_SHOT("statistic-arrows-shot", "Shot {0} arrows with a force of {1} on world '{2}'.", "&3Shot &2{0}&3 " +
+    ARROWS_SHOT(PlayerStat.ARROWS_SHOT, "Shot {0} arrows with a force of {1} on world '{2}'" +
+            ".", "&3Shot " +
+            "&2{0}&3 " +
             "arrows."),
 
     /**
      * Slept {0} times in a bed on world '{1}'.
      */
-    ENTERED_BEDS("statistic-entered-beds", "Slept {0} times in a bed on world '{1}'.", "&3Slept &2{0}&3 times."),
+    ENTERED_BEDS(PlayerStat.ENTERED_BEDS, "Slept {0} times in a bed on world '{1}'.",
+            "&3Slept &2{0}&3 " +
+                    "times."),
 
     /**
      * Performed {0} {1} times on world '{2}'.
      */
-    COMMANDS_PERFORMED("statistic-commands-performed", "Performed {0} {1} times on world '{2}'.", "&3Performed &2" +
-            "{0}&3 commands."),
+    COMMANDS_PERFORMED(PlayerStat.COMMANDS_PERFORMED, "Performed {0} {1} times on " +
+            "world '{2}'.",
+            "&3Performed " +
+                    "&2" +
+                    "{0}&3 commands."),
 
     /**
      * Kicked {0} times on world '{1}' with reason '{2}'.
      */
-    TIMES_KICKED("statistic-times-kicked", "Kicked {0} times on world '{1}' with reason '{2}'.", "&3Kicked &2{0}&3 " +
-            "times."),
+    TIMES_KICKED(PlayerStat.TIMES_KICKED, "Kicked {0} times on world '{1}' with reason " +
+            "'{2}'.",
+            "&3Kicked " +
+                    "&2{0}&3 " +
+                    "times."),
 
     /**
      * Broken {0} {1} times on world '{2}'.
      */
-    TOOLS_BROKEN("statistic-tools-broken", "Broken {0} {1} times on world '{2}'.", "&3Broken &2{0}&3 tools."),
+    TOOLS_BROKEN(PlayerStat.TOOLS_BROKEN, "Broken {0} {1} times on world '{2}'.",
+            "&3Broken " +
+                    "&2{0}&3 tools."),
 
     /**
      * Thrown {0} eggs on world '{1}'.
      */
-    EGGS_THROWN("statistic-eggs-thrown", "Thrown {0} eggs on world '{1}'.", "&3Thrown &2{0}&3 eggs."),
+    EGGS_THROWN(PlayerStat.EGGS_THROWN, "Thrown {0} eggs on world '{1}'.", "&3Thrown &2{0}&3" +
+            " eggs."),
 
     /**
      * Changed from {0} to {1} {2} times.
      */
-    WORLDS_CHANGED("statistic-worlds-changed", "Changed from {0} to {1} {2} times.", "&3Changed worlds &2{0}&3 times."),
+    WORLDS_CHANGED(PlayerStat.WORLDS_CHANGED, "Changed from {0} to {1} {2} times.",
+            "&3Changed worlds " +
+                    "&2{0}&3 times."),
 
     /**
      * Filled {0} buckets on world '{1}'.
      */
-    BUCKETS_FILLED("statistic-buckets-filled", "Filled {0} buckets on world '{1}'.", "&3Filled &2{0}&3 buckets."),
+    BUCKETS_FILLED(PlayerStat.BUCKETS_FILLED, "Filled {0} buckets on world '{1}'.",
+            "&3Filled &2{0}&3 " +
+                    "buckets."),
 
     /**
      * Emptied {0} buckets on world '{1}'.
      */
-    BUCKETS_EMPTIED("statistic-buckets-emptied", "Emptied {0} buckets on world '{1}'.", "&3Emptied &2{0}&3 buckets."),
+    BUCKETS_EMPTIED(PlayerStat.BUCKETS_EMPTIED, "Emptied {0} buckets on world '{1}'.",
+            "&3Emptied " +
+                    "&2{0}&3 " +
+                    "buckets."),
 
     /**
      * Dropped {0} {1} times on world '{2}'.
      */
-    ITEMS_DROPPED("statistic-items-dropped", "Dropped {0} {1} times on world '{2}'.", "&3Dropped &2{0}&3 items."),
+    ITEMS_DROPPED(PlayerStat.ITEMS_DROPPED, "Dropped {0} {1} times on world '{2}'.",
+            "&3Dropped " +
+                    "&2{0}&3 " +
+                    "items."),
 
     /**
      * Picked up {0} {1} times on world '{2}'.
      */
-    ITEMS_PICKED_UP("statistic-items-picked-up", "Picked up {0} {1} times on world '{2}'.", "&3Picked up &2{0}&3 " +
+    ITEMS_PICKED_UP(PlayerStat.ITEMS_PICKED_UP, "Picked up {0} {1} times on world '{2}'" +
+            ".", "&3Picked " +
+            "up " +
+            "&2{0}&3 " +
             "items."),
 
     /**
      * Teleported from {0} to {1} {2} times because of {3}.
      */
-    TELEPORTS("statistic-teleports", "Teleported from {0} to {1} {2} times because of {3}.", "&3Teleported &2{0}&3 " +
-            "times."),
+    TELEPORTS(PlayerStat.TELEPORTS, "Teleported from {0} to {1} {2} times because of {3}.",
+            "&3Teleported " +
+                    "&2{0}&3 " +
+                    "times."),
 
     /**
      * Traded with {0} Villagers on world '{1}' for item {2}.
      */
-    VILLAGER_TRADES("statistic-villager-trades", "Traded with {0} Villagers on world '{1}' for item {2}.", "&3Traded " +
-            "with &2{0}&3 Villagers."),
+    VILLAGER_TRADES(PlayerStat.VILLAGER_TRADES, "Traded with {0} Villagers on world " +
+            "'{1}' for item {2}" +
+            ".",
+            "&3Traded " +
+                    "with &2{0}&3 Villagers."),;
 
+    private static FileConfiguration file;
+    private String highDetailDesc, totalDesc;
+    private PlayerStat relatedPlayerStat;
 
-
-    ;
-
-    private static FileConfiguration LANG;
+    /**
+     * Statistic enum constructor.
+     */
+    StatisticDescription(PlayerStat correspondingStat, String highDetailDesc, String totalDesc) {
+        this.highDetailDesc = highDetailDesc;
+        this.totalDesc = totalDesc;
+        this.relatedPlayerStat = correspondingStat;
+    }
 
     /**
      * Set the {@code FileConfiguration} to use.
@@ -178,28 +238,14 @@ public enum StatisticDescription {
      * @param config The config to set.
      */
     public static void setFile(final FileConfiguration config) {
-        LANG = config;
-    }
-
-    private String path, highDetailDesc, totalDesc;
-
-    public enum DescriptionDetail {HIGH, MEDIUM, LOW}
-
-    /**
-     * Lang enum constructor.
-     *
-     * @param path The string path.
-     */
-    StatisticDescription(final String path, String highDetailDesc, String totalDesc) {
-        this.path = path;
-        this.highDetailDesc = highDetailDesc;
-        this.totalDesc = totalDesc;
+        file = config;
     }
 
     /**
      * Get the value in the config with certain arguments.
      *
      * @param args arguments that need to be given. (Can be null)
+     *
      * @return value in config or otherwise default value
      */
     private String getConfigValue(String description, final Object... args) {
@@ -208,9 +254,7 @@ public enum StatisticDescription {
             return null;
         }
 
-        String value = ChatColor.translateAlternateColorCodes('&',  description);
-
-        //ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, description));
+        String value = ChatColor.translateAlternateColorCodes('&', description);
 
         if (args == null)
             return value;
@@ -240,11 +284,17 @@ public enum StatisticDescription {
     }
 
     /**
-     * Get the path to the string.
+     * Get the PlayerStat enum that is related to this statistic description.
      *
-     * @return The path to the string.
+     * @return {@link PlayerStat}
      */
-    public String getPath() {
-        return this.path;
+    public PlayerStat getRelatedPlayerStat() {
+        return this.relatedPlayerStat;
     }
+
+    public String getStringIdentifier() {
+        return relatedPlayerStat.getTableName();
+    }
+
+    public enum DescriptionDetail {HIGH, MEDIUM, LOW}
 }

@@ -80,13 +80,13 @@ public class GUIManager implements Listener {
             PlayerInfo statInfo = entry.getValue();
 
             // Get icon of this stat type
-            Material iconMaterial = statType.getIconMaterial();
+            Material iconMaterial = plugin.getStatisticDescriptionConfig().getIconMaterial(statType);
 
             // Create an itemstack to show in the inventory
             ItemStack itemStack = new ItemStack(iconMaterial);
             itemStack.setAmount(1);
 
-            String displayName = statType.getHumanFriendlyName();
+            String displayName = plugin.getStatisticDescriptionConfig().getHumanFriendlyTitle(statType);
 
             // Get item meta to add messages
             ItemMeta itemMeta = itemStack.getItemMeta();
@@ -167,13 +167,13 @@ public class GUIManager implements Listener {
             }
 
             // Get icon of this stat type
-            Material iconMaterial = statType.getIconMaterial();
+            Material iconMaterial = plugin.getStatisticDescriptionConfig().getIconMaterial(statType);
 
             // Create an itemstack to show in the inventory
             ItemStack itemStack = new ItemStack(iconMaterial);
             itemStack.setAmount(1);
 
-            String displayName = statType.getHumanFriendlyName();
+            String displayName = plugin.getStatisticDescriptionConfig().getHumanFriendlyTitle(statType);
 
             // Get item meta to add messages
             ItemMeta itemMeta = itemStack.getItemMeta();
@@ -276,7 +276,7 @@ public class GUIManager implements Listener {
 
         for (PlayerStat stat : PlayerStat.values()) {
 
-            String humanName = stat.getHumanFriendlyName();
+            String humanName = plugin.getStatisticDescriptionConfig().getHumanFriendlyTitle(stat);
 
             if (humanName == null) {
                 continue;
