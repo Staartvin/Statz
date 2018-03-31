@@ -261,8 +261,6 @@ public class QueryTest {
         info.setData(PlayerStat.KILLS_MOBS, list);
         info.setData(PlayerStat.ITEMS_DROPPED, list);
 
-        System.out.println(info.toString());
-
         queryA.resolveConflict(queryB).getValue();
     }
 
