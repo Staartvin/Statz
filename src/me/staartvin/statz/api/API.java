@@ -37,10 +37,6 @@ public class API {
 	public Double getTotalOf(final PlayerStat statType, final UUID uuid, final String worldName) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
 
-		if (!info.isValid()) {
-			return null;
-		}
-
 		double value = 0;
 
         List<Query> results = info.getDataOfPlayerStat(statType);
@@ -82,10 +78,6 @@ public class API {
 	 */
 	public Double getSpecificData(final PlayerStat statType, final UUID uuid, final RowRequirement... conditions) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
-
-		if (!info.isValid()) {
-			return null;
-		}
 
         return info.getTotalValue(statType, conditions);
 	}
