@@ -2,6 +2,7 @@ package me.staartvin.statz.config;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
+import me.staartvin.statz.tasks.TaskManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +32,10 @@ public class ConfigHandler {
                 + "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any."
                 + "\nIf 'use custom statz list' is set to true, the /statz command will show a list of statistics for a player. The statistics that get displayed can be altered by changing the 'custom statz list' variable."
                 + "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19"
-                + "\nThe 'use statz gui' option enables you to view the statistics of a player via a gui. It is disabled by default ");
+                + "\nThe 'use statz gui' option enables you to view the statistics of a player via a gui. It is " +
+                "disabled by default "
+                + "\nThe 'refresh player cache time' is the time (in seconds) to refresh the cache of a player, you " +
+                "should not have to alter it.");
 
         plugin.getConfig().addDefault("track stats", true);
         plugin.getConfig().addDefault("show database save message", false);
@@ -42,7 +46,9 @@ public class ConfigHandler {
         plugin.getConfig().addDefault("mysql.password", "");
         plugin.getConfig().addDefault("mysql.database", "Statz");
 
-        plugin.getConfig().addDefault("periodic save time", 10);
+        plugin.getConfig().addDefault("periodic save time", TaskManager.UPDATE_DATABASE_TASK_INTERVAL);
+
+        plugin.getConfig().addDefault("refresh player cache time", TaskManager.UPDATE_PLAYER_CACHE_INTERVAL);
 
         plugin.getConfig().addDefault("disabled statistics",
                 Arrays.asList("DISABLED_STAT_NAME_HERE", "OTHER_DISABLED_STAT_NAME"));
@@ -112,7 +118,11 @@ public class ConfigHandler {
     }
 
     public int getPeriodicSaveTime() {
-        return plugin.getConfig().getInt("periodic save time", 10);
+        return plugin.getConfig().getInt("periodic save time", TaskManager.UPDATE_DATABASE_TASK_INTERVAL);
+    }
+
+    public int getPeriodiceRefreshPlayerCacheTime() {
+        return plugin.getConfig().getInt("refresh player cache time", TaskManager.UPDATE_PLAYER_CACHE_INTERVAL);
     }
 
     public List<PlayerStat> getDisabledStats() {
