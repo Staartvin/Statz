@@ -71,6 +71,7 @@ public class API {
 	 * <br>
 	 * <br>Another example: how much XP did a player get in total on world 'ravioli'?
 	 * <br><code>getSpecificData(PlayerStat.XP_GAINED, uuid of player, new RowRequirement("world", "ravioli"));</code>
+     * Note that this method will return -1 if there is no cached data of the requested player.
 	 * @param statType The stat to get info of
 	 * @param uuid UUID of the Player
 	 * @param conditions Extra conditions that need to be met. If no conditions are given, this method will act the same as {@link #getTotalOf(PlayerStat, UUID, String)}.
@@ -78,6 +79,10 @@ public class API {
 	 */
 	public Double getSpecificData(final PlayerStat statType, final UUID uuid, final RowRequirement... conditions) {
 		PlayerInfo info = plugin.getDataManager().getPlayerInfo(uuid, statType);
+
+        if (info == null) {
+            return -1.0;
+        }
 
         return info.getTotalValue(statType, conditions);
 	}

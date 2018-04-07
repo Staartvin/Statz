@@ -111,7 +111,7 @@ public class GUIManager implements Listener {
                 continue;
             } else {
 
-                // Create temp
+                // Create temp playerinfo object to obtain description
                 PlayerInfo tempInfo = new PlayerInfo(uuid);
                 tempInfo.setData(statType, storedRows);
 
