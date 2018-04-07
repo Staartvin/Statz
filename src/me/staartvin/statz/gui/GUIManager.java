@@ -68,16 +68,24 @@ public class GUIManager implements Listener {
      */
     public Inventory getStatisticsListInventory(UUID uuid, String playerName) {
 
-        Map<PlayerStat, PlayerInfo> data = getPlayerStatistics(uuid);
+        PlayerInfo data = plugin.getDataManager().getPlayerInfo(uuid);
+
+        if (data == null) {
+            data = plugin.getDataManager().loadPlayerData(uuid);
+        }
 
         int count = 0;
 
         Map<Integer, ItemStack> slots = new HashMap<>();
 
-        for (Map.Entry<PlayerStat, PlayerInfo> entry : data.entrySet()) {
+        for (PlayerStat statType : data.getStatistics()) {
 
-            PlayerStat statType = entry.getKey();
-            PlayerInfo statInfo = entry.getValue();
+            // Skip Players statistic
+            if (statType == PlayerStat.PLAYERS) {
+                continue;
+            }
+
+            List<Query> storedRows = data.getRows(statType);
 
             // Get icon of this stat type
             Material iconMaterial = plugin.getStatisticDescriptionConfig().getIconMaterial(statType);
@@ -97,15 +105,17 @@ public class GUIManager implements Listener {
             // Create a list of messages shown when hovering over the item
             List<String> messages = new ArrayList<>();
 
-            List<Query> results = statInfo.getDataOfPlayerStat(statType);
-
-            if (results.isEmpty()) {
-                messages.add(ChatColor.RED + "No information about you yet!");
+            if (storedRows == null || storedRows.isEmpty()) {
+                messages.add(ChatColor.RED + "No information about " + playerName + "!");
                 // Don't do anything when result is empty.
                 continue;
             } else {
 
-                String totalDescription = ChatColor.stripColor(DescriptionMatcher.getTotalDescription(statInfo,
+                // Create temp
+                PlayerInfo tempInfo = new PlayerInfo(uuid);
+                tempInfo.setData(statType, storedRows);
+
+                String totalDescription = ChatColor.stripColor(DescriptionMatcher.getTotalDescription(tempInfo,
                         statType));
 
                 if (totalDescription != null) {
@@ -352,7 +362,7 @@ public class GUIManager implements Listener {
 
         String[] words = message.split(" ");
 
-        StringBuilder line = new StringBuilder("");
+        StringBuilder line = new StringBuilder();
 
         for (String word : words) {
             // Check if line with extra word is longer than max length
