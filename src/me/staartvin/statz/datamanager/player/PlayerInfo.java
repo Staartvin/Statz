@@ -460,4 +460,25 @@ public class PlayerInfo {
 
         return rows;
     }
+
+	/**
+	 * Get every query in this PlayerInfo object per stored statistic.
+	 * This method returns a map where the key is the statistic and the associated value is a list of queries that
+	 * are stored in this object.
+	 *
+	 * @return all queries stored per statistic type.
+	 */
+	public Map<PlayerStat, List<Query>> getRowsPerStatistic() {
+		Map<PlayerStat, List<Query>> map = new HashMap<>();
+
+		for (Map.Entry<PlayerStat, List<Query>> entry : this.statistics.entrySet()) {
+			if (entry.getValue() == null) {
+				continue;
+			}
+
+			map.put(entry.getKey(), entry.getValue());
+		}
+
+		return map;
+	}
 }
