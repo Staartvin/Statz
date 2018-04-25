@@ -172,8 +172,6 @@ public class Statz extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // TODO: Send pool if server is closed.
-
         debugMessage(ChatColor.RED + "Saving updates to database!");
 
         // Schedule task to update database for the last time.
