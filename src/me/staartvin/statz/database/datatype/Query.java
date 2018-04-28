@@ -435,6 +435,11 @@ public class Query {
             return false;
         }
 
+        // If the value is null, it cannot be the same as the requirement
+        if (this.getValue(requirement.getColumnName()) == null) {
+            return false;
+        }
+
         // This query does not have the same value as specified by the requirement, so it does not meet the requirement.
         return this.getValue(requirement.getColumnName()).equals(requirement.getColumnValue());
     }

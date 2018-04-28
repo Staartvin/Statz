@@ -40,4 +40,9 @@ public class RowRequirement {
 	public void setColumnValue(String columnValue) {
 		this.columnValue = columnValue;
 	}
+
+	@Override
+	public String toString() {
+		return "Condition where " + columnName + " = " + columnValue;
+	}
 }
