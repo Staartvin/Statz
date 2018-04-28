@@ -47,8 +47,8 @@ public class API {
 		if (worldName != null) {
 			// Add every value that is in the proper world
 			for (Query result : results) {
-				if (result.getValue("world") != null
-						&& result.getValue("world").toString().equalsIgnoreCase(worldName)) {
+
+                if (result.meetsRequirement(new RowRequirement("world", worldName))) {
 					value += Double.parseDouble(result.getValue("value").toString());
 				}
 			}
