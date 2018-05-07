@@ -4,10 +4,7 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -84,8 +81,9 @@ public class UpdatePoolManager {
     public List<Query> getUpdateQueriesCopy(PlayerStat statType) {
         List<Query> queries = new ArrayList<>();
 
-        for (Query q : this.getUpdateQueries(statType)) {
-            queries.add(q);
+        while ( Iterator<Query> it = this.getUpdateQueries(statType).iterator();
+        it.hasNext()){
+            queries.add(it.next());
         }
 
         return queries;
