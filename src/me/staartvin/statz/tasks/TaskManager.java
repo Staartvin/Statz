@@ -24,7 +24,7 @@ public class TaskManager {
     /**
      * How often should the cache of a player be validated with the database (in seconds)?
      */
-    public static int UPDATE_PLAYER_CACHE_INTERVAL = 60 * 5;
+    public static int UPDATE_PLAYER_CACHE_INTERVAL = 60;
     // Store the task id of the 'update player cache' task for each player.
     private Map<UUID, Integer> cacheUpdateTask = new HashMap<>();
 
