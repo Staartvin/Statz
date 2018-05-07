@@ -4,7 +4,10 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,10 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UpdatePoolManager {
 
+    public static boolean isForcingPool = false;
     private Map<PlayerStat, List<Query>> updateQueries = new ConcurrentHashMap<>();
     private Statz plugin;
-
-    public static boolean isForcingPool = false;
 
     public UpdatePoolManager(Statz instance) {
         this.plugin = instance;
@@ -53,6 +55,7 @@ public class UpdatePoolManager {
     /**
      * Get a map containing every pool for each statistic. The pools are given in key-value pairs where the key is
      * the type of statistic for the pool, and the value is the pool (list of queries) itself.
+     *
      * @return a map of all pools.
      */
     public Map<PlayerStat, List<Query>> getAllUpdateQueries() {
@@ -61,6 +64,7 @@ public class UpdatePoolManager {
 
     /**
      * Get a list of queries that are in the pool of the given statistic.
+     *
      * @param statType Type of statistic.
      * @return a list of queries that are in the pool.
      */
@@ -75,22 +79,18 @@ public class UpdatePoolManager {
     /**
      * Get a list of queries that are in the pool of the given statistic. Note that this creates a copy of the pool
      * and hence you cannot actually alter the 'real' pool.
+     *
      * @param statType Type of statistic.
      * @return a list of queries that are in the pool.
      */
     public List<Query> getUpdateQueriesCopy(PlayerStat statType) {
-        List<Query> queries = new ArrayList<>();
 
-        while ( Iterator<Query> it = this.getUpdateQueries(statType).iterator();
-        it.hasNext()){
-            queries.add(it.next());
-        }
-
-        return queries;
+        return new ArrayList<>(this.getUpdateQueries(statType));
     }
 
     /**
      * Get whether there is a pool for the given statistic. Note that a pool may exist but still be empty.
+     *
      * @param statType Type of statistic
      * @return true if there is a pool for the given statistic, false otherwise.
      */
@@ -100,8 +100,9 @@ public class UpdatePoolManager {
 
     /**
      * Set the pool of the given statistic.
+     *
      * @param statType Type of statistic
-     * @param queries List of queries to set the pool to
+     * @param queries  List of queries to set the pool to
      */
     private void setUpdateQueries(PlayerStat statType, List<Query> queries) {
         this.updateQueries.put(statType, queries);
@@ -109,8 +110,9 @@ public class UpdatePoolManager {
 
     /**
      * Add a query to a pool of the given statistic.
+     *
      * @param statType Type of statistic
-     * @param query Query to add
+     * @param query    Query to add
      */
     public void addQuery(PlayerStat statType, Query query) {
         List<Query> queries = getUpdateQueries(statType);
@@ -129,6 +131,7 @@ public class UpdatePoolManager {
 
     /**
      * Clear the pool of the given statistic.
+     *
      * @param statType Type of statistic
      */
     public void clearUpdateQueries(PlayerStat statType) {
