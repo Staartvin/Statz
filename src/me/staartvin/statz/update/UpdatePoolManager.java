@@ -82,13 +82,7 @@ public class UpdatePoolManager {
      * @return a list of queries that are in the pool.
      */
     public List<Query> getUpdateQueriesCopy(PlayerStat statType) {
-        List<Query> queries = new ArrayList<>();
-
-        for (Query q : this.getUpdateQueries(statType)) {
-            queries.add(q);
-        }
-
-        return queries;
+        return new ArrayList<>(this.getUpdateQueries(statType));
     }
 
     /**
