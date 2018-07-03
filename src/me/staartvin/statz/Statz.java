@@ -65,9 +65,6 @@ public class Statz extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
-        // test push for new Jenkins instance
-
         // Load confighandler
         this.setConfigHandler(new ConfigHandler(this));
 
@@ -333,7 +330,6 @@ public class Statz extends JavaPlugin {
      *
      * @param player Player to check
      * @param stat   Stat to check
-     *
      * @return true if we should track the stat, false otherwise.
      */
     public boolean doGeneralCheck(Player player, PlayerStat stat) {
