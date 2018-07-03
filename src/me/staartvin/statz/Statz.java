@@ -66,6 +66,8 @@ public class Statz extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        // test push for new Jenkins instance
+
         // Load confighandler
         this.setConfigHandler(new ConfigHandler(this));
 
