@@ -44,8 +44,6 @@ public class DistanceTravelledListener implements Listener {
 			return;
 		}
 
-		System.out.println("IS PLAYER SWIMMING: " + player.isSwimming());
-
 		final String movement = movementType;
 
 		// Update value to new stat.
