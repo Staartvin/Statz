@@ -4,6 +4,7 @@ version: ${project.version}
 authors: [Staartvin]
 description: The one-and-all plugin to record and store stats about any player.
 softdepend: [Vault, Stats, Votifier, PluginLibrary]
+api-version: 1.13
 commands:
     statz:
         description: Master command of Statz

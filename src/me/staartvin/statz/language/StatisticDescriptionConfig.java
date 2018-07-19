@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 
 /**
@@ -65,19 +64,11 @@ public class StatisticDescriptionConfig {
         saveConfig();
     }
 
-    @SuppressWarnings("deprecation")
     public void reloadConfig() {
         if (statisticsConfigFile == null) {
             statisticsConfigFile = new File(plugin.getDataFolder() + "/statistics", "statistics.yml");
         }
         statisticsConfig = YamlConfiguration.loadConfiguration(statisticsConfigFile);
-
-        // Look for defaults in the jar
-        final InputStream defConfigStream = plugin.getResource("statistics.yml");
-        if (defConfigStream != null) {
-            final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            statisticsConfig.setDefaults(defConfig);
-        }
     }
 
     public void saveConfig() {

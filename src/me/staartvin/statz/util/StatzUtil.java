@@ -5,9 +5,11 @@ import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Rabbit.Type;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +19,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StatzUtil {
+
+    // This is true if player is gliding with an elytra
+    public static HashMap<UUID, Boolean> isGliding = new HashMap<>();
 
     /**
      * Checks whether the current version is higher than the given version
@@ -41,7 +46,8 @@ public class StatzUtil {
             return false;
         }
 
-        if (Integer.parseInt(splitCheck.get(0)) > Integer.parseInt(splitCur.get(0))) {
+        if (Integer.parseInt(splitCheck.get(0).replaceAll("[^\\d.]", "")) > Integer.parseInt(splitCur.get(0)
+                .replaceAll("[^\\d.]", ""))) {
             return false;
         }
 
@@ -59,15 +65,14 @@ public class StatzUtil {
             splitCheck.add("0");
         }
 
-        if (Integer.parseInt(splitCheck.get(1)) > Integer.parseInt(splitCur.get(1))) {
+        if (Integer.parseInt(splitCheck.get(1).replaceAll("[^\\d.]", "")) > Integer.parseInt(splitCur.get(1)
+                .replaceAll("[^\\d.]", ""))) {
             return false;
         }
 
-        return Integer.parseInt(splitCheck.get(2)) <= Integer.parseInt(splitCur.get(2));
+        return Integer.parseInt(splitCheck.get(2).replaceAll("[^\\d.]", "")) <= Integer.parseInt(splitCur.get(2)
+                .replaceAll("[^\\d.]", ""));
     }
-
-    // This is true if player is gliding with an elytra
-    public static HashMap<UUID, Boolean> isGliding = new HashMap<>();
 
     /**
      * Create a query to retrieve or send data from or to the database.
@@ -125,9 +130,9 @@ public class StatzUtil {
             return null;
 
         switch (item.getType()) {
-            case CAKE_BLOCK: // not working atm
+            case CAKE: // not working atm
                 return "CAKE_BLOCK";
-            case COOKED_FISH: {
+            case COOKED_COD: {
                 if (item.getDurability() == (short) 1) {
                     return "COOKED_SALMON";
                 }
@@ -139,7 +144,7 @@ public class StatzUtil {
                 }
                 return "GOLDEN_APPLE";
             }
-            case RAW_FISH: {
+            case COD: {
                 if (item.getDurability() == (short) 1) {
                     return "RAW_SALMON";
                 } else if (item.getDurability() == (short) 2) {
@@ -164,72 +169,30 @@ public class StatzUtil {
         name = name.toUpperCase();
         name = name.replace(" ", "_");
 
-        if (name.equals("APPLE")) {
-            return new ItemStack(Material.APPLE, 1);
-        } else if (name.equals("BAKED_POTATO")) {
-            return new ItemStack(Material.BAKED_POTATO, 1);
-        } else if (name.equals("BREAD")) {
-            return new ItemStack(Material.BREAD, 1);
-        } else if (name.equals("CAKE_BLOCK")) {
-            return new ItemStack(Material.CAKE_BLOCK, 1);
-        } else if (name.equals("CARROT_ITEM")) {
-            return new ItemStack(Material.CARROT_ITEM, 1);
-        } else if (name.equals("COOKED_CHICKEN")) {
-            return new ItemStack(Material.COOKED_CHICKEN, 1);
-        } else if (name.equals("COOKED_FISH")) {
-            return new ItemStack(Material.COOKED_FISH, 1);
-        } else if (name.equals("COOKED_SALMON")) {
-            return new ItemStack(Material.COOKED_FISH.getId(), 1, (short) 1);
-        } else if (name.equals("COOKED_MUTTON")) {
-            return new ItemStack(Material.COOKED_MUTTON, 1);
-        } else if (name.equals("GRILLED_PORK")) {
-            return new ItemStack(Material.GRILLED_PORK, 1);
-        } else if (name.equals("COOKED_RABBIT")) {
-            return new ItemStack(Material.COOKED_RABBIT, 1);
-        } else if (name.equals("COOKIE")) {
-            return new ItemStack(Material.COOKIE, 1);
-        } else if (name.equals("GOLDEN_APPLE")) {
-            return new ItemStack(Material.GOLDEN_APPLE, 1);
-        } else if (name.equals("ENCHANTED_GOLDEN_APPLE")) {
-            return new ItemStack(Material.GOLDEN_APPLE.getId(), 1, (short) 1);
-        } else if (name.equals("GOLDEN_CARROT")) {
-            return new ItemStack(Material.GOLDEN_CARROT, 1);
-        } else if (name.equals("MELON")) {
-            return new ItemStack(Material.MELON, 1);
-        } else if (name.equals("MUSHROOM_SOUP")) {
-            return new ItemStack(Material.MUSHROOM_SOUP, 1);
-        } else if (name.equals("RABBIT_STEW")) {
-            return new ItemStack(Material.RABBIT_STEW, 1);
-        } else if (name.equals("RAW_BEEF")) {
-            return new ItemStack(Material.RAW_BEEF, 1);
-        } else if (name.equals("RAW_CHICKEN")) {
-            return new ItemStack(Material.RAW_CHICKEN, 1);
-        } else if (name.equals("RAW_FISH")) {
-            return new ItemStack(Material.RAW_FISH, 1);
-        } else if (name.equals("RAW_SALMON")) {
-            return new ItemStack(Material.RAW_FISH.getId(), 1, (short) 1);
-        } else if (name.equals("CLOWNFISH")) {
-            return new ItemStack(Material.RAW_FISH.getId(), 1, (short) 2);
-        } else if (name.equals("PUFFERFISH")) {
-            return new ItemStack(Material.RAW_FISH.getId(), 1, (short) 3);
-        } else if (name.equals("POISONOUS_POTATO")) {
-            return new ItemStack(Material.POISONOUS_POTATO, 1);
-        } else if (name.equals("POTATO")) {
-            return new ItemStack(Material.POTATO, 1);
-        } else if (name.equals("PUMPKIN_PIE")) {
-            return new ItemStack(Material.PUMPKIN_PIE, 1);
-        } else if (name.equals("MUTTON")) {
-            return new ItemStack(Material.MUTTON, 1);
-        } else if (name.equals("COOKED_BEEF")) {
-            return new ItemStack(Material.COOKED_BEEF, 1);
-        } else if (name.equals("RABBIT")) {
-            return new ItemStack(Material.RABBIT, 1);
-        } else if (name.equals("ROTTEN_FLESH")) {
-            return new ItemStack(Material.ROTTEN_FLESH, 1);
-        } else if (name.equals("SPIDER_EYE")) {
-            return new ItemStack(Material.SPIDER_EYE, 1);
-        } else
-            return null;
+        switch (name) {
+            case "CAKE_BLOCK":
+                return new ItemStack(Material.CAKE, 1);
+            case "CARROT_ITEM":
+                return new ItemStack(Material.CARROT, 1);
+            case "COOKED_FISH":
+                return new ItemStack(Material.COOKED_COD, 1);
+            case "GRILLED_PORK":
+                return new ItemStack(Material.COOKED_PORKCHOP, 1);
+            case "MUSHROOM_SOUP":
+                return new ItemStack(Material.MUSHROOM_STEW, 1);
+            case "RAW_BEEF":
+                return new ItemStack(Material.BEEF, 1);
+            case "RAW_CHICKEN":
+                return new ItemStack(Material.CHICKEN, 1);
+            case "RAW_FISH":
+                return new ItemStack(Material.COD, 1);
+            case "RAW_SALMON":
+                return new ItemStack(Material.SALMON, 1);
+            case "CLOWNFISH":
+                return new ItemStack(Material.TROPICAL_FISH, 1);
+            default:
+                return new ItemStack(Material.valueOf(name.toUpperCase()), 1);
+        }
     }
 
     // Courtesy to Lolmewn for this code.
@@ -238,6 +201,11 @@ public class StatzUtil {
         if (player.isFlying()) {
             return "FLY";
         }
+
+        if (player.isSwimming()) {
+            return "SWIM";
+        }
+
         if (player.isInsideVehicle()) {
             Entity vehicle = player.getVehicle();
 
@@ -613,10 +581,6 @@ public class StatzUtil {
         return version;
     }
 
-    public enum Time {
-        DAYS, HOURS, MINUTES, SECONDS
-    }
-
     public static String getMobType(Entity e) {
         String mobType = e.getType().toString();
 
@@ -713,5 +677,73 @@ public class StatzUtil {
             res = Double.parseDouble(string);
 
         return res;
+    }
+
+
+    /**
+     * Get the matching material from an item id and damage value. Attempts to find the material that matches the
+     * given data type.
+     *
+     * @param typeId    Id of item
+     * @param dataValue optional data value
+     * @return the material that matches the given item id and data value, or null if there is no match.
+     */
+    public static org.bukkit.Material findMaterial(int typeId, int dataValue) {
+
+        final Material[] foundMaterial = new Material[1];
+
+        EnumSet.allOf(Material.class).forEach(material -> {
+
+                    // TODO: Find a way to convert extra data to a new material type.
+
+                    // Found matching id
+                    if (material.getId() == typeId) {
+                        foundMaterial[0] = material;
+                    }
+                }
+        );
+
+        if (foundMaterial[0] == null) {
+            return null;
+        }
+
+        System.out.println("----------------------------------");
+
+        System.out.println("FOUND MATCHING MATERIAL: " + foundMaterial[0]);
+
+        // Use switch statements to convert to proper material
+        BlockData blockData = foundMaterial[0].createBlockData();
+
+        System.out.println("BLOCK DATA: " + blockData);
+        System.out.println("BLOCK DATA Material: " + blockData.getMaterial());
+        System.out.println("BLOCK DATA String: " + blockData.getAsString());
+
+        ItemStack newItemStack = new ItemStack(blockData.getMaterial(), 1, (short) dataValue);
+
+        newItemStack.setDurability((short) dataValue);
+        System.out.println("NEW ITEMSTACK: " + newItemStack.getType());
+
+        try {
+            MaterialData newMaterial = foundMaterial[0].getNewData((byte) dataValue);
+
+            System.out.println("NEW MATERIAL: " + newMaterial);
+            System.out.println("NEW MATERIAL TO ITEMSTACK: " + newMaterial.toItemStack(1));
+            System.out.println("NEW MATERIAL ITEMTYPE: " + newMaterial.getItemType());
+            System.out.println("NEW MATERIAL TO ITEMSTACK AND TYPE: " + newMaterial.toItemStack(1).getType());
+
+            newItemStack.setData(newMaterial);
+
+            System.out.println("ITEMSTACK WITH MODIFIED MATERIAL: " + newItemStack);
+            System.out.println("ITEMSTACK WITH MODIFIED MATERIAL TYPE: " + newItemStack.getType());
+        } catch (Exception e) {
+
+        }
+
+
+        return foundMaterial[0];
+    }
+
+    public enum Time {
+        DAYS, HOURS, MINUTES, SECONDS
     }
 }

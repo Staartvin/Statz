@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -121,19 +120,11 @@ public class DisableManager {
         saveConfig();
     }
 
-    @SuppressWarnings("deprecation")
     public void reloadConfig() {
         if (disableConfigFile == null) {
             disableConfigFile = new File(plugin.getDataFolder(), "disabled-stats.yml");
         }
         disableConfig = YamlConfiguration.loadConfiguration(disableConfigFile);
-
-        // Look for defaults in the jar
-        final InputStream defConfigStream = plugin.getResource("disabled-stats.yml");
-        if (defConfigStream != null) {
-            final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            disableConfig.setDefaults(defConfig);
-        }
     }
 
     public void saveConfig() {

@@ -167,6 +167,15 @@ public class Statz extends JavaPlugin {
 
         // Load statistics.yml
         this.getStatisticDescriptionConfig().createNewFile();
+
+        System.out.println("Found material (glass): " + StatzUtil.findMaterial(20, 0));
+        System.out.println("Found material (red wool): " + StatzUtil.findMaterial(35, 14));
+        System.out.println("Found material (jungle wood): " + StatzUtil.findMaterial(5, 3));
+        System.out.println("Found material (wooden pressure plate): " + StatzUtil.findMaterial(72, 0));
+        System.out.println("Found material (raw fish): " + StatzUtil.findMaterial(349, 0));
+        System.out.println("Found material (clown fish): " + StatzUtil.findMaterial(349, 2));
+        System.out.println("Found material (granite): " + StatzUtil.findMaterial(1, 1));
+        System.out.println("Found material (polished granite): " + StatzUtil.findMaterial(1, 2));
     }
 
     @Override

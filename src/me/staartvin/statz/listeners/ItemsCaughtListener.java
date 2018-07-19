@@ -47,6 +47,12 @@ public class ItemsCaughtListener implements Listener {
 
 			item = ((Item) entity).getItemStack();
 
+			System.out.println("Material: " + item.getType());
+			System.out.println("Material ID: " + item.getType().getId());
+			System.out.println("Material.name(): " + item.getType().name());
+			System.out.println("Material KEY: " + item.getType().getKey());
+
+
 			if (event.getState().equals(State.CAUGHT_FISH)) {
 				materialName = StatzUtil.getFoodName(item);
 

@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 
 /**
@@ -53,19 +52,11 @@ public class LanguageHandler {
 		saveConfig();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void reloadConfig() {
 		if (languageConfigFile == null) {
 			languageConfigFile = new File(plugin.getDataFolder() + "/lang", "lang.yml");
 		}
 		languageConfig = YamlConfiguration.loadConfiguration(languageConfigFile);
-
-		// Look for defaults in the jar
-		final InputStream defConfigStream = plugin.getResource("lang.yml");
-		if (defConfigStream != null) {
-			final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			languageConfig.setDefaults(defConfig);
-		}
 	}
 
 	public void saveConfig() {

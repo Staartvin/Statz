@@ -13,7 +13,7 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player join the server?
 	 */
-	JOINS("joins", Material.ACACIA_DOOR_ITEM, "How many times did I log in?"),
+    JOINS("joins", Material.ACACIA_DOOR, "How many times did I log in?"),
 	/**
 	 * How many times did a player die?
 	 */
@@ -21,7 +21,7 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player catch an item with fishing?
 	 */
-	ITEMS_CAUGHT("items_caught", Material.GOLD_SPADE, "How many items did I catch while fishing?"),
+    ITEMS_CAUGHT("items_caught", Material.GOLDEN_SHOVEL, "How many items did I catch while fishing?"),
 	/**
 	 * What kind of blocks (and how many) where placed by a player?
 	 */
@@ -34,7 +34,7 @@ public enum PlayerStat {
 	/**
 	 * What kind of mobs did a player kill?
 	 */
-	KILLS_MOBS("kills_mobs", Material.SKULL_ITEM, "How many mobs did I kill?"),
+    KILLS_MOBS("kills_mobs", Material.SKELETON_SKULL, "How many mobs did I kill?"),
 
 	/**
 	 * How many players did a player kill?
@@ -44,12 +44,12 @@ public enum PlayerStat {
 	/**
 	 * How many minutes has a player played on the server?
 	 */
-	TIME_PLAYED("time_played", Material.WATCH, "How many minutes have I played on this server?"),
+    TIME_PLAYED("time_played", Material.CLOCK, "How many minutes have I played on this server?"),
 
 	/**
 	 * What food has a player eaten?
 	 */
-	FOOD_EATEN("food_eaten", Material.GRILLED_PORK, "How much food have I eaten?"),
+    FOOD_EATEN("food_eaten", Material.COOKED_PORKCHOP, "How much food have I eaten?"),
 
 	/**
 	 * How much damage has a player taken?
@@ -70,12 +70,12 @@ public enum PlayerStat {
 	/**
 	 * What kind of items did a player craft?
 	 */
-	ITEMS_CRAFTED("items_crafted", Material.WORKBENCH, "How many items did I craft?"),
+    ITEMS_CRAFTED("items_crafted", Material.CRAFTING_TABLE, "How many items did I craft?"),
 
 	/**
 	 * How much XP did a player gain in total?
 	 */
-	XP_GAINED("xp_gained", Material.EXP_BOTTLE, "How much EXP did I gain?"),
+    XP_GAINED("xp_gained", Material.EXPERIENCE_BOTTLE, "How much EXP did I gain?"),
 
 	/**
 	 * How many times did a player vote (with Votifier)?
@@ -95,7 +95,7 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player enter a bed and on what world?
 	 */
-	ENTERED_BEDS("entered_beds", Material.BED, "How many times have I slept in a bed?"),
+    ENTERED_BEDS("entered_beds", Material.PINK_BED, "How many times have I slept in a bed?"),
 
 	/**
 	 * What commands did a player perform and on what world?
@@ -140,7 +140,7 @@ public enum PlayerStat {
 	/**
 	 * How many items did a player pick up?
 	 */
-	ITEMS_PICKED_UP("items_picked_up", Material.SEEDS, "How many items did I pick up?"),
+    ITEMS_PICKED_UP("items_picked_up", Material.WHEAT_SEEDS, "How many items did I pick up?"),
 
 	/**
 	 * How many times did a player teleport?

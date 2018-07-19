@@ -12,35 +12,40 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlocksPlacedListener implements Listener {
 
-	private final Statz plugin;
+    private final Statz plugin;
 
-	public BlocksPlacedListener(final Statz plugin) {
-		this.plugin = plugin;
-	}
+    public BlocksPlacedListener(final Statz plugin) {
+        this.plugin = plugin;
+    }
 
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onBlockPlace(final BlockPlaceEvent event) {
+    @SuppressWarnings("deprecation")
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockPlace(final BlockPlaceEvent event) {
 
-		final PlayerStat stat = PlayerStat.BLOCKS_PLACED;
+        final PlayerStat stat = PlayerStat.BLOCKS_PLACED;
 
-		// Get player
-		final Player player = event.getPlayer();
+        // Get player
+        final Player player = event.getPlayer();
 
-		// Do general check
-		if (!plugin.doGeneralCheck(player, stat))
-			return;
+        // Do general check
+        if (!plugin.doGeneralCheck(player, stat))
+            return;
 
-		Block blockPlaced = event.getBlockPlaced();
+        Block blockPlaced = event.getBlockPlaced();
 
-		final int typeId = blockPlaced.getTypeId();
-		final int dataValue = blockPlaced.getData();
-		final String worldName = blockPlaced.getWorld().getName();
+        System.out.println("BlockData: " + blockPlaced.getBlockData());
+        System.out.println("Material: " + blockPlaced.getBlockData().getMaterial().getId());
+        System.out.println("Material as String: " + blockPlaced.getBlockData().getAsString());
+        System.out.println("Material.name(): " + blockPlaced.getBlockData().getMaterial().name());
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "typeid", typeId, "datavalue",
-						dataValue, "world", worldName));
+        final int typeId = blockPlaced.getBlockData().getMaterial().getId();
+        final int dataValue = blockPlaced.getData();
+        final String worldName = blockPlaced.getWorld().getName();
 
-	}
+        // Update value to new stat.
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "block", blockPlaced
+                        .getBlockData().getMaterial().name(), "world", worldName));
+
+    }
 }
