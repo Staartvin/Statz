@@ -41,7 +41,7 @@ public class WeaponColumnMobKillsPatch extends Patch {
 
     @Override
     public int getPatchId() {
-        return 3;
+        return 1;
     }
 
     @Override
