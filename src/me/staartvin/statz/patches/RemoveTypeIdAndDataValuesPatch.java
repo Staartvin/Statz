@@ -95,9 +95,6 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
 
             org.bukkit.Material matchingMaterial = StatzUtil.findMaterial(typeId, dataValue);
 
-            System.out.println(String.format("Found Material %s for item id %d, data value %d", matchingMaterial,
-                    typeId, dataValue));
-
             queries.add(String.format("INSERT INTO %s (uuid, value, world, block) VALUES ('%s', %s, '%s', '%s')",
                     temporaryName,
                     query.getUUID(), query.getValue(), query.getValue("world").toString(), matchingMaterial.name()));
