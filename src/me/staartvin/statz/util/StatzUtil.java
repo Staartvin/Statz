@@ -5,7 +5,6 @@ import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Rabbit.Type;
 import org.bukkit.inventory.ItemStack;
@@ -18,10 +17,40 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.bukkit.Material.*;
+
 public class StatzUtil {
 
     // This is true if player is gliding with an elytra
     public static HashMap<UUID, Boolean> isGliding = new HashMap<>();
+
+    public static Map<Material, List<Material>> materialsMap = new HashMap<>();
+
+    static {
+        materialsMap.put(STONE, Arrays.asList(GRANITE, POLISHED_GRANITE, DIORITE, POLISHED_DIORITE,
+                ANDESITE, POLISHED_ANDESITE));
+        materialsMap.put(DIRT, Arrays.asList(COARSE_DIRT, PODZOL));
+        materialsMap.put(OAK_PLANKS, Arrays.asList(SPRUCE_PLANKS, BIRCH_PLANKS, JUNGLE_PLANKS, ACACIA_PLANKS,
+                DARK_OAK_PLANKS));
+        materialsMap.put(OAK_SAPLING, Arrays.asList(SPRUCE_SAPLING, BIRCH_SAPLING, JUNGLE_SAPLING, ACACIA_SAPLING,
+                DARK_OAK_SAPLING));
+        materialsMap.put(SAND, Arrays.asList(RED_SAND));
+        materialsMap.put(OAK_LOG, Arrays.asList(SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, OAK_WOOD,
+                SPRUCE_WOOD, BIRCH_WOOD, JUNGLE_WOOD));
+        materialsMap.put(ACACIA_LOG, Arrays.asList(DARK_OAK_LOG, ACACIA_WOOD, DARK_OAK_WOOD));
+        materialsMap.put(OAK_LEAVES, Arrays.asList(SPRUCE_LEAVES, BIRCH_LEAVES, JUNGLE_LEAVES));
+        materialsMap.put(ACACIA_LEAVES, Arrays.asList(DARK_OAK_LEAVES));
+        materialsMap.put(SPONGE, Arrays.asList(WET_SPONGE));
+        materialsMap.put(SANDSTONE, Arrays.asList(CHISELED_SANDSTONE, CUT_SANDSTONE));
+        materialsMap.put(DEAD_BUSH, Arrays.asList(GRASS, FERN));
+        materialsMap.put(WHITE_WOOL, Arrays.asList(ORANGE_WOOL, MAGENTA_WOOL, LIGHT_BLUE_WOOL, YELLOW_WOOL,
+                LIME_WOOL, PINK_WOOL, GRAY_WOOL, LIGHT_GRAY_WOOL, CYAN_WOOL, PURPLE_WOOL, BLUE_WOOL, BROWN_WOOL,
+                GREEN_WOOL, RED_WOOL, BLACK_WOOL));
+        materialsMap.put(POPPY, Arrays.asList(BLUE_ORCHID, ALLIUM, AZURE_BLUET, RED_TULIP, ORANGE_TULIP, WHITE_TULIP,
+                PINK_TULIP, OXEYE_DAISY));
+
+
+    }
 
     /**
      * Checks whether the current version is higher than the given version
@@ -689,58 +718,14 @@ public class StatzUtil {
      * @return the material that matches the given item id and data value, or null if there is no match.
      */
     public static org.bukkit.Material findMaterial(int typeId, int dataValue) {
-
-        final Material[] foundMaterial = new Material[1];
-
-        EnumSet.allOf(Material.class).forEach(material -> {
-
-                    // TODO: Find a way to convert extra data to a new material type.
-
-                    // Found matching id
-                    if (material.getId() == typeId) {
-                        foundMaterial[0] = material;
-                    }
-                }
-        );
-
-        if (foundMaterial[0] == null) {
-            return null;
+        for (Material mat : EnumSet.allOf(Material.class)) {
+            if (mat.getId() == typeId) {
+                return Bukkit.getUnsafe().fromLegacy(new MaterialData(mat,
+                        (byte) dataValue));
+            }
         }
 
-        System.out.println("----------------------------------");
-
-        System.out.println("FOUND MATCHING MATERIAL: " + foundMaterial[0]);
-
-        // Use switch statements to convert to proper material
-        BlockData blockData = foundMaterial[0].createBlockData();
-
-        System.out.println("BLOCK DATA: " + blockData);
-        System.out.println("BLOCK DATA Material: " + blockData.getMaterial());
-        System.out.println("BLOCK DATA String: " + blockData.getAsString());
-
-        ItemStack newItemStack = new ItemStack(blockData.getMaterial(), 1, (short) dataValue);
-
-        newItemStack.setDurability((short) dataValue);
-        System.out.println("NEW ITEMSTACK: " + newItemStack.getType());
-
-        try {
-            MaterialData newMaterial = foundMaterial[0].getNewData((byte) dataValue);
-
-            System.out.println("NEW MATERIAL: " + newMaterial);
-            System.out.println("NEW MATERIAL TO ITEMSTACK: " + newMaterial.toItemStack(1));
-            System.out.println("NEW MATERIAL ITEMTYPE: " + newMaterial.getItemType());
-            System.out.println("NEW MATERIAL TO ITEMSTACK AND TYPE: " + newMaterial.toItemStack(1).getType());
-
-            newItemStack.setData(newMaterial);
-
-            System.out.println("ITEMSTACK WITH MODIFIED MATERIAL: " + newItemStack);
-            System.out.println("ITEMSTACK WITH MODIFIED MATERIAL TYPE: " + newItemStack.getType());
-        } catch (Exception e) {
-
-        }
-
-
-        return foundMaterial[0];
+        return null;
     }
 
     public enum Time {
