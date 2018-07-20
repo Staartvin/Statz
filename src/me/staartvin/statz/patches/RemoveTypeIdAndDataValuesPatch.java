@@ -6,7 +6,7 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +22,9 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
     @Override
     public boolean applyMySQLChanges() {
 
-        String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
+        List<String> queries = convertMySQLTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_PLACED).getTableName());
 
-        List<String> queries = Arrays.asList("ALTER TABLE " + tableName + " ADD weapon VARCHAR(255) NOT NULL", "ALTER" +
-                " TABLE " + tableName
-                + " DROP INDEX `uuid`, ADD UNIQUE `uuid` (`uuid`, `mob`, `world`, `weapon`) USING BTREE;");
+        queries.addAll(convertMySQLTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_BROKEN).getTableName()));
 
         try {
             this.getDatabaseConnector().sendQueries(queries, false);
@@ -43,22 +41,22 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
 
     @Override
     public String getPatchName() {
-        return "Convert database to 1.13 Materials";
+        return "Remove type id and datavalue of materials";
     }
 
     @Override
     public int getPatchId() {
-        return 1;
+        return 4;
     }
 
     @Override
     public boolean applySQLiteChanges() {
 
-        List<String> queries = convertTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_BROKEN)
+        List<String> queries = convertSQLiteTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_BROKEN)
                 .getTableName(), DatabaseConnector.getTable(PlayerStat.BLOCKS_BROKEN)
                 .getTableName() + "_temp");
 
-        queries.addAll(convertTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_PLACED).getTableName(),
+        queries.addAll(convertSQLiteTable(DatabaseConnector.getTable(PlayerStat.BLOCKS_PLACED).getTableName(),
                 DatabaseConnector.getTable(PlayerStat.BLOCKS_PLACED).getTableName() + "_temp"));
 
         try {
@@ -73,14 +71,17 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
 
     }
 
-    private List<String> convertTable(String tableName, String temporaryName) {
+    private List<String> convertSQLiteTable(String tableName, String temporaryName) {
         // Create new table with new indexes and column 'block' (without columns 'typeid' and 'datavalue').
         // Insert data from old table to new table (but convert to material name)
         // Drop old table
         // Rename new table to name of old table
         // Done!
 
-        List<String> queries = Arrays.asList("CREATE TABLE " + temporaryName + " ('id' INTEGER PRIMARY KEY NOT NULL, " +
+        List<String> queries = new ArrayList<>();
+
+        queries.add("CREATE TABLE " + temporaryName + " ('id' INTEGER PRIMARY KEY " +
+                "NOT NULL, " +
                 "'uuid' TEXT NOT NULL, 'value' INTEGER NOT NULL, 'world' TEXT NOT NULL, 'block' TEXT NOT NULL, UNIQUE" +
                 " (uuid, block, world))");
 
@@ -104,6 +105,35 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
 
         queries.add("DROP TABLE IF EXISTS " + tableName);
         queries.add("ALTER TABLE " + temporaryName + " RENAME TO " + tableName);
+
+        return queries;
+    }
+
+    private List<String> convertMySQLTable(String tableName) {
+        List<String> queries = new ArrayList<>();
+
+        // Add a new column called 'block'
+        queries.add("ALTER TABLE " + tableName + " ADD block VARCHAR(100) NOT NULL");
+
+        // Get all data in the table
+        List<Query> data = this.getDatabaseConnector().getObjects(tableName);
+
+        // Add value for each row for the new block column
+        for (Query query : data) {
+
+            int itemId = Integer.parseInt(query.getValue("typeid").toString());
+            int damageValue = Integer.parseInt(query.getValue("datavalue").toString());
+
+            queries.add("UPDATE " + tableName + " SET block='" + StatzUtil.findMaterial(itemId, damageValue) + "' " +
+                    "WHERE id=" + query.getValue("id"));
+        }
+
+        // Update the index with the new column
+        queries.add("ALTER TABLE " + tableName + " DROP INDEX uuid, ADD UNIQUE KEY `uuid` (`uuid`,`block`,`world`)");
+
+        // Remove the old columns
+        queries.add("ALTER TABLE " + tableName + " DROP COLUMN typeid, DROP COLUMN datavalue");
+
 
         return queries;
     }

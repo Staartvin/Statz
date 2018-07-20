@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Rabbit.Type;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import java.math.BigDecimal;
@@ -143,85 +142,6 @@ public class StatzUtil {
         searchQuery = new StringBuilder(searchQuery.substring(0, lastIndex));
 
         return searchQuery.toString();
-    }
-
-    /**
-     * Get the name of this food item.
-     *
-     * @param item ItemStack to get the name of.
-     * @return Name of food, or null if not a valid food item.
-     */
-    public static String getFoodName(final ItemStack item) {
-        // Returns null if not a valid food item
-        // Got Materials from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-
-        if (item == null)
-            return null;
-
-        switch (item.getType()) {
-            case CAKE: // not working atm
-                return "CAKE_BLOCK";
-            case COOKED_COD: {
-                if (item.getDurability() == (short) 1) {
-                    return "COOKED_SALMON";
-                }
-                return "COOKED_FISH";
-            }
-            case GOLDEN_APPLE: {
-                if (item.getDurability() == (short) 1) {
-                    return "ENCHANTED_GOLDEN_APPLE";
-                }
-                return "GOLDEN_APPLE";
-            }
-            case COD: {
-                if (item.getDurability() == (short) 1) {
-                    return "RAW_SALMON";
-                } else if (item.getDurability() == (short) 2) {
-                    return "CLOWNFISH";
-                } else if (item.getDurability() == (short) 3) {
-                    return "PUFFERFISH";
-                }
-                return "RAW_FISH";
-            }
-            default:
-                return item.getType().toString().toUpperCase();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static ItemStack getFoodItemFromName(String name) {
-        // Cannot use switch, is only supported in Java 1.7+
-
-        if (name == null)
-            return null;
-
-        name = name.toUpperCase();
-        name = name.replace(" ", "_");
-
-        switch (name) {
-            case "CAKE_BLOCK":
-                return new ItemStack(Material.CAKE, 1);
-            case "CARROT_ITEM":
-                return new ItemStack(Material.CARROT, 1);
-            case "COOKED_FISH":
-                return new ItemStack(Material.COOKED_COD, 1);
-            case "GRILLED_PORK":
-                return new ItemStack(Material.COOKED_PORKCHOP, 1);
-            case "MUSHROOM_SOUP":
-                return new ItemStack(Material.MUSHROOM_STEW, 1);
-            case "RAW_BEEF":
-                return new ItemStack(Material.BEEF, 1);
-            case "RAW_CHICKEN":
-                return new ItemStack(Material.CHICKEN, 1);
-            case "RAW_FISH":
-                return new ItemStack(Material.COD, 1);
-            case "RAW_SALMON":
-                return new ItemStack(Material.SALMON, 1);
-            case "CLOWNFISH":
-                return new ItemStack(Material.TROPICAL_FISH, 1);
-            default:
-                return new ItemStack(Material.valueOf(name.toUpperCase()), 1);
-        }
     }
 
     // Courtesy to Lolmewn for this code.
@@ -711,7 +631,8 @@ public class StatzUtil {
 
     /**
      * Get the matching material from an item id and damage value. Attempts to find the material that matches the
-     * given data type.
+     * given data type. This method is to be used with old (pre 1.13) item id and data values. It converts the item
+     * id and data value pair into the new (post 1.13) material.
      *
      * @param typeId    Id of item
      * @param dataValue optional data value

@@ -31,25 +31,19 @@ public enum StatisticDescription {
      * Caught {0} {1} times on world '{2}'
      */
     ITEMS_CAUGHT(PlayerStat.ITEMS_CAUGHT, "Caught {0} {1} times on world '{2}'.", "&3Caught" +
-            " &2{0}&3 " +
-            "items."),
+            " &2{0}&3 " + "items."),
 
     /**
-     * Caught {0} {1} times on world '{2}'
+     * Placed {0} blocks of {1} on world '{1}'
      */
-    BLOCKS_PLACED(PlayerStat.BLOCKS_PLACED, "Placed {0} blocks of item id {1} and damage " +
-            "value {2} on " +
-            "world '{3}'.",
-            "&3Placed &2{0}&3 blocks."),
+    BLOCKS_PLACED(PlayerStat.BLOCKS_PLACED, "Placed {0} blocks of {1} on " +
+            "world '{2}'.", "&3Placed &2{0}&3 blocks."),
 
     /**
-     * Broke {0} blocks of item id {1} and damage value {2} on world '{3}'.
+     * Broke {0} blocks of {1} on world '{2}'.
      */
-    BLOCKS_BROKEN(PlayerStat.BLOCKS_BROKEN, "Broke {0} blocks of item id {1} and damage " +
-            "value {2} on " +
-            "world " +
-            "'{3}'.",
-            "&3Broke &2{0}&3 blocks."),
+    BLOCKS_BROKEN(PlayerStat.BLOCKS_BROKEN, "Broke {0} blocks of {1} on " +
+            "world " + "'{2}'.", "&3Broke &2{0}&3 blocks."),
 
     /**
      * Killed {0} {1}s on world '{2}'.
@@ -245,7 +239,6 @@ public enum StatisticDescription {
      * Get the value in the config with certain arguments.
      *
      * @param args arguments that need to be given. (Can be null)
-     *
      * @return value in config or otherwise default value
      */
     private String getConfigValue(String description, final Object... args) {

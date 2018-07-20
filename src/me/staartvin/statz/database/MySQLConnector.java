@@ -335,19 +335,16 @@ public class MySQLConnector extends DatabaseConnector {
         newTable.addColumn(id);
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        Column typeID = new Column("typeid", false, SQLDataType.INT, true);
-        Column dataValue = new Column("datavalue", false, SQLDataType.INT, true);
+        Column block = new Column("block", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
-        newTable.addColumn(dataValue);
+        newTable.addColumn(block);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
-        newTable.addUniqueMatched(dataValue);
+        newTable.addUniqueMatched(block);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -357,20 +354,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.BLOCKS_BROKEN.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("typeid", false, SQLDataType.INT, true);
-        dataValue = new Column("datavalue", false, SQLDataType.INT, true);
+        block = new Column("block", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
-        newTable.addColumn(dataValue);
+        newTable.addColumn(block);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
-        newTable.addUniqueMatched(dataValue);
+        newTable.addUniqueMatched(block);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -380,7 +374,7 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.KILLS_MOBS.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("mob", false, SQLDataType.TEXT, true);
+        Column mob = new Column("mob", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
         Column weapon = new Column("weapon", false, SQLDataType.TEXT, true);
 
@@ -388,11 +382,11 @@ public class MySQLConnector extends DatabaseConnector {
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(mob);
         newTable.addColumn(weapon);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(mob);
         newTable.addUniqueMatched(world);
         newTable.addUniqueMatched(weapon);
 
@@ -403,17 +397,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.KILLS_PLAYERS.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("playerKilled", false, SQLDataType.TEXT, true);
+        Column playerKilled = new Column("playerKilled", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(playerKilled);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(playerKilled);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -440,17 +434,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.FOOD_EATEN.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("foodEaten", false, SQLDataType.TEXT, true);
+        Column foodEaten = new Column("foodEaten", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(foodEaten);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(foodEaten);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -460,17 +454,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.DAMAGE_TAKEN.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("cause", false, SQLDataType.TEXT, true);
+        Column cause = new Column("cause", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(cause);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(cause);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -497,17 +491,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.DISTANCE_TRAVELLED.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("moveType", false, SQLDataType.TEXT, true);
+        Column moveType = new Column("moveType", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.DOUBLE);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(moveType);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(moveType);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -517,17 +511,17 @@ public class MySQLConnector extends DatabaseConnector {
         newTable = new MySQLTable(PlayerStat.ITEMS_CRAFTED.getTableName());
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
-        typeID = new Column("item", false, SQLDataType.TEXT, true);
+        Column item = new Column("item", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(item);
 
         newTable.addUniqueMatched(uuid);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(item);
         newTable.addUniqueMatched(world);
 
         this.addTable(newTable);
@@ -571,17 +565,17 @@ public class MySQLConnector extends DatabaseConnector {
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
-        typeID = new Column("forceShot", false, SQLDataType.DOUBLE, true);
+        Column forceShot = new Column("forceShot", false, SQLDataType.DOUBLE, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT, true);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(forceShot);
 
         newTable.addUniqueMatched(uuid);
         newTable.addUniqueMatched(world);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(forceShot);
 
         this.addTable(newTable);
 
@@ -737,17 +731,17 @@ public class MySQLConnector extends DatabaseConnector {
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
-        typeID = new Column("item", false, SQLDataType.TEXT, true);
+        item = new Column("item", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT, true);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(item);
 
         newTable.addUniqueMatched(uuid);
         newTable.addUniqueMatched(world);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(item);
 
         this.addTable(newTable);
 
@@ -757,17 +751,17 @@ public class MySQLConnector extends DatabaseConnector {
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
-        typeID = new Column("item", false, SQLDataType.TEXT, true);
+        item = new Column("item", false, SQLDataType.TEXT, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT, true);
         newTable.addColumn(world);
-        newTable.addColumn(typeID);
+        newTable.addColumn(item);
 
         newTable.addUniqueMatched(uuid);
         newTable.addUniqueMatched(world);
-        newTable.addUniqueMatched(typeID);
+        newTable.addUniqueMatched(item);
 
         this.addTable(newTable);
 

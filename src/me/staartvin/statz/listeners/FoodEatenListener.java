@@ -29,7 +29,7 @@ public class FoodEatenListener implements Listener {
 		if (!plugin.doGeneralCheck(player, stat))
 			return;
 
-		final String foodName = StatzUtil.getFoodName(event.getItem());
+		final String foodName = event.getItem().getType().name();
 
 		if (foodName == null)
 			return;

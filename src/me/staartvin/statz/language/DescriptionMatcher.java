@@ -47,8 +47,7 @@ public class DescriptionMatcher {
             case BLOCKS_BROKEN:
             case BLOCKS_PLACED:
                 description = descriptionEnum.getHighDetailDescription((int) query.getValue(),
-                        query.getIntValue("typeid"), query.getIntValue("datavalue"),
-                        query.getValue("world"));
+                        query.getValue("block"), query.getValue("world"));
                 break;
             case BUCKETS_EMPTIED:
             case BUCKETS_FILLED:
@@ -74,8 +73,8 @@ public class DescriptionMatcher {
                         query.getValue("world"), query.getValue("moveType"));
                 break;
             case FOOD_EATEN:
-                description = descriptionEnum.getHighDetailDescription(query.getValue("foodEaten"),
-                        (int) query.getValue(), query.getValue("world"));
+                description = descriptionEnum.getHighDetailDescription((int) query.getValue(), query.getValue
+                        ("foodEaten"), query.getValue("world"));
                 break;
             case ITEMS_CAUGHT:
                 description = descriptionEnum.getHighDetailDescription(query.getValue("caught"),
@@ -114,7 +113,7 @@ public class DescriptionMatcher {
                         query.getValue("world"), query.getValue("trade"));
                 break;
             case WORLDS_CHANGED:
-                description = descriptionEnum.getHighDetailDescription( query.getValue("world"),
+                description = descriptionEnum.getHighDetailDescription(query.getValue("world"),
                         query.getValue("destWorld"), (int) query.getValue());
                 break;
         }

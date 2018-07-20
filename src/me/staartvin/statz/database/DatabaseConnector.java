@@ -46,7 +46,10 @@ public abstract class DatabaseConnector {
 	 */
 	public static Table getTable(String tableName) {
 
-		tableName = SQLiteConnector.prefix + tableName;
+        // Add prefix if it wasn't added before.
+        if (!tableName.startsWith(SQLiteConnector.prefix)) {
+            tableName = SQLiteConnector.prefix + tableName;
+        }
 
 		for (final Table table : tables) {
 			if (table.getTableName().equals(tableName)) {

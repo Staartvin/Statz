@@ -17,6 +17,8 @@ public class PatchManager {
         patches.add(new WeaponColumnMobKillsPatch(plugin));
         patches.add(new RenameWitherSkeletonPatch(plugin));
         patches.add(new RenameElderGuardianPatch(plugin));
+        patches.add(new RemoveTypeIdAndDataValuesPatch(plugin));
+        patches.add(new RenameFoodNamesPatch(plugin));
     }
 
     public void applyPatches() {
@@ -44,13 +46,22 @@ public class PatchManager {
             // Update latest patch information.
             if (plugin.getConfigHandler().isMySQLEnabled()) {
 
-                success = patch.applyMySQLChanges();
+                try {
+                    success = patch.applyMySQLChanges();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
                 if (success) {
                     plugin.getConfigHandler().setLatestPatchMySQLVersion(patch.getPatchId());
                 }
             } else {
-                success = patch.applySQLiteChanges();
+                try {
+                    success = patch.applySQLiteChanges();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 if (success) {
                     plugin.getConfigHandler().setLatestPatchSQLiteVersion(patch.getPatchId());
@@ -76,7 +87,12 @@ public class PatchManager {
             count++;
         }
 
-        plugin.getLogger().info("---------- [" + count + " patches have been applied!] ----------");
+        if (count == 0) {
+            plugin.getLogger().info("---------- [No patches were applied! Database is already up-to-date.] ----------");
+        } else {
+            plugin.getLogger().info("---------- [" + count + " patches have been applied!] ----------");
+        }
+
     }
 
 }

@@ -167,39 +167,6 @@ public class Statz extends JavaPlugin {
 
         // Load statistics.yml
         this.getStatisticDescriptionConfig().createNewFile();
-
-        System.out.println("Found material (glass): " + StatzUtil.findMaterial(20, 0));
-        System.out.println("Found material (red wool): " + StatzUtil.findMaterial(35, 14));
-        System.out.println("Found material (jungle wood): " + StatzUtil.findMaterial(5, 3));
-        System.out.println("Found material (wooden pressure plate): " + StatzUtil.findMaterial(72, 0));
-        System.out.println("Found material (raw fish): " + StatzUtil.findMaterial(349, 0));
-        System.out.println("Found material (clown fish): " + StatzUtil.findMaterial(349, 2));
-        System.out.println("Found material (granite): " + StatzUtil.findMaterial(1, 1));
-        System.out.println("Found material (polished granite): " + StatzUtil.findMaterial(1, 2));
-        System.out.println("Found material (acacia leaves): " + StatzUtil.findMaterial(161, 0));
-        System.out.println("Found material (dark oak leaves): " + StatzUtil.findMaterial(161, 1));
-        System.out.println("Found material (grass): " + StatzUtil.findMaterial(31, 1));
-        System.out.println("Found material (dead bush): " + StatzUtil.findMaterial(32, 0));
-        System.out.println("Found material (fern): " + StatzUtil.findMaterial(31, 2));
-        System.out.println("Found material (dandelion): " + StatzUtil.findMaterial(37, 0));
-        System.out.println("Found material (poppy): " + StatzUtil.findMaterial(38, 0));
-        System.out.println("Found material (blue orchid): " + StatzUtil.findMaterial(38, 1));
-        System.out.println("Found material (single stone slab): " + StatzUtil.findMaterial(44, 0));
-        System.out.println("Found material (single sandstone slab): " + StatzUtil.findMaterial(44, 1));
-        System.out.println("Found material (single wooden slab): " + StatzUtil.findMaterial(44, 2));
-        System.out.println("Found material (single cobblestone slab): " + StatzUtil.findMaterial(44, 3));
-        System.out.println("Found material (single brick slab): " + StatzUtil.findMaterial(44, 4));
-        System.out.println("Found material (single stone brick slab): " + StatzUtil.findMaterial(44, 5));
-        System.out.println("Found material (single quartz slab): " + StatzUtil.findMaterial(44, 6));
-        System.out.println("Found material (single nether brick slab): " + StatzUtil.findMaterial(44, 7));
-        System.out.println("Found material (single oak slab): " + StatzUtil.findMaterial(126, 0));
-        System.out.println("Found material (single spruce slab): " + StatzUtil.findMaterial(126, 1));
-        System.out.println("Found material (single birch slab): " + StatzUtil.findMaterial(126, 2));
-        System.out.println("Found material (single jungle slab): " + StatzUtil.findMaterial(126, 3));
-        System.out.println("Found material (single acacia slab): " + StatzUtil.findMaterial(126, 4));
-        System.out.println("Found material (single dark oak slab): " + StatzUtil.findMaterial(126, 5));
-        System.out.println("Found material (double oak slab): " + StatzUtil.findMaterial(126, 5));
-        System.out.println("Found material (single dark oak slab): " + StatzUtil.findMaterial(126, 5));
     }
 
     @Override

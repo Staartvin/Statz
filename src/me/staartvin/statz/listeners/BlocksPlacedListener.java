@@ -32,14 +32,6 @@ public class BlocksPlacedListener implements Listener {
             return;
 
         Block blockPlaced = event.getBlockPlaced();
-
-        System.out.println("BlockData: " + blockPlaced.getBlockData());
-        System.out.println("Material: " + blockPlaced.getBlockData().getMaterial().getId());
-        System.out.println("Material as String: " + blockPlaced.getBlockData().getAsString());
-        System.out.println("Material.name(): " + blockPlaced.getBlockData().getMaterial().name());
-
-        final int typeId = blockPlaced.getBlockData().getMaterial().getId();
-        final int dataValue = blockPlaced.getData();
         final String worldName = blockPlaced.getWorld().getName();
 
         // Update value to new stat.

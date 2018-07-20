@@ -33,16 +33,6 @@ public class BlocksBrokenListener implements Listener {
 
         Block blockBroken = event.getBlock();
 
-        System.out.println("BlockData: " + blockBroken.getBlockData());
-        System.out.println("Material: " + blockBroken.getBlockData().getMaterial());
-
-        System.out.println("Material ID: " + blockBroken.getBlockData().getMaterial().getId());
-
-        System.out.println("Material as String: " + blockBroken.getBlockData().getAsString());
-        System.out.println("Material.name(): " + blockBroken.getBlockData().getMaterial().name());
-
-        final int typeId = blockBroken.getBlockData().getMaterial().getId();
-        final int dataValue = blockBroken.getData();
         final String worldName = blockBroken.getWorld().getName();
 
         // Update value to new stat.
