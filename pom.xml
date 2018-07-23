@@ -92,9 +92,15 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-            <version>1.13-pre7-R0.1-SNAPSHOT</version>
+			<version>1.13-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.13-R0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -121,12 +127,6 @@
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
 			<version>2.3.2.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.11.2-R0.1-SNAPSHOT</version>
 		</dependency>
 
         <dependency>
