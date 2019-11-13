@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.staartvin.Statz</groupId>
 	<artifactId>Statz</artifactId>
-	<version>1.5.3-Dev-${BUILD_NUMBER}</version>
+	<version>1.5.3-SNAPSHOT-${BUILD_NUMBER}</version>
 	<name>Statz</name>
 	<description>Maven project for Spigot plugin Statz
 	</description>
@@ -19,6 +19,11 @@
 			</properties>
 		</profile>
 	</profiles>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 
@@ -64,26 +69,12 @@
 	<repositories>
 		<repository>
 			<id>staartvin-repo</id>
-			<url>http://62.131.38.74:8081/artifactory/ext-release-local/</url>
+			<url>http://78.47.218.125:8081/artifactory/libs-release-local/</url>
 		</repository>
 
 		<repository>
 			<id>Spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-		</repository>
-
-		<repository>
-			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/artifactory/repo/</url>
-		</repository>
-
-		<repository>
-			<id>uSkyBlock-mvn-repo</id>
-			<url>https://raw.github.com/rlf/uSkyBlock/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
 		</repository>
 
 	</repositories>
@@ -92,7 +83,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.13-R0.1-SNAPSHOT</version>
+			<version>1.14.4-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>
@@ -100,40 +91,26 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.13-R0.1-SNAPSHOT</version>
+			<version>1.14.4-R0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.vexsoftware</groupId>
-			<artifactId>votifier</artifactId>
-			<version>1.9</version>
+			<groupId>nl.lolmewn.stats</groupId>
+			<artifactId>Stats</artifactId>
+			<version>5.3.3</version>
 		</dependency>
 
-        <dependency>
-            <groupId>nl.lolmewn.stats</groupId>
-            <artifactId>Stats</artifactId>
-            <version>3.1.2-20171108.195442-1</version>
-        </dependency>
-
-        <dependency>
+		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.5.6</version>
-			<scope>provided</scope>
-			<type>jar</type>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.7</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.vexsoftware</groupId>
-			<artifactId>nuvotifier-universal</artifactId>
-			<version>2.3.2.2</version>
+			<groupId>me.staartvin</groupId>
+			<artifactId>PluginLibrary</artifactId>
+			<version>1.2.1-SNAPSHOT-10</version>
 		</dependency>
-
-        <dependency>
-            <groupId>me.staartvin</groupId>
-            <artifactId>PluginLibrary</artifactId>
-            <version>LATEST</version>
-        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -167,6 +144,18 @@
             <version>16.0.2</version>
             <scope>compile</scope>
         </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 </project>
