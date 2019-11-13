@@ -17,7 +17,7 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player die?
 	 */
-	DEATHS("deaths", Material.SIGN, "How many times did I die?"),
+    DEATHS("deaths", Material.OAK_SIGN, "How many times did I die?"),
 	/**
 	 * How many times did a player catch an item with fishing?
 	 */

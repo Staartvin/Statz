@@ -251,11 +251,11 @@ public class GUIManager implements Listener {
         }
 
         // Check if clicking a Statz GUI window
-        if (!inv.getTitle().contains(inventoryTitle)) {
+        if (!event.getView().getTitle().contains(inventoryTitle)) {
             return;
         }
 
-        String targetPlayer = ChatColor.stripColor(inv.getTitle().replace(inventoryTitle, "").trim());
+        String targetPlayer = ChatColor.stripColor(event.getView().getTitle().replace(inventoryTitle, "").trim());
 
         // Check if we can find the target player of this inventory.
         if (targetPlayer == null || targetPlayer.equalsIgnoreCase("")) {

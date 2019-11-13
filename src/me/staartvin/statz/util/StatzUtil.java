@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Rabbit.Type;
-import org.bukkit.material.MaterialData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -640,10 +639,13 @@ public class StatzUtil {
      */
     public static org.bukkit.Material findMaterial(int typeId, int dataValue) {
         for (Material mat : EnumSet.allOf(Material.class)) {
-            if (mat.getId() == typeId) {
-                return Bukkit.getUnsafe().fromLegacy(new MaterialData(mat,
-                        (byte) dataValue));
+            XMaterial matchedMaterial = XMaterial.matchXMaterial(typeId, (byte) dataValue);
+
+            if (matchedMaterial == null) {
+                return null;
             }
+
+            return matchedMaterial.parseMaterial();
         }
 
         return null;
