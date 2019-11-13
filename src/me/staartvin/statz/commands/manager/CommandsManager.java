@@ -194,11 +194,27 @@ public class CommandsManager implements TabExecutor {
 
 			final List<String> commands = new ArrayList<String>();
 
-			for (final Entry<List<String>, StatzCommand> entry : registeredCommands.entrySet()) {
-				final List<String> list = entry.getKey();
+			if (args.length == 1) {
 
-				commands.add(list.get(0));
+				// If the user has typed something as a first argument, try to match it with other commands that exist.
+				for (final Entry<List<String>, StatzCommand> entry : registeredCommands.entrySet()) {
+					final List<String> list = entry.getKey();
+
+					if (list.get(0).startsWith(args[0].toLowerCase())) {
+						commands.add(list.get(0));
+					}
+				}
+			} else {
+
+				// The user has not typed anything yet, so we show all commands.
+				for (final Entry<List<String>, StatzCommand> entry : registeredCommands.entrySet()) {
+					final List<String> list = entry.getKey();
+
+					commands.add(list.get(0));
+				}
 			}
+
+
 
 			return commands;
 		}

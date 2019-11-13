@@ -288,7 +288,7 @@ public class ListCommand extends StatzCommand {
                 String statName = stat.toString().toLowerCase();
 
                 // Show all tab completed items
-			    if (statType == "") {
+                if (statType.equals("")) {
                     tabCompletions.add(statName);
                 } else {
 			        // Only show tab completions if it matches the already given string.
@@ -297,7 +297,22 @@ public class ListCommand extends StatzCommand {
                     }
                 }
 			}
-		}
+        } else if (args.length == 2) {
+            // Get the names of any players that match the currently typed word.
+
+            // Get any players that are cached
+            List<UUID> uuids = plugin.getCachingManager().getCachedPlayers();
+
+            for (UUID uuid : uuids) {
+                OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(uuid);
+
+                // Check if a name starts with the already typed name.
+                if (offlinePlayer.getName() != null && offlinePlayer.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                    // If it does, we add it as a suggestion.
+                    tabCompletions.add(offlinePlayer.getName());
+                }
+            }
+        }
 
         if (!tabCompletions.isEmpty()) {
             return tabCompletions;
