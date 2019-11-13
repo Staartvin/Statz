@@ -1,59 +1,36 @@
 package me.staartvin.statz.listeners;
 
-import com.vexsoftware.votifier.model.VotifierEvent;
+import me.staartvin.plugins.pluginlibrary.events.PlayerVotedEvent;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.util.UUID;
-
 public class VotesListener implements Listener {
 
-	private final Statz plugin;
+    private final Statz plugin;
 
-	public VotesListener(final Statz plugin) {
-		this.plugin = plugin;
-	}
+    public VotesListener(final Statz plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onVote(final VotifierEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onVote(final PlayerVotedEvent event) {
 
-		final PlayerStat stat = PlayerStat.VOTES;
+        final PlayerStat stat = PlayerStat.VOTES;
 
-		String userName = event.getVote().getUsername();
+        Player player = event.getPlayer();
 
-		// Get player
-        final Player player = plugin.getServer().getPlayer(userName);
+        // Do general check
+        if (!plugin.doGeneralCheck(player, stat))
+            return;
 
-		UUID uuid = null;
+        // Update value to new stat.
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
+                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1));
 
-		// Player is not online, so 
-		if (player == null) {
-		} else {
-			uuid = player.getUniqueId();
-			userName = player.getName();
-		}
-
-		if (player != null) {
-			// Do general check
-			if (!plugin.doGeneralCheck(player, stat))
-				return;
-		}
-
-		if (uuid == null) {
-			@SuppressWarnings("deprecation")
-			OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(userName);
-
-			uuid = offlinePlayer.getUniqueId();
-		}
-
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(uuid, stat, StatzUtil.makeQuery("uuid", uuid.toString(), "value", 1));
-
-	}
+    }
 }

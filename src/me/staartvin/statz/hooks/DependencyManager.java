@@ -16,36 +16,35 @@ import java.util.Map.Entry;
  * Not all dependencies are required, some are optional.
  * <p>
  * Date created: 18:18:43 2 mrt. 2014
- * 
+ *
  * @author Staartvin
- * 
  */
 public class DependencyManager {
 
-    private final HashMap<StatzDependency, DependencyHandler> handlers = new HashMap<StatzDependency, DependencyHandler>();
+    private final HashMap<StatzDependency, DependencyHandler> handlers = new HashMap<StatzDependency,
+            DependencyHandler>();
 
     private final Statz plugin;
 
     public DependencyManager(final Statz instance) {
         plugin = instance;
-        
+
         for (StatzDependency dep : StatzDependency.values()) {
-         // Register handlers
+            // Register handlers
             try {
                 handlers.put(dep, dep.getDependencyHandler());
             } catch (NoClassDefFoundError e) {
                 plugin.debugMessage("Could not load " + dep.getInternalString() + "!");
-            }   
+            }
         }
     }
 
     /**
      * Gets a specific dependency.
-     * 
-     * @param dep
-     *            StatzDependency to get.
+     *
+     * @param dep StatzDependency to get.
      * @return the {@linkplain DependencyHandler} that is associated with the
-     *         given {@linkplain StatzDependency}, can be null.
+     * given {@linkplain StatzDependency}, can be null.
      */
     public DependencyHandler getDependency(final StatzDependency dep) {
 
@@ -59,8 +58,6 @@ public class DependencyManager {
     /**
      * Loads all dependencies used for Statz. <br>
      * Statz will check for dependencies and shows the output on the console.
-     * 
-     * 
      */
     public void loadDependencies() {
 
@@ -80,16 +77,8 @@ public class DependencyManager {
                 if (dependency == null)
                     continue;
 
-                // NuVotifier has the same internal name, and hence cannot be
-                // distinguished from Votifier.
-                // That's why we provide a special case.
-                if (dependency == StatzDependency.NUVOTIFIER) {
-                    plugin.debugMessage(ChatColor.GREEN + "NuVotifier was found and Statz now tracks its data!");
-                } else {
-                    plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
-                            + " was found and Statz now tracks its data!");
-                }
-
+                plugin.debugMessage(ChatColor.GREEN + dependency.getInternalString()
+                        + " was found and Statz now tracks its data!");
             }
         }
 
@@ -101,11 +90,10 @@ public class DependencyManager {
 
     /**
      * Get the StatzDependency by the StatzDependency Handler
-     * 
-     * @param depHandler
-     *            The dependency handler to get the dependency from.
+     *
+     * @param depHandler The dependency handler to get the dependency from.
      * @return the dependency that is associated with this dependency handler or
-     *         null if no association was found.
+     * null if no association was found.
      */
     public StatzDependency getDependencyByHandler(DependencyHandler depHandler) {
         for (Entry<StatzDependency, DependencyHandler> entry : handlers.entrySet()) {
@@ -139,6 +127,7 @@ public class DependencyManager {
 
     /**
      * Get library hook of PluginLibrary
+     *
      * @param library library to get
      * @return hook used by PluginLibrary (if available) or null if not found.
      */
@@ -158,6 +147,7 @@ public class DependencyManager {
 
     /**
      * Check whether a plugin is available using PluginLibrary.
+     *
      * @param library Library to check
      * @return true if it is available, false otherwise.
      */
