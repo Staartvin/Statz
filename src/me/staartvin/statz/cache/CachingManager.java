@@ -4,6 +4,8 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -149,5 +151,14 @@ public class CachingManager {
 
         // Check if the data has been loaded before (can be an empty list).
         return cachedPlayerData.get(uuid).hasDataOfPlayerStat(statType);
+    }
+
+    /**
+     * Get all the UUIDs of the players that have cached data.
+     *
+     * @return a list of uuids of players that have cached data.
+     */
+    public List<UUID> getCachedPlayers() {
+        return new ArrayList<>(this.cachedPlayerData.keySet());
     }
 }
