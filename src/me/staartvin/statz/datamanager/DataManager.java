@@ -304,7 +304,7 @@ public class DataManager {
 
 		int pages = 0;
 
-		if (sender instanceof Player) {
+        if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
 			pages = (int) Math.ceil(messagesSpigot.size() / (double) messagesPerPage);
 		} else {
 			pages = (int) Math.ceil(messages.size() / (double) messagesPerPage);
@@ -320,7 +320,7 @@ public class DataManager {
 			int index = (pageNumber == 0 ? j : (pageNumber * messagesPerPage) + j);
 
 			// Don't try to get other messages, as there are no others.
-			if (sender instanceof Player) {
+            if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
 				if (index >= messagesSpigot.size()) {
 					break;
 				}
@@ -330,7 +330,7 @@ public class DataManager {
 				}
 			}
 
-			if (sender instanceof Player) {
+            if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
 				Player p = (Player) sender;
 
 				p.spigot().sendMessage(messagesSpigot.get(index));
@@ -343,15 +343,15 @@ public class DataManager {
 		// Create page clicker
         BaseComponent[] pageClicker = new ComponentBuilder("<<< ").color(net.md_5.bungee.api.ChatColor.GOLD)
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-						"/statz list " + playerName + " " + (pageNumber < 0 ? 0 : pageNumber)))
-                .append("Page ").color(net.md_5.bungee.api.ChatColor.DARK_AQUA).append(pageNumber + 1 + "").color(net.md_5.bungee.api.ChatColor.GREEN)
+                        "/statz list " + playerName + " " + (Math.max(pageNumber, 0))))
+                .append("Page ").color(net.md_5.bungee.api.ChatColor.DARK_AQUA).append(pages == 0 ?
+                        pageNumber + "" : pageNumber + 1 + "").color(net.md_5.bungee.api.ChatColor.GREEN)
                 .append(" of " + pages).color(net.md_5.bungee.api.ChatColor.DARK_AQUA).append(" >>>").color(net.md_5.bungee.api.ChatColor.GOLD)
 				.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-						"/statz list " + playerName + " " + (pageNumber + 2 > pages ? pages
-								: pageNumber + 2)))
+                        "/statz list " + playerName + " " + (Math.min(pageNumber + 2, pages))))
 				.create();
 
-		if (sender instanceof Player) {
+        if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
 			Player p = (Player) sender;
 
 			p.spigot().sendMessage(pageClicker);
