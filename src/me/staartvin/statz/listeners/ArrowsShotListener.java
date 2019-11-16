@@ -35,7 +35,7 @@ public class ArrowsShotListener implements Listener {
 
 		// Update value to new stat.
 		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-				player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "forceShot", event.getForce()));
+                player.getUniqueId(), "value", 1, "world", player.getWorld().getName()));
 
 	}
 }
