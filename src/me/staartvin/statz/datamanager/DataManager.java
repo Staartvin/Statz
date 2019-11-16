@@ -264,6 +264,9 @@ public class DataManager {
 		List<String> messages = new ArrayList<>();
 		List<TextComponent> messagesSpigot = new ArrayList<>();
 
+        boolean canShowSpigotMessages =
+                plugin.getServer().getVersion().toLowerCase().contains("spigot") || plugin.getServer().getVersion().toLowerCase().contains("paper");
+
 		for (PlayerStat statType : list) {
 
 			// Skip data of players table
@@ -285,7 +288,7 @@ public class DataManager {
 
 			String messageString = DescriptionMatcher.getTotalDescription(info, statType);
 
-			if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+            if (sender instanceof Player && canShowSpigotMessages) {
 				TextComponent spigotMessage = new TextComponent(messageString);
 
 				spigotMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
@@ -304,7 +307,7 @@ public class DataManager {
 
 		int pages = 0;
 
-        if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+        if (sender instanceof Player && canShowSpigotMessages) {
 			pages = (int) Math.ceil(messagesSpigot.size() / (double) messagesPerPage);
 		} else {
 			pages = (int) Math.ceil(messages.size() / (double) messagesPerPage);
@@ -320,7 +323,7 @@ public class DataManager {
 			int index = (pageNumber == 0 ? j : (pageNumber * messagesPerPage) + j);
 
 			// Don't try to get other messages, as there are no others.
-            if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+            if (sender instanceof Player && canShowSpigotMessages) {
 				if (index >= messagesSpigot.size()) {
 					break;
 				}
@@ -330,7 +333,7 @@ public class DataManager {
 				}
 			}
 
-            if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+            if (sender instanceof Player && canShowSpigotMessages) {
 				Player p = (Player) sender;
 
 				p.spigot().sendMessage(messagesSpigot.get(index));
@@ -351,7 +354,7 @@ public class DataManager {
                         "/statz list " + playerName + " " + (Math.min(pageNumber + 2, pages))))
 				.create();
 
-        if (sender instanceof Player && plugin.getServer().getVersion().toLowerCase().contains("spigot")) {
+        if (sender instanceof Player && canShowSpigotMessages) {
 			Player p = (Player) sender;
 
 			p.spigot().sendMessage(pageClicker);
