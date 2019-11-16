@@ -44,6 +44,9 @@ public class LogManager {
 	public String createLogFile() {
 		dateFormatSave = dateFormat.format(new Date());
 
+        // If logging is disabled, you cannot write to the logging file.
+        if (!plugin.getConfigHandler().isLoggingEnabled()) return dateFormatSave;
+
 		// Creates a new file
 		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
 
@@ -94,6 +97,9 @@ public class LogManager {
 	 */
 	public void writeToLogFile(List<Query> queries, PlayerStat stat) {
 
+        // If logging is disabled, you cannot write to the logging file.
+        if (!plugin.getConfigHandler().isLoggingEnabled()) return;
+
 		// Creates a new file
 		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
 
@@ -135,6 +141,9 @@ public class LogManager {
 	 */
 	public void writeToLogFile(String message) {
 
+        // If logging is disabled, you cannot write to the logging file.
+        if (!plugin.getConfigHandler().isLoggingEnabled()) return;
+
 		// Creates a new file
 		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");
 
@@ -173,6 +182,9 @@ public class LogManager {
 	 * @param messages List of messages to write to log file.
 	 */
 	public void writeToLogFile(List<String> messages) {
+
+        // If logging is disabled, you cannot write to the logging file.
+        if (!plugin.getConfigHandler().isLoggingEnabled()) return;
 
 		// Creates a new file
 		logFile = new File(plugin.getDataFolder() + "/logs", "log-" + dateFormatSave + ".txt");

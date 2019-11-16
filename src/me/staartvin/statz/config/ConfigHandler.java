@@ -22,20 +22,33 @@ public class ConfigHandler {
 
         plugin.getConfig().options().header("This is the config file of " + plugin.getDescription().getFullName()
                 + ". \nYou can configure Statz with this file."
-                + "\nThe 'track stats' option can either be true of false. When it is true, Statz will record data of players. If it is false, Statz won't record any data."
-                + "\nThe 'show database save message' option allows you to toggle the visibility of the 'Save message'. Every few minutes, the database of Statz is saved. If you"
+                + "\nThe 'track stats' option can either be true of false. When it is true, Statz will record data of" +
+                " players. If it is false, Statz won't record any data."
+                + "\nThe 'show database save message' option allows you to toggle the visibility of the 'Save " +
+                "message'. Every few minutes, the database of Statz is saved. If you"
                 + "set this option to false, Statz will still save the database, but won't show the message."
-                + "\nThe 'periodic save time' value represents the time (in seconds) after an update is sent to the database. The default is 10 seconds and I don't recommend changing it."
-                + "\nYou can experiment with it and see whether it improves performance for your server. A lower value means the database is updated more often, resulting in a decrement of performance."
-                + "\nDisabled statistics option can be used to disable a statistic. A list of statistics you can disable is provided here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L20"
-                + "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log statistics of players that are in creative mode."
-                + "\nEnabling debug output will show you a host of messages in the console that can help you debug problems when you have any."
-                + "\nIf 'use custom statz list' is set to true, the /statz command will show a list of statistics for a player. The statistics that get displayed can be altered by changing the 'custom statz list' variable."
-                + "\nFor a list of statistics to use in the custom list, click here: https://github.com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19"
+                + "\nThe 'periodic save time' value represents the time (in seconds) after an update is sent to the " +
+                "database. The default is 10 seconds and I don't recommend changing it."
+                + "\nYou can experiment with it and see whether it improves performance for your server. A lower " +
+                "value means the database is updated more often, resulting in a decrement of performance."
+                + "\nDisabled statistics option can be used to disable a statistic. A list of statistics you can " +
+                "disable is provided here: https://github" +
+                ".com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L20"
+                + "\nThe 'ignore creative' option can either be true or false. When set to false, Statz will not log " +
+                "statistics of players that are in creative mode."
+                + "\nEnabling debug output will show you a host of messages in the console that can help you debug " +
+                "problems when you have any."
+                + "\nIf 'use custom statz list' is set to true, the /statz command will show a list of statistics for" +
+                " a player. The statistics that get displayed can be altered by changing the 'custom statz list' " +
+                "variable."
+                + "\nFor a list of statistics to use in the custom list, click here: https://github" +
+                ".com/Staartvin/Statz/blob/master/src/me/staartvin/statz/datamanager/PlayerStat.java#L19"
                 + "\nThe 'use statz gui' option enables you to view the statistics of a player via a gui. It is " +
                 "disabled by default "
                 + "\nThe 'refresh player cache time' is the time (in seconds) to refresh the cache of a player, you " +
-                "should not have to alter it.");
+                "should not have to alter it."
+                + "\nThe 'enable logging' option allows you to enable or disable logging of certain statistics. It " +
+                "is off by default and create large log files if left on for a long time.");
 
         plugin.getConfig().addDefault("track stats", true);
         plugin.getConfig().addDefault("show database save message", false);
@@ -55,7 +68,7 @@ public class ConfigHandler {
 
         plugin.getConfig().addDefault("ignore creative", false);
 
-        plugin.getConfig().addDefault("enable debug output", true);
+        plugin.getConfig().addDefault("enable debug output", false);
 
         plugin.getConfig().addDefault("latest patch mysql version", 0);
         plugin.getConfig().addDefault("latest patch sqlite version", 0);
@@ -65,6 +78,8 @@ public class ConfigHandler {
         plugin.getConfig().addDefault("custom statz list", Arrays.asList("JOINS", "FOOD_EATEN", "KILLS_PLAYERS"));
 
         plugin.getConfig().addDefault("use statz gui", false);
+
+        plugin.getConfig().addDefault("enable logging", false);
 
         plugin.getConfig().options().copyDefaults(true);
 
@@ -79,13 +94,13 @@ public class ConfigHandler {
         plugin.saveConfig();
     }
 
+    public boolean getStatsTracking() {
+        return plugin.getConfig().getBoolean("track stats", true);
+    }
+
     public void setStatsTracking(boolean value) {
         plugin.getConfig().set("track stats", value);
         saveConfig();
-    }
-
-    public boolean getStatsTracking() {
-        return plugin.getConfig().getBoolean("track stats", true);
     }
 
     public boolean shouldShowDatabaseSave() {
@@ -180,16 +195,16 @@ public class ConfigHandler {
         return plugin.getConfig().getInt("latest patch mysql version", 0);
     }
 
-    public int getLatestPatchSQLiteVersion() {
-        return plugin.getConfig().getInt("latest patch sqlite version", 0);
-    }
-
     public void setLatestPatchMySQLVersion(int version) {
         plugin.getConfig().set("latest patch mysql version", version);
 
         this.saveConfig();
     }
-    
+
+    public int getLatestPatchSQLiteVersion() {
+        return plugin.getConfig().getInt("latest patch sqlite version", 0);
+    }
+
     public void setLatestPatchSQLiteVersion(int version) {
         plugin.getConfig().set("latest patch sqlite version", version);
 
@@ -198,6 +213,10 @@ public class ConfigHandler {
 
     public boolean isStatzGUIenabled() {
         return plugin.getConfig().getBoolean("use statz gui", false);
+    }
+
+    public boolean isLoggingEnabled() {
+        return plugin.getConfig().getBoolean("enable logging", false);
     }
 
 }
