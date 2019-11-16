@@ -6,6 +6,8 @@ import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +49,35 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
     @Override
     public int getPatchId() {
         return 4;
+    }
+
+    @Override
+    public boolean isPatchNeeded() {
+        String query;
+        String tableName = this.getDatabaseConnector().getTable(PlayerStat.BLOCKS_BROKEN).getTableName();
+
+        // The query is different whether it's MySQL or SQLite
+        if (this.plugin.getConfigHandler().isMySQLEnabled()) {
+            query = "SHOW COLUMNS FROM " + tableName;
+        } else {
+            query = "PRAGMA table_info(" + tableName + ")";
+        }
+
+        try (ResultSet resultSet =
+                     this.getDatabaseConnector().sendQuery(query, true)) {
+
+            while (resultSet != null && resultSet.next()) {
+                // If there is column called 'block', we don't have to patch anymore.
+                if (resultSet.getString(this.plugin.getConfigHandler().isMySQLEnabled() ? 1 : 2).equalsIgnoreCase(
+                        "block")) {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     @Override

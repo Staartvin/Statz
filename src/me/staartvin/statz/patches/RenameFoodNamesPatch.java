@@ -5,6 +5,8 @@ import me.staartvin.statz.database.DatabaseConnector;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.Material;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +140,64 @@ public class RenameFoodNamesPatch extends Patch {
     @Override
     public int getPatchId() {
         return 5;
+    }
+
+    @Override
+    public boolean isPatchNeeded() {
+        String foodTable = this.getDatabaseConnector().getTable(PlayerStat.FOOD_EATEN).getTableName();
+        String itemsCaughtTable = this.getDatabaseConnector().getTable(PlayerStat.ITEMS_CAUGHT).getTableName();
+
+        try (ResultSet result = this.getDatabaseConnector().sendQuery("SELECT uuid FROM " + foodTable + " WHERE " +
+                "foodEaten='RAW_CHICKEN' OR foodEaten='RAW_BEEF' OR foodEaten='GRILLED_PORK';", true)) {
+
+            // No result returned, so something must've gone wrong.
+            if (result == null) {
+                return true;
+            }
+
+            // If there are rows found, it must mean we need to patch.
+            int rows = 0;
+
+            while (result.next()) {
+                rows++;
+            }
+
+            // If there are rows found, it must mean we need to patch.
+            if (rows != 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+        try (ResultSet result = this.getDatabaseConnector().sendQuery("SELECT uuid FROM " + itemsCaughtTable + " " +
+                "WHERE " +
+                "caught='RAW_CHICKEN' OR caught='RAW_BEEF' OR caught='GRILLED_PORK';", true)) {
+
+            // No result returned, so something must've gone wrong.
+            if (result == null) {
+                return true;
+            }
+
+            // If there are rows found, it must mean we need to patch.
+            int rows = 0;
+
+            while (result.next()) {
+                rows++;
+            }
+
+            // If there are rows found, it must mean we need to patch.
+            if (rows != 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+        // If both queries returned no result, it means we need no patching.
+        return false;
     }
 
     @Override

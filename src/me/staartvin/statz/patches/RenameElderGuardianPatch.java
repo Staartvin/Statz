@@ -4,6 +4,7 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +107,34 @@ public class RenameElderGuardianPatch extends Patch {
     @Override
     public int getPatchId() {
         return 3;
+    }
+
+    @Override
+    public boolean isPatchNeeded() {
+        String tableName = this.getDatabaseConnector().getTable(PlayerStat.KILLS_MOBS).getTableName();
+
+        try (ResultSet result = this.getDatabaseConnector().sendQuery("SELECT uuid FROM " + tableName + " WHERE " +
+                "mob='ELDER GUARDIAN' OR mob='ELDER ELDER_GUARDIAN';", true)) {
+
+            // No result returned, so something must've gone wrong.
+            if (result == null) {
+                return true;
+            }
+
+            // If there are rows found, it must mean we need to patch.
+            int rows = 0;
+
+            while (result.next()) {
+                rows++;
+            }
+
+            // We must patch if rows are zero
+            return rows != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     @Override
