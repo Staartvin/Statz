@@ -94,6 +94,8 @@ public class MySQLConnector extends DatabaseConnector {
                     return;
                 }
 
+                int existingTables = 0;
+
                 try {
                     final Statement s = connection.createStatement();
 
@@ -110,6 +112,9 @@ public class MySQLConnector extends DatabaseConnector {
                 initialize();
 
                 // Apply patches
+                if (existingTables == MySQLConnector.this.getTables().size()) {
+                    // We have not created new tables, so we check what updates we should perform.
+                }
                 plugin.getPatchManager().applyPatches();
             }
         });
@@ -255,7 +260,7 @@ public class MySQLConnector extends DatabaseConnector {
 
             statements.add(statement.toString());
 
-            plugin.debugMessage(ChatColor.BLUE + "Loaded table '" + table.getTableName() + "'");
+            plugin.debugMessage(ChatColor.GREEN + "Created table '" + table.getTableName() + "'");
         }
 
         return statements;
@@ -565,17 +570,14 @@ public class MySQLConnector extends DatabaseConnector {
 
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
-        Column forceShot = new Column("forceShot", false, SQLDataType.DOUBLE, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT, true);
         newTable.addColumn(world);
-        newTable.addColumn(forceShot);
 
         newTable.addUniqueMatched(uuid);
         newTable.addUniqueMatched(world);
-        newTable.addUniqueMatched(forceShot);
 
         this.addTable(newTable);
 
@@ -1023,7 +1025,7 @@ public class MySQLConnector extends DatabaseConnector {
     }
 
     @Override
-    public ResultSet sendQuery(final String query, final boolean wantResult) {
+    public ResultSet sendQuery(final String query, final boolean wantResult) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -1043,6 +1045,8 @@ public class MySQLConnector extends DatabaseConnector {
 
         } catch (final SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+
+            throw ex;
         } finally {
             try {
                 if (ps != null && !wantResult)
@@ -1058,7 +1062,7 @@ public class MySQLConnector extends DatabaseConnector {
     }
 
     @Override
-    public List<ResultSet> sendQueries(final List<String> queries, boolean wantResult) {
+    public List<ResultSet> sendQueries(final List<String> queries, boolean wantResult) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -1085,6 +1089,8 @@ public class MySQLConnector extends DatabaseConnector {
 
             } catch (final SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
+
+                throw ex;
             } finally {
                 try {
                     if (ps != null && !wantResult)
@@ -1097,5 +1103,55 @@ public class MySQLConnector extends DatabaseConnector {
         }
 
         return resultSets;
+    }
+
+    @Override
+    public boolean createBackup(String identifier) {
+
+        Connection tempConnection = null;
+
+        String tempDatabaseName = databaseName + "_" + identifier;
+        try {
+            final String url = "jdbc:mysql://" + hostname + "/";
+
+            // Open a temporary connection to create a new database to make a back up.
+            tempConnection = DriverManager.getConnection(url, username, password);
+
+            Statement statement = tempConnection.createStatement();
+
+            // Drop any old database that existed prior to this
+            statement.executeUpdate("DROP DATABASE IF EXISTS " + tempDatabaseName);
+
+            // Create a new database that acts as a backup.
+            statement.executeUpdate("CREATE DATABASE " + tempDatabaseName);
+
+            for (Table table : this.getTables()) {
+                // We create a table and copy the structure from the other database.
+                statement.executeUpdate("CREATE TABLE " + tempDatabaseName + "." + table.getTableName() + " LIKE "
+                        + databaseName + "." + table.getTableName());
+                // Then we load all data from the original table into the new table
+                statement.executeUpdate("INSERT INTO " + tempDatabaseName + "." + table.getTableName() + " SELECT * " +
+                        "FROM " + databaseName + "." + table.getTableName());
+            }
+
+            // Close connection to prevent leakages.
+            try {
+                tempConnection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        } catch (final SQLException ex) {
+            System.out.println("SQLDataStorage.connect");
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            plugin.getLogger().log(Level.SEVERE, "MySQL exception on connecting: " + ex.getMessage());
+            return false; // Could not make a backup.
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

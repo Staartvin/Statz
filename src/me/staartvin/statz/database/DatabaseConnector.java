@@ -220,7 +220,7 @@ public abstract class DatabaseConnector {
      * @param wantResult whether you want the result set back.
      * @return the result set if wantResult is true, otherwise it will return null.
      */
-	public abstract ResultSet sendQuery(String query, boolean wantResult);
+	public abstract ResultSet sendQuery(String query, boolean wantResult) throws SQLException;
 
     /**
      * Send specific queries (as strings) to the database. It is not recommended to use this method to obtain data
@@ -229,5 +229,14 @@ public abstract class DatabaseConnector {
      * @param wantResult whether you want the result sets back.
      * @return a list of result sets (in order of executing the queries) if wantResult is true, otherwise it will return null.
      */
-	public abstract List<ResultSet> sendQueries(List<String> queries, boolean wantResult) throws Exception;
+	public abstract List<ResultSet> sendQueries(List<String> queries, boolean wantResult) throws SQLException;
+
+	/**
+	 * Create a back-up of the current state of the data storage. Using the identifier it should be possible to
+	 * restore the database to the state it was backed up as.
+	 *
+	 * @param identifier String identifier to be able to restore the database to the state it was backed up to.
+	 * @return true if the backup succeeded, false otherwise.
+	 */
+	public abstract boolean createBackup(String identifier);
 }

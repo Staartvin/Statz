@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
     private final Statz plugin;
     private Connection connection;
+    private File databaseFile;
 
     public SQLiteConnector(final Statz instance) {
         super(instance);
@@ -45,12 +47,12 @@ public class SQLiteConnector extends DatabaseConnector {
             e1.printStackTrace();
         }
 
-        final File dataFile = new File(plugin.getDataFolder(), databaseName + ".db");
-        if (!dataFile.exists()) {
+        databaseFile = new File(plugin.getDataFolder(), databaseName + ".db");
+        if (!databaseFile.exists()) {
             plugin.debugMessage(ChatColor.YELLOW + "Database not found! Creating one for you.");
             try {
-                dataFile.getParentFile().mkdirs();
-                dataFile.createNewFile();
+                databaseFile.getParentFile().mkdirs();
+                databaseFile.createNewFile();
                 plugin.debugMessage(ChatColor.GREEN + "Database created!");
             } catch (final IOException e) {
                 plugin.getLogger().log(Level.SEVERE, "File write error: " + databaseName + ".db");
@@ -59,7 +61,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
             return connection;
         } catch (final Exception ex) {
             plugin.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
@@ -237,7 +239,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
             statements.add(statement.toString());
 
-            plugin.debugMessage(ChatColor.BLUE + "Loaded table '" + table.getTableName() + "'");
+            plugin.debugMessage(ChatColor.GREEN + "Created table '" + table.getTableName() + "'");
         }
 
         return statements;
@@ -544,17 +546,14 @@ public class SQLiteConnector extends DatabaseConnector {
         id = new Column("id", true, SQLDataType.INT, true);
         uuid = new Column("uuid", false, SQLDataType.TEXT, true);
         world = new Column("world", false, SQLDataType.TEXT, true);
-        Column forceShot = new Column("forceShot", false, SQLDataType.DOUBLE, true);
 
         newTable.addColumn(id);
         newTable.addColumn(uuid); // UUID of the player
         newTable.addColumn("value", false, SQLDataType.INT, true);
         newTable.addColumn(world);
-        newTable.addColumn(forceShot);
 
         newTable.addUniqueMatched(uuid);
         newTable.addUniqueMatched(world);
-        newTable.addUniqueMatched(forceShot);
 
         this.addTable(newTable);
 
@@ -812,7 +811,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
                 StringBuilder resultNames = new StringBuilder("(");
 
-                StringBuilder updateWhere = new StringBuilder("");
+                StringBuilder updateWhere = new StringBuilder();
 
                 for (final Entry<String, String> result : results.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
@@ -901,7 +900,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
                 StringBuilder resultNames = new StringBuilder("(");
 
-                StringBuilder updateWhere = new StringBuilder("");
+                StringBuilder updateWhere = new StringBuilder();
 
                 for (final Entry<String, String> result : query.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
@@ -1023,7 +1022,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
 
     @Override
-    public ResultSet sendQuery(final String query, final boolean wantResult) {
+    public ResultSet sendQuery(final String query, final boolean wantResult) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -1043,6 +1042,8 @@ public class SQLiteConnector extends DatabaseConnector {
 
         } catch (final SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+
+            throw ex;
         } finally {
             try {
                 if (ps != null && !wantResult)
@@ -1058,7 +1059,7 @@ public class SQLiteConnector extends DatabaseConnector {
     }
 
     @Override
-    public List<ResultSet> sendQueries(final List<String> queries, boolean wantResult) {
+    public List<ResultSet> sendQueries(final List<String> queries, boolean wantResult) throws SQLException {
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -1085,6 +1086,8 @@ public class SQLiteConnector extends DatabaseConnector {
 
             } catch (final SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQLite statement:", ex);
+
+                throw ex;
             } finally {
                 try {
                     if (ps != null && !wantResult)
@@ -1097,5 +1100,28 @@ public class SQLiteConnector extends DatabaseConnector {
         }
 
         return resultSets;
+    }
+
+    @Override
+    public boolean createBackup(String identifier) {
+
+        // The database is not loaded or not existent, so we can't make a backup.
+        if (this.databaseFile == null) {
+            return false;
+        }
+
+        // Try to make a backup of the database.
+        File backupDatabase = new File(databaseFile.getAbsolutePath() + "-" + identifier + ".db");
+
+        // Make a copy of this database file.
+        try {
+            Files.copy(this.databaseFile.toPath(), backupDatabase.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Something went wrong while copying, so return that it went wrong.
+            return false;
+        }
+
+        return true;
     }
 }
