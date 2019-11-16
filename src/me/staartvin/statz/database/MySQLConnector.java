@@ -260,7 +260,7 @@ public class MySQLConnector extends DatabaseConnector {
 
             statements.add(statement.toString());
 
-            plugin.debugMessage(ChatColor.GREEN + "Created table '" + table.getTableName() + "'");
+            plugin.debugMessage(ChatColor.GREEN + "Loaded table '" + table.getTableName() + "'");
         }
 
         return statements;
