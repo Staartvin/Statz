@@ -112,9 +112,9 @@ public enum StatisticDescription {
     VOTES(PlayerStat.VOTES, "Voted {0} times.", "&3Voted &2{0}&3 times."),
 
     /**
-     * Shot {0} arrows with a force of {1} on world '{2}'.
+     * Shot {0} arrows on world '{1}'.
      */
-    ARROWS_SHOT(PlayerStat.ARROWS_SHOT, "Shot {0} arrows with a force of {1} on world '{2}'" +
+    ARROWS_SHOT(PlayerStat.ARROWS_SHOT, "Shot {0} arrows on world '{1}'" +
             ".", "&3Shot " +
             "&2{0}&3 " +
             "arrows."),

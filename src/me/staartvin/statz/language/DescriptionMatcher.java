@@ -41,7 +41,6 @@ public class DescriptionMatcher {
                 break;
             case ARROWS_SHOT:
                 description = descriptionEnum.getHighDetailDescription((int) query.getValue(),
-                        StatzUtil.roundDouble(Double.parseDouble(query.getValue("forceShot").toString()), 2),
                         query.getValue("world"));
                 break;
             case BLOCKS_BROKEN:

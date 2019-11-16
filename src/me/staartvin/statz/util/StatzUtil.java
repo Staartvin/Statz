@@ -416,7 +416,7 @@ public class StatzUtil {
 
         if (statType.equals(PlayerStat.ARROWS_SHOT)) {
             builder.append(createStringWithParams("shot {0} arrows with a force of {1} on world '{2}'",
-                    (int) query.getValue(), roundDouble(Double.parseDouble(query.getValue("forceShot").toString()), 2),
+                    (int) query.getValue(),
                     query.getValue("world")));
         } else if (statType.equals(PlayerStat.BLOCKS_BROKEN)) {
             builder.append(createStringWithParams("broke {0} blocks of item id {1} and damage value {2} on world '{3}'",
