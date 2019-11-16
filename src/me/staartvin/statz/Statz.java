@@ -119,6 +119,13 @@ public class Statz extends JavaPlugin {
         // Create log file
         this.getLogsManager().createLogFile();
 
+        // Show admin what the status of the logging system is.
+        if (!this.getConfigHandler().isLoggingEnabled()) {
+            this.getServer().getConsoleSender().sendMessage("[Statz] " + ChatColor.RED + "Logging is disabled!");
+        } else {
+            this.getServer().getConsoleSender().sendMessage("[Statz] " + ChatColor.GREEN + "Logging is enabled!");
+        }
+
         this.setLangHandler(new LanguageHandler(this));
 
         // Load lang.yml
