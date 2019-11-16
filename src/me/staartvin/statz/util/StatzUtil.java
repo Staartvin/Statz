@@ -415,17 +415,15 @@ public class StatzUtil {
         StringBuilder builder = new StringBuilder(ChatColor.GOLD + playerName + ChatColor.DARK_AQUA + " ");
 
         if (statType.equals(PlayerStat.ARROWS_SHOT)) {
-            builder.append(createStringWithParams("shot {0} arrows with a force of {1} on world '{2}'",
-                    (int) query.getValue(),
-                    query.getValue("world")));
+            builder.append(createStringWithParams("shot {0} arrows on world '{1}'",
+                    (int) query.getValue(), query.getValue("world")));
         } else if (statType.equals(PlayerStat.BLOCKS_BROKEN)) {
-            builder.append(createStringWithParams("broke {0} blocks of item id {1} and damage value {2} on world '{3}'",
-                    (int) query.getValue(), query.getIntValue("typeid"), query.getIntValue("datavalue"),
-                    query.getValue("world")));
+            builder.append(createStringWithParams("broke {0} blocks of {1} on world '{2}'.",
+                    (int) query.getValue(), query.getValue("block"), query.getValue("world")));
         } else if (statType.equals(PlayerStat.BLOCKS_PLACED)) {
             builder.append(createStringWithParams(
-                    "placed {0} blocks of item id {1} and damage value {2} on world '{3}'", (int) query.getValue(),
-                    query.getIntValue("typeid"), query.getIntValue("datavalue"), query.getValue("world")));
+                    "placed {0} blocks of {1} on world '{2}'.", (int) query.getValue(),
+                    query.getValue("block"), query.getValue("world")));
         } else if (statType.equals(PlayerStat.BUCKETS_EMPTIED)) {
             builder.append(createStringWithParams("emptied {0} buckets on world '{1}'", (int) query.getValue(),
                     query.getValue("world")));
