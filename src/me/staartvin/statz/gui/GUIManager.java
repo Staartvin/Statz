@@ -164,7 +164,7 @@ public class GUIManager implements Listener {
 
         List<Query> results = info.getDataOfPlayerStat(statType);
 
-        int invSize = (results.size() + 8) / 9 * 9 > 63 ? 63 : (results.size() + 8) / 9 * 9;
+        int invSize = Math.min((results.size() + 8) / 9 * 9, 63);
 
         Inventory inv = Bukkit.createInventory(null, invSize, inventoryTitle + ChatColor.RED + playerName);
 
@@ -263,6 +263,20 @@ public class GUIManager implements Listener {
         }
 
         event.setCancelled(true);
+
+        // When player clicks with right mouse button, it indicates they want to back.
+        if (event.isRightClick()) {
+            event.getWhoClicked().closeInventory();
+
+            // Send the player back to the main overview inventory.
+
+            // Open the general inventory that shows all stats.
+            Inventory generalInv = this.getStatisticsListInventory(event.getWhoClicked().getUniqueId(), targetPlayer);
+
+            showInventory((Player) event.getWhoClicked(), generalInv);
+
+            return;
+        }
 
         int slot = event.getSlot();
 
