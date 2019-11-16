@@ -48,7 +48,10 @@ public class ConfigHandler {
                 + "\nThe 'refresh player cache time' is the time (in seconds) to refresh the cache of a player, you " +
                 "should not have to alter it."
                 + "\nThe 'enable logging' option allows you to enable or disable logging of certain statistics. It " +
-                "is off by default and create large log files if left on for a long time.");
+                "is off by default and create large log files if left on for a long time."
+                + "\nThe option 'make backup of database before patching' tells Statz whether to make a backup of the" +
+                " database before attempting to patch it. This will require that Statz can make new databases as " +
+                "backup database so be sure to give it elevated privileges.");
 
         plugin.getConfig().addDefault("track stats", true);
         plugin.getConfig().addDefault("show database save message", false);
@@ -80,6 +83,8 @@ public class ConfigHandler {
         plugin.getConfig().addDefault("use statz gui", false);
 
         plugin.getConfig().addDefault("enable logging", false);
+
+        plugin.getConfig().addDefault("make backup of database before patching", true);
 
         plugin.getConfig().options().copyDefaults(true);
 
@@ -217,6 +222,12 @@ public class ConfigHandler {
 
     public boolean isLoggingEnabled() {
         return plugin.getConfig().getBoolean("enable logging", false);
+    }
+
+    public boolean shouldBackupBeforePatching() {
+        // TODO: Use this in patching system.
+        // TODO: Update patching system so we have one backup database and a lot of tables in that backup database.
+        return plugin.getConfig().getBoolean("make backup of database before patching", true);
     }
 
 }
