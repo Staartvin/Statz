@@ -43,7 +43,7 @@ public class SQLiteConnector extends DatabaseConnector {
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 
@@ -798,7 +798,7 @@ public class SQLiteConnector extends DatabaseConnector {
     }
 
     @Override
-    public void setObjects(final Table table, final Query results, final int mode) {
+    public void setObjects(final Table table, final Query results, final SET_OPERATION mode) {
         // Run SQLite query async to not disturb the main Server thread
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
@@ -848,7 +848,7 @@ public class SQLiteConnector extends DatabaseConnector {
                 String update;
                 String updateTwo = null;
 
-                if (mode == 1 || !results.hasColumn("value")) {
+                if (mode == SET_OPERATION.OVERRIDE || !results.hasColumn("value")) {
                     // Override value
                     update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
                             + " VALUES " + resultNames;
@@ -886,7 +886,7 @@ public class SQLiteConnector extends DatabaseConnector {
     }
 
     @Override
-    public void setBatchObjects(final Table table, final List<Query> queries, int mode) {
+    public void setBatchObjects(final Table table, final List<Query> queries, SET_OPERATION mode) {
         // Run SQLite query async to not disturb the main Server thread
 
         Connection conn = getConnection();
@@ -936,7 +936,7 @@ public class SQLiteConnector extends DatabaseConnector {
                 String update;
                 String updateTwo = null;
 
-                if (mode == 1 || !query.hasColumn("value")) {
+                if (mode == SET_OPERATION.OVERRIDE || !query.hasColumn("value")) {
                     // Override value
                     update = "INSERT OR REPLACE INTO " + table.getTableName() + " " + columnNames.toString()
                             + " VALUES " + resultNames;
@@ -970,14 +970,14 @@ public class SQLiteConnector extends DatabaseConnector {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }
             try {
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
         }

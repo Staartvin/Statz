@@ -53,7 +53,7 @@ public class MySQLConnector extends DatabaseConnector {
                 return connection;
             }
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 
@@ -810,7 +810,7 @@ public class MySQLConnector extends DatabaseConnector {
     }
 
     @Override
-    public void setObjects(final Table table, final Query results, final int mode) {
+    public void setObjects(final Table table, final Query results, final SET_OPERATION mode) {
         // Run SQLite query async to not disturb the main Server thread
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
@@ -852,7 +852,7 @@ public class MySQLConnector extends DatabaseConnector {
                 String onDuplicate = "";
 
                 if (results.hasColumn("value")) {
-                    if (mode == 1) {
+                    if (mode == SET_OPERATION.OVERRIDE) {
                         // Override current value
                         onDuplicate = " ON DUPLICATE KEY UPDATE value=" + results.getValue();
                     } else {
@@ -899,7 +899,7 @@ public class MySQLConnector extends DatabaseConnector {
     }
 
     @Override
-    public void setBatchObjects(final Table table, final List<Query> queries, int mode) {
+    public void setBatchObjects(final Table table, final List<Query> queries, SET_OPERATION mode) {
         // Run SQLite query async to not disturb the main Server thread
 
         Connection conn = getConnection();
@@ -944,7 +944,7 @@ public class MySQLConnector extends DatabaseConnector {
                 String onDuplicate = "";
 
                 if (query.hasColumn("value")) {
-                    if (mode == 1) {
+                    if (mode == SET_OPERATION.OVERRIDE) {
                         // Override current value
                         onDuplicate = " ON DUPLICATE KEY UPDATE value=" + query.getValue();
                     } else {
@@ -975,14 +975,14 @@ public class MySQLConnector extends DatabaseConnector {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
             }
             try {
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
         }
@@ -1110,7 +1110,9 @@ public class MySQLConnector extends DatabaseConnector {
 
         Connection tempConnection = null;
 
-        String tempDatabaseName = databaseName + "_" + identifier;
+        String backupTableName = plugin.getConfigHandler().getBackupMySQLDatabase();
+        String backupTablePrefix = identifier;
+
         try {
             final String url = "jdbc:mysql://" + hostname + "/";
 
@@ -1119,18 +1121,19 @@ public class MySQLConnector extends DatabaseConnector {
 
             Statement statement = tempConnection.createStatement();
 
-            // Drop any old database that existed prior to this
-            statement.executeUpdate("DROP DATABASE IF EXISTS " + tempDatabaseName);
-
             // Create a new database that acts as a backup.
-            statement.executeUpdate("CREATE DATABASE " + tempDatabaseName);
+            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS " + backupTableName);
 
             for (Table table : this.getTables()) {
+
+                // Drop the back up table if it already exists so we can override it.
+                statement.executeUpdate("DROP TABLE IF EXISTS " + backupTableName + "." + backupTablePrefix + "_" + table.getTableName());
+
                 // We create a table and copy the structure from the other database.
-                statement.executeUpdate("CREATE TABLE " + tempDatabaseName + "." + table.getTableName() + " LIKE "
+                statement.executeUpdate("CREATE TABLE " + backupTableName + "." + backupTablePrefix + "_" + table.getTableName() + " LIKE "
                         + databaseName + "." + table.getTableName());
                 // Then we load all data from the original table into the new table
-                statement.executeUpdate("INSERT INTO " + tempDatabaseName + "." + table.getTableName() + " SELECT * " +
+                statement.executeUpdate("INSERT INTO " + backupTableName + "." + backupTablePrefix + "_" + table.getTableName() + " SELECT * " +
                         "FROM " + databaseName + "." + table.getTableName());
             }
 
