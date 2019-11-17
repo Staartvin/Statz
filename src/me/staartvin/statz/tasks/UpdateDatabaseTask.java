@@ -79,7 +79,7 @@ public class UpdateDatabaseTask implements Runnable {
 
             // Update database with new data.
             plugin.getDatabaseConnector().setBatchObjects(DatabaseConnector.getTable(statType),
-                    resultingQueries, 2);
+                    resultingQueries, DatabaseConnector.SET_OPERATION.ADD);
 
             plugin.getUpdatePoolManager().clearUpdateQueries(statType);
         }

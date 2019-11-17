@@ -27,6 +27,22 @@ public abstract class DatabaseConnector {
 
 	public static String databaseName = "statz";
 
+	/**
+	 * Sets values to columns in a specific table. <br>
+	 * <b>Note:</b> a linked hashmap is used to make sure that the order of the
+	 * elements does not change.
+	 *
+	 * @param table   Table to change values in.
+	 * @param results A hashmap that will specify what results should be applied.
+	 *                <br>
+	 *                You could call a hashmap with key: 'uuid' and value:
+	 *                'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
+	 *                that we set the value of <i>uuid</i> to
+	 *                'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
+	 * @param mode    What mode should the update run in? See {@link SET_OPERATION}.
+	 */
+	public abstract void setObjects(final Table table, final Query results, SET_OPERATION mode);
+
 	public DatabaseConnector(final Statz instance) {
 		plugin = instance;
 	}
@@ -127,28 +143,24 @@ public abstract class DatabaseConnector {
 	}
 
 	/**
-	 * Sets values to columns in a specific table. <br>
-	 * <b>Note:</b> a linked hashmap is used to make sure that the order of the
-	 * elements does not change.
-	 * 
-	 * @param table
-	 *            Table to change values in.
-	 * @param results
-	 *            A hashmap that will specify what results should be applied.
-	 *            <br>
-	 *            You could call a hashmap with key: 'uuid' and value:
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'. This will make sure
-	 *            that we set the value of <i>uuid</i> to
-	 *            'c5f39a1d-3786-46a7-8953-d4efabf8880d'.
-	 * @param mode What mode should the update run in? '1' means 'override current value in database', '2' means 'add the value to current value in database'
+	 * Instead of updating one single row, you can also perform a batch of updates.
+	 * This can drastically improve update time. See {@link #setBatchObjects(Table, List, SET_OPERATION)} for more
+	 * info.
 	 */
-	public abstract void setObjects(final Table table, final Query results, int mode);
+	public abstract void setBatchObjects(final Table table, final List<Query> queries, SET_OPERATION mode);
 
 	/**
-	 * Instead of updating one single row, you can also perform a batch of updates.
-	 * This can drastically improve update time. See {@link #setObjects(Table, Query, int)} for more info.
+	 * The mode of operation when setting objects in the database.
 	 */
-	public abstract void setBatchObjects(final Table table, final List<Query> queries, int mode);
+	public enum SET_OPERATION {
+		/**
+		 * Override the current value in the database
+		 */
+		OVERRIDE,
+		/**
+		 * Add to the current value in the database.
+         */
+        ADD}
 
 	/**
 	 * Get a list of currently loaded tables.
