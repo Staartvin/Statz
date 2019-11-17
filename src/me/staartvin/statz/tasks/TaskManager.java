@@ -13,8 +13,6 @@ import java.util.UUID;
  */
 public class TaskManager {
 
-    // TODO: Add a task that can retrieve
-
     private Statz plugin;
 
     /**

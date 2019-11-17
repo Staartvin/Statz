@@ -35,6 +35,105 @@ public class TransferCommand extends StatzCommand {
 	// Transfer from MySQL to SQLite
 	public static List<String> confirmTransferMySQL = new ArrayList<>();
 
+	public static void confirmTransfer(final CommandSender sender) {
+		// Run after a player has confirmed the command.
+
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+				confirmTransferSQLite.remove(sender.getName());
+
+				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
+
+				// Load SQLiteConnector
+				SQLiteConnector = new SQLiteConnector(plugin);
+
+				SQLiteConnector.loadTables();
+				SQLiteConnector.load();
+
+				int updateCount = 0;
+
+				plugin.getLogsManager().writeToLogFile("Starting tranfer from SQLite to MySQL database!");
+
+				for (PlayerStat stat : PlayerStat.values()) {
+					// When using null as queries parameter, it will get all data in the table.
+					List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName());
+
+					Table table = DatabaseConnector.getTable(stat.getTableName());
+
+					// Write transferred items to log
+					plugin.getLogsManager().writeToLogFile(storedSQLiteQueries, stat);
+
+					plugin.getDatabaseConnector().setBatchObjects(table, storedSQLiteQueries,
+							DatabaseConnector.SET_OPERATION.ADD);
+
+					updateCount += storedSQLiteQueries.size();
+				}
+
+				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring SQLite to" +
+						" MySQL database");
+
+				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
+						+ " database records from SQLite to MySQL!");
+			}
+		});
+
+	}
+
+	public static void confirmReverseTransfer(final CommandSender sender) {
+		// Run after a player has confirmed the command.
+
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+			public void run() {
+				confirmTransferMySQL.remove(sender.getName());
+
+				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
+
+				// Load SQLiteConnector
+				MySQLConnector = new MySQLConnector(plugin);
+
+				MySQLConnector.loadTables();
+				MySQLConnector.load();
+
+				int updateCount = 0;
+
+				plugin.getLogsManager().writeToLogFile("Starting tranfer from MySQL to SQLite database!");
+
+				for (PlayerStat stat : PlayerStat.values()) {
+					// When using null as queries parameter, it will get all data in the table.
+					List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName());
+
+					// Remove ID column because SQLite automatically assigns id's to its tables.
+					for (Query q : storedMySQLQueries) {
+						if (q.hasColumn("id")) {
+							q.removeColumn("id");
+						}
+					}
+
+					// Write transferred items to log
+					plugin.getLogsManager().writeToLogFile(storedMySQLQueries, stat);
+
+					Table table = DatabaseConnector.getTable(stat.getTableName());
+
+					plugin.getDatabaseConnector().setBatchObjects(table, storedMySQLQueries,
+							DatabaseConnector.SET_OPERATION.ADD);
+
+					updateCount += storedMySQLQueries.size();
+				}
+
+				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring MySQL to " +
+						"SQLite database");
+
+				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
+						+ " database records from MySQL to SQLite!");
+
+
+			}
+		});
+
+	}
+
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
@@ -72,7 +171,7 @@ public class TransferCommand extends StatzCommand {
 
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
+
 
 					// Player already confirmed or it was removed from the list
 					if (!confirmTransferMySQL.contains(sender.getName()))
@@ -120,7 +219,7 @@ public class TransferCommand extends StatzCommand {
 
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
+
 
 					// Player already confirmed or it was removed from the list
 					if (!confirmTransferSQLite.contains(sender.getName()))
@@ -138,108 +237,13 @@ public class TransferCommand extends StatzCommand {
 		return true;
 	}
 
-	public static void confirmTransfer(final CommandSender sender) {
-		// Run after a player has confirmed the command.
-
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-			public void run() {
-				confirmTransferSQLite.remove(sender.getName());
-				
-				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
-				
-				// Load SQLiteConnector
-				SQLiteConnector = new SQLiteConnector(plugin);
-
-				SQLiteConnector.loadTables();
-				SQLiteConnector.load();
-
-				int updateCount = 0;
-				
-				plugin.getLogsManager().writeToLogFile("Starting tranfer from SQLite to MySQL database!");
-
-				for (PlayerStat stat : PlayerStat.values()) {
-					// When using null as queries parameter, it will get all data in the table.
-                    List<Query> storedSQLiteQueries = SQLiteConnector.getObjects(stat.getTableName());
-
-                    Table table = DatabaseConnector.getTable(stat.getTableName());
-					
-					// Write transferred items to log
-					plugin.getLogsManager().writeToLogFile(storedSQLiteQueries, stat);
-					
-					plugin.getDatabaseConnector().setBatchObjects(table, storedSQLiteQueries, 2);
-
-					updateCount += storedSQLiteQueries.size();
-				}
-				
-				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring SQLite to MySQL database");
-
-				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
-						+ " database records from SQLite to MySQL!");
-			}
-		});
-
-	}
-
-	public static void confirmReverseTransfer(final CommandSender sender) {
-		// Run after a player has confirmed the command.
-
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-			public void run() {
-				confirmTransferMySQL.remove(sender.getName());
-				
-				sender.sendMessage(ChatColor.GOLD + "Transferring database records... This make take a while!");
-				
-				// Load SQLiteConnector
-				MySQLConnector = new MySQLConnector(plugin);
-
-				MySQLConnector.loadTables();
-				MySQLConnector.load();
-
-				int updateCount = 0;
-				
-				plugin.getLogsManager().writeToLogFile("Starting tranfer from MySQL to SQLite database!");
-
-				for (PlayerStat stat : PlayerStat.values()) {
-					// When using null as queries parameter, it will get all data in the table.
-                    List<Query> storedMySQLQueries = MySQLConnector.getObjects(stat.getTableName());
-
-					// Remove ID column because SQLite automatically assigns id's to its tables.
-					for (Query q: storedMySQLQueries) {
-                        if (q.hasColumn("id")) {
-							q.removeColumn("id");
-						}
-					}
-					
-					// Write transferred items to log
-					plugin.getLogsManager().writeToLogFile(storedMySQLQueries, stat);
-
-                    Table table = DatabaseConnector.getTable(stat.getTableName());
-
-					plugin.getDatabaseConnector().setBatchObjects(table, storedMySQLQueries, 2);
-
-					updateCount += storedMySQLQueries.size();
-				}
-				
-				plugin.getLogsManager().writeToLogFile("Wrote " + updateCount + " changes while transferring MySQL to SQLite database");
-
-				sender.sendMessage(ChatColor.GREEN + "Transferred " + ChatColor.GOLD + updateCount + ChatColor.GREEN
-						+ " database records from MySQL to SQLite!");
-
-				
-			}
-		});
-
-	}
-
 	/* (non-Javadoc)
 	 * @see me.staartvin.statz.commands.manager.StatzCommand#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
 			final String[] args) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 }

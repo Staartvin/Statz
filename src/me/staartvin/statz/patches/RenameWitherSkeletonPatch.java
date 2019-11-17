@@ -91,7 +91,7 @@ public class RenameWitherSkeletonPatch extends Patch {
 
             return true;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             this.getStatz().getLogger().warning("Failed to patch MySQL database for patch " + this.getPatchId());
             e.printStackTrace();
             return false;
@@ -197,7 +197,7 @@ public class RenameWitherSkeletonPatch extends Patch {
 
             return true;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             this.getStatz().getLogger().warning("Failed to patch SQLite database for patch " + this.getPatchId());
             e.printStackTrace();
             return false;

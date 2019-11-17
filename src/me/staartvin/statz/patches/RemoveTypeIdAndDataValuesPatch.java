@@ -34,7 +34,7 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
             return true;
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             this.getStatz().getLogger().warning("Failed to patch MySQL database for patch " + this.getPatchId());
             return false;
         }
@@ -95,7 +95,7 @@ public class RemoveTypeIdAndDataValuesPatch extends Patch {
 
             return true;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             this.getStatz().getLogger().warning("Failed to patch SQLite database for patch " + this.getPatchId());
             return false;
         }

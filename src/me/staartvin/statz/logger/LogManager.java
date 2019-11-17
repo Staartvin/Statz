@@ -54,8 +54,8 @@ public class LogManager {
 			logFile.getParentFile().mkdirs();
 			logFile.createNewFile();
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return dateFormatSave;
 		}
 
@@ -64,8 +64,8 @@ public class LogManager {
 		try {
 			out = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return dateFormatSave;
 		}
 
@@ -83,8 +83,8 @@ public class LogManager {
 			out.close();
 			return dateFormatSave;
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return dateFormatSave;
 		}
 	}
@@ -108,8 +108,8 @@ public class LogManager {
 		try {
 			out = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 
@@ -129,8 +129,8 @@ public class LogManager {
 			out.close();
 			return;
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 	}
@@ -152,8 +152,8 @@ public class LogManager {
 		try {
 			out = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 
@@ -171,8 +171,8 @@ public class LogManager {
 			out.close();
 			return;
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 	}
@@ -194,8 +194,8 @@ public class LogManager {
 		try {
 			out = new BufferedWriter(new FileWriter(logFile, true));
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 
@@ -215,8 +215,8 @@ public class LogManager {
 			out.close();
 			return;
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+            e.printStackTrace();
 			return;
 		}
 	}

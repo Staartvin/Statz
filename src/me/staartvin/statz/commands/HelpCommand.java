@@ -104,7 +104,7 @@ public class HelpCommand extends StatzCommand {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command cmd, final String commandLabel,
 			final String[] args) {
-		// TODO Auto-generated method stub
-		return null;
+
+        return null;
 	}
 }
