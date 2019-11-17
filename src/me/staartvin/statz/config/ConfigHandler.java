@@ -50,8 +50,8 @@ public class ConfigHandler {
                 + "\nThe 'enable logging' option allows you to enable or disable logging of certain statistics. It " +
                 "is off by default and create large log files if left on for a long time."
                 + "\nThe option 'make backup of database before patching' tells Statz whether to make a backup of the" +
-                " database before attempting to patch it. This will require that Statz can make new databases as " +
-                "backup database so be sure to give it elevated privileges.");
+                " database before attempting to patch it. This will require that Statz can use the backup database " +
+                "specified in the mysql section. Be sure to give Statz the correct permissions in your database");
 
         plugin.getConfig().addDefault("track stats", true);
         plugin.getConfig().addDefault("show database save message", false);
@@ -61,6 +61,7 @@ public class ConfigHandler {
         plugin.getConfig().addDefault("mysql.username", "root");
         plugin.getConfig().addDefault("mysql.password", "");
         plugin.getConfig().addDefault("mysql.database", "Statz");
+        plugin.getConfig().addDefault("mysql.database for backups", "Statz_backups");
 
         plugin.getConfig().addDefault("periodic save time", TaskManager.UPDATE_DATABASE_TASK_INTERVAL);
 
@@ -135,6 +136,10 @@ public class ConfigHandler {
 
     public String getMySQLDatabase() {
         return plugin.getConfig().getString("mysql.database", "Statz");
+    }
+
+    public String getBackupMySQLDatabase() {
+        return plugin.getConfig().getString("mysql.database for backups", "Statz_backups");
     }
 
     public int getPeriodicSaveTime() {
@@ -225,8 +230,6 @@ public class ConfigHandler {
     }
 
     public boolean shouldBackupBeforePatching() {
-        // TODO: Use this in patching system.
-        // TODO: Update patching system so we have one backup database and a lot of tables in that backup database.
         return plugin.getConfig().getBoolean("make backup of database before patching", true);
     }
 

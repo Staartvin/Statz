@@ -58,18 +58,21 @@ public class PatchManager {
                 continue;
             }
 
-            // Before we start patching, make a backup of the data storage.
-            if (this.createBackupDataStorage(patch)) {
-                plugin.getLogger().info("Made backup of data storage before patching so you can roll back if " +
-                        "something " +
-                        "went wrong.");
-            } else {
-                // Don't patch if no backup could be made.
-                plugin.getLogger().severe("Could not make a backup of data storage before patching, so will not " +
-                        "continue patching.");
-                noErrors = false;
-                break;
+            // Check if we should make a back up before patching.
+            if (plugin.getConfigHandler().shouldBackupBeforePatching()) {
+                // Before we start patching, make a backup of the data storage.
+                plugin.getLogger().info("Making backup of data storage before patching so you can roll back if " +
+                        "something went wrong.");
+
+                if (!this.createBackupDataStorage(patch)) {
+                    // Don't patch if no backup could be made.
+                    plugin.getLogger().severe("Could not make a backup of data storage before patching, so will not " +
+                            "continue patching.");
+                    noErrors = false;
+                    break;
+                }
             }
+
 
             plugin.getLogger().info("Applying patch '" + patch.getPatchName() + "' (id: " + patch.getPatchId() + ").");
 
