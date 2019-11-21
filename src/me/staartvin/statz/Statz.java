@@ -13,6 +13,7 @@ import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.gui.GUIManager;
 import me.staartvin.statz.hooks.DependencyManager;
+import me.staartvin.statz.hooks.StatzDependency;
 import me.staartvin.statz.importer.ImportManager;
 import me.staartvin.statz.language.LanguageHandler;
 import me.staartvin.statz.language.StatisticDescriptionConfig;
@@ -253,8 +254,8 @@ public class Statz extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new JoinPlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
 
-        // Check for votes if the stat is not disabled
-        if (!this.getConfigHandler().isStatDisabled(PlayerStat.VOTES)) {
+        // Check for votes if the stat is not disabled and PluginLibrary is active.
+        if (!this.getConfigHandler().isStatDisabled(PlayerStat.VOTES) && this.getDependencyManager().isAvailable(StatzDependency.PLUGINLIBRARY)) {
             this.getServer().getPluginManager().registerEvents(new VotesListener(this), this);
         }
 
