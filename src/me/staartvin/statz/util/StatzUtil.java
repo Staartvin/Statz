@@ -649,6 +649,15 @@ public class StatzUtil {
         return null;
     }
 
+    public static boolean isHarvestableCrop(Material material) {
+
+        List<Material> crops = Arrays.asList(WHEAT, BEETROOTS, CARROTS, POTATOES, MELON, PUMPKIN, BAMBOO, COCOA,
+                SUGAR_CANE, CACTUS, BROWN_MUSHROOM, RED_MUSHROOM, KELP_PLANT,
+                SEA_PICKLE, NETHER_WART, CHORUS_PLANT, CHORUS_FLOWER);
+
+        return crops.contains(material);
+    }
+
     public enum Time {
         DAYS, HOURS, MINUTES, SECONDS
     }
