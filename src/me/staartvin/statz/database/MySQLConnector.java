@@ -112,9 +112,6 @@ public class MySQLConnector extends DatabaseConnector {
                 initialize();
 
                 // Apply patches
-                if (existingTables == MySQLConnector.this.getTables().size()) {
-                    // We have not created new tables, so we check what updates we should perform.
-                }
                 plugin.getPatchManager().applyPatches();
             }
         });
