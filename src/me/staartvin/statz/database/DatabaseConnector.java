@@ -8,7 +8,6 @@ import me.staartvin.statz.datamanager.player.PlayerStat;
 import org.bukkit.ChatColor;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -104,19 +103,17 @@ public abstract class DatabaseConnector {
 	 * Will spit errors in the console when it could not properly connect.
 	 */
 	public void initialize() {
-		Connection connection = getConnection();
+		try (Connection connection = getConnection()) {
+			// Something went wrong
+			if (connection == null) {
+				plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection!");
+				return;
+			}
 
-		// Something went wrong
-		if (connection == null) {
-			plugin.getLogger().log(Level.SEVERE, "Unable to retrieve connection!");
-			return;
+			plugin.debugMessage(ChatColor.AQUA + "Statz is connected to its database!");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-
-		this.refreshConnection();
-
-		plugin.debugMessage(ChatColor.AQUA + "Statz is connected to its database!");
-
-		return;
 	}
 
 	/**
@@ -191,39 +188,6 @@ public abstract class DatabaseConnector {
 	 * @param uuid UUID to remove data of.
 	 */
 	public abstract void purgeData(UUID uuid);
-
-	/**
-	 * Refresh connection with database
-	 */
-	private void refreshConnection() {
-		// Run this query to refresh the connection.
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			public void run() {
-				Connection conn = null;
-				PreparedStatement ps = null;
-
-				try {
-					conn = getConnection();
-					ps = conn.prepareStatement("SELECT 1");
-					ps.executeQuery();
-
-					return;
-				} catch (final SQLException ex) {
-					plugin.getLogger().log(Level.SEVERE, "Couldn't execute SQL statement:", ex);
-				} finally {
-					try {
-						if (ps != null)
-							ps.close();
-						//if (conn != null)
-						//conn.close();
-					} catch (final SQLException ex) {
-						plugin.getLogger().log(Level.SEVERE, "Failed to close SQL connection: ", ex);
-					}
-				}
-
-			}
-		});
-	}
 
     /**
      * Send a specific query (as a string) to the database. It is not recommended to use this method to obtain data

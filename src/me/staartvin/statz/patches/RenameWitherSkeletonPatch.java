@@ -48,7 +48,11 @@ public class RenameWitherSkeletonPatch extends Patch {
 
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);
-            ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true)) {
 
             if (set == null) {
                 return false;
@@ -154,7 +158,11 @@ public class RenameWitherSkeletonPatch extends Patch {
 
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);
-            ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true)) {
 
             if (set == null) {
                 return false;

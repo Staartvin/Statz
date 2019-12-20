@@ -1,5 +1,7 @@
 package me.staartvin.statz.database;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.Column;
 import me.staartvin.statz.database.datatype.Query;
@@ -21,10 +23,12 @@ import java.util.logging.Level;
 public class MySQLConnector extends DatabaseConnector {
 
     private final Statz plugin;
-    private Connection connection;
     private String hostname = "localhost:3306";
     private String password = "";
     private String username = "root";
+
+    private HikariDataSource dataSource = null;
+
     public MySQLConnector(final Statz instance) {
         super(instance);
         plugin = instance;
@@ -40,40 +44,43 @@ public class MySQLConnector extends DatabaseConnector {
         DatabaseConnector.databaseName = plugin.getConfigHandler().getMySQLDatabase();
     }
 
+    private void setupDatabaseConnection() {
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl("jdbc:mysql://" + this.hostname + "/" + DatabaseConnector.databaseName);
+        System.out.println("SETTING UP DATABASE TO " + this.hostname + " ON DATABASE " + DatabaseConnector.databaseName);
+        config.setUsername(this.username);
+        config.setPassword(this.password);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("maintainTimeStats", "false");
+        config.addDataSourceProperty("leakDetectionThreshold", "10000");
+
+        this.dataSource = new HikariDataSource(config);
+    }
+
     /*
      * (non-Javadoc)
      *
      * @see me.staartvin.statz.database.Database#getSQLConnection()
      */
     @Override
-    public synchronized Connection getConnection() {
+    public Connection getConnection() {
 
-        try {
-            if (connection != null && !connection.isClosed()) {
-                return connection;
-            }
-        } catch (SQLException e1) {
-
-            e1.printStackTrace();
+        if (dataSource == null) {
+            setupDatabaseConnection();
         }
 
         try {
-            final String url = "jdbc:mysql://" + hostname + "/" + DatabaseConnector.databaseName
-                    + "?rewriteBatchedStatements=true&autoReconnect=true&useSSL=false";
-
-            connection = DriverManager.getConnection(url, username, password);
-        } catch (final SQLException ex) {
-            System.out.println("SQLDataStorage.connect");
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            plugin.getLogger().log(Level.SEVERE, "MySQL exception on initialize: " + ex.getMessage());
-            return null;
-        } catch (final Exception e) {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return connection;
 
+        return null;
     }
 
     /*
@@ -83,9 +90,8 @@ public class MySQLConnector extends DatabaseConnector {
      */
     @Override
     public void load() {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            public void run() {
-                connection = getConnection();
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            try (Connection connection = getConnection()) {
 
                 // Did not properly connect to database
                 if (connection == null) {
@@ -96,24 +102,23 @@ public class MySQLConnector extends DatabaseConnector {
 
                 int existingTables = 0;
 
-                try {
-                    final Statement s = connection.createStatement();
 
-                    // Run all statements to create tables
-                    for (final String statement : createTablesStatement()) {
-                        s.executeUpdate(statement);
-                    }
+                final Statement s = connection.createStatement();
 
-                    s.close();
-                } catch (final SQLException e) {
-                    e.printStackTrace();
+                // Run all statements to create tables
+                for (final String statement : createTablesStatement()) {
+                    s.executeUpdate(statement);
                 }
 
-                initialize();
-
-                // Apply patches
-                plugin.getPatchManager().applyPatches();
+                s.close();
+            } catch (final SQLException e) {
+                e.printStackTrace();
             }
+
+            initialize();
+
+            // Apply patches
+            plugin.getPatchManager().applyPatches();
         });
     }
 
@@ -129,8 +134,12 @@ public class MySQLConnector extends DatabaseConnector {
             return results;
         }
 
-        try {
-            connection = getConnection();
+        try (Connection connection = getConnection()) {
+
+            if (connection == null) {
+                plugin.getLogger().warning("Statz is not connected to your database properly!");
+                return new ArrayList<>();
+            }
 
             // Create SQL query to retrieve data
             if (requirements == null || requirements.length == 0) {
@@ -176,16 +185,8 @@ public class MySQLConnector extends DatabaseConnector {
         } catch (final SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
             return results;
-        } finally {
-            try {
-                if (ps != null)
-                    ps.close();
-                // if (conn != null)
-                // conn.close();
-            } catch (final SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
-            }
         }
+
         return results;
     }
 
@@ -812,9 +813,6 @@ public class MySQLConnector extends DatabaseConnector {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 
             public void run() {
-                Connection conn = null;
-                PreparedStatement ps = null;
-
                 StringBuilder columnNames = new StringBuilder("(");
 
                 StringBuilder resultNames = new StringBuilder("(");
@@ -863,21 +861,15 @@ public class MySQLConnector extends DatabaseConnector {
 
                 update += onDuplicate;
 
-                try {
-                    conn = getConnection();
+                try (Connection conn = getConnection()) {
+                    PreparedStatement ps = null;
+
                     ps = conn.prepareStatement(update);
                     ps.executeUpdate();
 
                     return;
                 } catch (final SQLException ex) {
                     plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
-                } finally {
-                    try {
-                        if (ps != null)
-                            ps.close();
-                    } catch (final SQLException ex) {
-                        plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
-                    }
                 }
             }
         });
@@ -899,11 +891,9 @@ public class MySQLConnector extends DatabaseConnector {
     public void setBatchObjects(final Table table, final List<Query> queries, SET_OPERATION mode) {
         // Run SQLite query async to not disturb the main Server thread
 
-        Connection conn = getConnection();
         Statement stmt = null;
 
-        try {
-            conn.setAutoCommit(false);
+        try (Connection conn = getConnection()) {
             stmt = conn.createStatement();
 
             for (Query query : queries) {
@@ -976,12 +966,6 @@ public class MySQLConnector extends DatabaseConnector {
                     e.printStackTrace();
                 }
             }
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-
-                e.printStackTrace();
-            }
         }
     }
 
@@ -991,32 +975,16 @@ public class MySQLConnector extends DatabaseConnector {
 
             public void run() {
 
-                Connection conn = null;
-                PreparedStatement ps = null;
+                try (Connection conn = getConnection()) {
+                    for (Table table : getTables()) {
+                        String update = "DELETE FROM " + table.getTableName() + " WHERE uuid='" + uuid.toString() + "'";
 
-                conn = getConnection();
-
-                for (Table table : getTables()) {
-                    String update = "DELETE FROM " + table.getTableName() + " WHERE uuid='" + uuid.toString() + "'";
-
-                    try {
-                        ps = conn.prepareStatement(update);
+                        PreparedStatement ps = conn.prepareStatement(update);
                         ps.executeUpdate();
-
-                    } catch (final SQLException ex) {
-                        plugin.getLogger().log(Level.SEVERE, "Couldn't execute MySQL statement:", ex);
-                    } finally {
-                        try {
-                            if (ps != null)
-                                ps.close();
-                            // if (conn != null)
-                            // conn.close();
-                        } catch (final SQLException ex) {
-                            plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
-                        }
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-
             }
         });
     }
@@ -1046,10 +1014,8 @@ public class MySQLConnector extends DatabaseConnector {
             throw ex;
         } finally {
             try {
-                if (ps != null && !wantResult)
-                    ps.close();
-                //if (conn != null)
-                //conn.close();
+                if (conn != null && !wantResult)
+                    conn.close();
             } catch (final SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);
             }
@@ -1090,8 +1056,8 @@ public class MySQLConnector extends DatabaseConnector {
                 throw ex;
             } finally {
                 try {
-                    if (ps != null && !wantResult)
-                        ps.close();
+                    if (conn != null && !wantResult)
+                        conn.close();
 
                 } catch (final SQLException ex) {
                     plugin.getLogger().log(Level.SEVERE, "Failed to close MySQL connection: ", ex);

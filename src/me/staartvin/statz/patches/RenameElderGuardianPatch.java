@@ -45,10 +45,13 @@ public class RenameElderGuardianPatch extends Patch {
                         "table1.world = table2.world AND " +
                         "table1.weapon = table2.weapon;",
                 "SELECT * FROM " + tempName + ";");
-
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);
-            ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true)) {
 
             if (set == null) {
                 return false;
@@ -154,7 +157,11 @@ public class RenameElderGuardianPatch extends Patch {
 
         try {
             this.getDatabaseConnector().sendQuery(queries.get(0), false);
-            ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (ResultSet set = this.getDatabaseConnector().sendQuery(queries.get(1), true)) {
 
             if (set == null) {
                 return false;
