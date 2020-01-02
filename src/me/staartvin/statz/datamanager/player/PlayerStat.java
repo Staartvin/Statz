@@ -13,15 +13,15 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player join the server?
 	 */
-    JOINS("joins", Material.ACACIA_DOOR, "How many times did I log in?"),
+	JOINS("joins", Material.ACACIA_DOOR, "How often did I log in?"),
 	/**
 	 * How many times did a player die?
 	 */
-    DEATHS("deaths", Material.OAK_SIGN, "How many times did I die?"),
+	DEATHS("deaths", Material.OAK_SIGN, "How often did I die?"),
 	/**
 	 * How many times did a player catch an item with fishing?
 	 */
-    ITEMS_CAUGHT("items_caught", Material.GOLDEN_SHOVEL, "How many items did I catch while fishing?"),
+	ITEMS_CAUGHT("items_caught", Material.GOLDEN_SHOVEL, "How many items caught while fishing?"),
 	/**
 	 * What kind of blocks (and how many) where placed by a player?
 	 */
@@ -34,7 +34,7 @@ public enum PlayerStat {
 	/**
 	 * What kind of mobs did a player kill?
 	 */
-    KILLS_MOBS("kills_mobs", Material.SKELETON_SKULL, "How many mobs did I kill?"),
+	KILLS_MOBS("kills_mobs", Material.SKELETON_SKULL, "How many mobs did I kill?"),
 
 	/**
 	 * How many players did a player kill?
@@ -44,12 +44,12 @@ public enum PlayerStat {
 	/**
 	 * How many minutes has a player played on the server?
 	 */
-    TIME_PLAYED("time_played", Material.CLOCK, "How many minutes have I played on this server?"),
+	TIME_PLAYED("time_played", Material.CLOCK, "What's my playtime?"),
 
 	/**
 	 * What food has a player eaten?
 	 */
-    FOOD_EATEN("food_eaten", Material.COOKED_PORKCHOP, "How much food have I eaten?"),
+	FOOD_EATEN("food_eaten", Material.COOKED_PORKCHOP, "How much have I eaten?"),
 
 	/**
 	 * How much damage has a player taken?
@@ -95,7 +95,7 @@ public enum PlayerStat {
 	/**
 	 * How many times did a player enter a bed and on what world?
 	 */
-    ENTERED_BEDS("entered_beds", Material.PINK_BED, "How many times have I slept in a bed?"),
+	ENTERED_BEDS("entered_beds", Material.PINK_BED, "How often have I slept?"),
 
 	/**
 	 * What commands did a player perform and on what world?
@@ -115,12 +115,12 @@ public enum PlayerStat {
 	/**
 	 * How many eggs did a player throw?
 	 */
-	EGGS_THROWN("eggs_thrown", Material.EGG, "How many egg did I throw?"),
+	EGGS_THROWN("eggs_thrown", Material.EGG, "How many eggs did I throw?"),
 
 	/**
 	 * How many times did a player switch worlds?
 	 */
-	WORLDS_CHANGED("worlds_changed", Material.NETHER_STAR, "How many times did I travel between worlds?"),
+	WORLDS_CHANGED("worlds_changed", Material.NETHER_STAR, "How often did I switch worlds?"),
 
 	/**
 	 * How many buckets did a player fill?
@@ -140,17 +140,17 @@ public enum PlayerStat {
 	/**
 	 * How many items did a player pick up?
 	 */
-    ITEMS_PICKED_UP("items_picked_up", Material.WHEAT_SEEDS, "How many items did I pick up?"),
+	ITEMS_PICKED_UP("items_picked_up", Material.WHEAT_SEEDS, "How many items did I pick up?"),
 
 	/**
 	 * How many times did a player teleport?
 	 */
-	TELEPORTS("teleports", Material.MELON_SEEDS, "How many times did I teleport?"),
+	TELEPORTS("teleports", Material.MELON_SEEDS, "How much did I teleport?"),
 
 	/**
 	 * How many trades with villages did a player do?
 	 */
-	VILLAGER_TRADES("villager_trades", Material.EMERALD, "How many times did I trade with Villagers?");
+	VILLAGER_TRADES("villager_trades", Material.EMERALD, "How much did I trade with Villagers?");
 
 	private String tableName;
 

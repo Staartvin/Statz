@@ -173,8 +173,7 @@ public class ListCommand extends StatzCommand {
 
                 Player player = (Player) sender;
 
-                plugin.getGUIManager().showInventory(player, plugin.getGUIManager()
-                        .getStatisticsListInventory(uuid, playerName));
+                plugin.getGUIManager().showStatisticsOverviewInventory(player, uuid, playerName);
 
             } else { // Only show text.
                 plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {

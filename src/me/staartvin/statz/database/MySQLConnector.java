@@ -48,7 +48,6 @@ public class MySQLConnector extends DatabaseConnector {
         HikariConfig config = new HikariConfig();
 
         config.setJdbcUrl("jdbc:mysql://" + this.hostname + "/" + DatabaseConnector.databaseName);
-        System.out.println("SETTING UP DATABASE TO " + this.hostname + " ON DATABASE " + DatabaseConnector.databaseName);
         config.setUsername(this.username);
         config.setPassword(this.password);
         config.addDataSourceProperty("cachePrepStmts", "true");
