@@ -357,12 +357,21 @@ public class PaginatedGUI implements InventoryHolder {
         /* END PAGINATION */
 
         // Where appropriate, include pagination.
-        if (!atFirstPage())
+        if (!atFirstPage()) {
             toolbarItems.put(3, backButton);
-        if (getFinalPage() > 0)
+        } else {
+            toolbarItems.remove(3);
+        }
+
+        if (getFinalPage() > 0) {
             toolbarItems.put(4, pageIndicator);
-        if (!atFinalPage())
+        }
+
+        if (!atFinalPage()) {
             toolbarItems.put(5, nextButton);
+        } else {
+            toolbarItems.remove(5);
+        }
 
         // Add the main inventory items
         int counter = 0;
