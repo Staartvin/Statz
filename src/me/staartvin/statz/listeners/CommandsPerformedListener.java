@@ -1,9 +1,9 @@
 package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.CommandsPerformedSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,10 +33,10 @@ public class CommandsPerformedListener implements Listener {
 		String message = event.getMessage();
 		
 		int subString = message.indexOf(" ");
-		
+
 		String command = "";
 		String arguments = "";
-		
+
 		if (subString > 0) {
 			command = message.substring(0, subString).trim();
 			arguments = message.substring(subString).trim();
@@ -44,12 +44,11 @@ public class CommandsPerformedListener implements Listener {
 			command = message.trim();
 		}
 
-        Query query = StatzUtil.makeQuery("uuid",
-                player.getUniqueId(), "value", 1, "world", player.getWorld().getName(), "command", command,
-                "arguments", arguments);
+		PlayerStatSpecification specification = new CommandsPerformedSpecification(player.getUniqueId(), 1,
+				player.getWorld().getName(), command, arguments);
 
 		// Update value to new stat.
-        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, query);
+		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
 
 	}
 }

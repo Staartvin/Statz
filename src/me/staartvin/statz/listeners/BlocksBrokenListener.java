@@ -2,7 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.BlocksBrokenSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,6 @@ public class BlocksBrokenListener implements Listener {
         this.plugin = plugin;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent event) {
 
@@ -35,10 +35,11 @@ public class BlocksBrokenListener implements Listener {
 
         final String worldName = blockBroken.getWorld().getName();
 
+        PlayerStatSpecification specification = new BlocksBrokenSpecification(player.getUniqueId(), 1,
+                worldName, blockBroken.getType());
+
         // Update value to new stat.
-        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "block", blockBroken
-                        .getBlockData().getMaterial().name(), "world", worldName));
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
 
     }
 }

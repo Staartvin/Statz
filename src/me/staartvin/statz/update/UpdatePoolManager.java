@@ -197,8 +197,8 @@ public class UpdatePoolManager {
             for (Query query : queries) {
                 System.out.println("------------------------");
                 StringBuilder builder = new StringBuilder("{");
-                for (Map.Entry<String, String> entry : query.getEntrySet()) {
-                    builder.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");
+                for (Map.Entry<String, Object> entry : query.getEntrySet()) {
+                    builder.append(entry.getKey()).append(": ").append(entry.getValue().toString()).append(", ");
                 }
                 builder.append("}");
                 System.out.println(builder.toString());

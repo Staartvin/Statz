@@ -167,12 +167,12 @@ public class MySQLConnector extends DatabaseConnector {
             rs = ps.executeQuery();
             while (rs.next()) {
 
-                final HashMap<String, String> result = new HashMap<>();
+                final HashMap<String, Object> result = new HashMap<>();
 
                 // Populate hashmap
                 for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                     final String columnName = rs.getMetaData().getColumnName(i + 1);
-                    final String value = rs.getObject(i + 1).toString();
+                    final Object value = rs.getObject(i + 1);
 
                     // Put value in hashmap if not null, otherwise just put
                     // empty string
@@ -266,7 +266,7 @@ public class MySQLConnector extends DatabaseConnector {
     @Override
     public void loadTables() {
         // UUID table to look up uuid of players
-        MySQLTable newTable = new MySQLTable("players");
+        MySQLTable newTable = new MySQLTable(PlayerStat.PLAYERS.getTableName());
 
         Column id = new Column("id", true, SQLDataType.INT, true);
 
@@ -816,21 +816,21 @@ public class MySQLConnector extends DatabaseConnector {
 
                 StringBuilder resultNames = new StringBuilder("(");
 
-                for (final Entry<String, String> result : results.getEntrySet()) {
+                for (final Entry<String, Object> result : results.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
 
                     try {
                         // Try to check if it is an integer
-                        Integer.parseInt(result.getValue());
+                        Integer.parseInt(result.getValue().toString());
                         resultNames.append(result.getValue() + ",");
                     } catch (final NumberFormatException e) {
 
                         try {
                             // Try to check if it is an double
-                            Double.parseDouble(result.getValue());
-                            resultNames.append(result.getValue() + ",");
+                            Double.parseDouble(result.getValue().toString());
+                            resultNames.append(result.getValue().toString() + ",");
                         } catch (NumberFormatException ev) {
-                            resultNames.append("'" + result.getValue().replace("'", "''") + "',");
+                            resultNames.append("'" + result.getValue().toString().replace("'", "''") + "',");
                         }
                     }
 
@@ -900,21 +900,21 @@ public class MySQLConnector extends DatabaseConnector {
 
                 StringBuilder resultNames = new StringBuilder("(");
 
-                for (final Entry<String, String> result : query.getEntrySet()) {
+                for (final Entry<String, Object> result : query.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
 
                     try {
                         // Try to check if it is an integer
-                        Integer.parseInt(result.getValue());
+                        Integer.parseInt(result.getValue().toString());
                         resultNames.append(result.getValue() + ",");
                     } catch (final NumberFormatException e) {
 
                         try {
                             // Try to check if it is an double
-                            Double.parseDouble(result.getValue());
+                            Double.parseDouble(result.getValue().toString());
                             resultNames.append(result.getValue() + ",");
                         } catch (NumberFormatException ev) {
-                            resultNames.append("'" + result.getValue().replace("'", "''") + "',");
+                            resultNames.append("'" + result.getValue().toString().replace("'", "''") + "',");
                         }
                     }
 

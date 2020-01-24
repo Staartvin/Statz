@@ -2,7 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.BlocksPlacedSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,6 @@ public class BlocksPlacedListener implements Listener {
         this.plugin = plugin;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent event) {
 
@@ -34,10 +34,11 @@ public class BlocksPlacedListener implements Listener {
         Block blockPlaced = event.getBlockPlaced();
         final String worldName = blockPlaced.getWorld().getName();
 
+        PlayerStatSpecification specification = new BlocksPlacedSpecification(player.getUniqueId(), 1,
+                worldName, blockPlaced.getType());
+
         // Update value to new stat.
-        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "block", blockPlaced
-                        .getBlockData().getMaterial().name(), "world", worldName));
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
 
     }
 }

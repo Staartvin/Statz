@@ -1,6 +1,20 @@
 package me.staartvin.statz.importer;
 
 import me.staartvin.statz.Statz;
+import me.staartvin.statz.datamanager.player.PlayerInfo;
+import me.staartvin.statz.datamanager.player.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class can import data into Statz' database from other plugins. Currently supports Stats3
@@ -16,308 +30,313 @@ public class ImportManager {
         this.plugin = plugin;
     }
 
-    /**
-     * Import data from Stats 3.
-     *
-     * @return number of entries imported from Stats 3.
-     */
-    @SuppressWarnings("deprecation")
-    public int importFromStats3() {
-        int importedEntries = 0;
 
-        return -1; // Currently not implemented.
-//        LibraryHook hook = plugin.getDependencyManager().getLibraryHook(Library.STATS);
-//
-//        if (hook == null || !hook.isAvailable()) {
-//            plugin.getLogger().warning("Cannot import data from Stats 3 as it is not running!");
-//
-//            return -1;
-//        }
-//
-//        int waitingTime = 10;
-//
-//        StatsHook stats3 = (StatsHook) hook;
-//
-//        List<UUID> loggedPlayers = stats3.getLoggedPlayers();
-//
-//        plugin.getLogsManager().writeToLogFile("Requested " + loggedPlayers.size() + " users from Stats. Now
-//        waiting " +
-//                "" + ((loggedPlayers.size() * waitingTime) / 1000.0) + " seconds for the response...");
-//        plugin.getLogger().info("Requested all users for importing, now wait " + ((loggedPlayers.size() *
-//        waitingTime) /
-//                1000.0) + " seconds for Stats to load all users.");
-//
-//        try {
-//            Thread.sleep(loggedPlayers.size() * waitingTime);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        plugin.getLogsManager().writeToLogFile("Started processing UUIDs of Stats.");
-//
-//        for (UUID uuid : loggedPlayers) {
-//
-//            StatsHolder user = stats3.getStatsHolder(uuid);
-//
-//            importedEntries++;
-//
-//            if (importedEntries % 1000 == 0) {
-//                plugin.getLogsManager().writeToLogFile("Processed " + importedEntries + " / " + loggedPlayers.size()
-//                        + " uuids.");
-//            }
-//
-//            Collection<Stat> storedStats = user.getStats();
-//
-//            for (Stat stat : storedStats) {
-//                for (StatEntry entry : user.getStats(stat)) {
-//
-//                    Map<String, Object> metadata = entry.getMetadata();
-//
-//                    double value = entry.getValue();
-//                    String worldName = (String) metadata.get("world");
-//
-//                    if (stat instanceof Move) {
-//                        // Movement stat
-//
-//                        double moveType = Double.parseDouble(metadata.get("type").toString());
-//
-//                        String movementType = "WALK";
-//
-//                        switch ((int) moveType) {
-//                            case 0:
-//                                movementType = "WALK";
-//                                break;
-//                            case 1:
-//                                movementType = "BOAT";
-//                                break;
-//                            case 2:
-//                                movementType = "MINECART";
-//                                break;
-//                            case 3:
-//                                movementType = "PIG";
-//                                break;
-//                            case 4:
-//                                movementType = "PIG IN MINECART";
-//                                break;
-//                            case 5:
-//                                movementType = "HORSE";
-//                                break;
-//                            case 6:
-//                                movementType = "FLY";
-//                                break;
-//                        }
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.DISTANCE_TRAVELLED,
-//                                StatzUtil.makeQuery("value", (value), "moveType", movementType, "world", worldName));
-//
-//                    } else if (stat instanceof Kill) {
-//                        // Kill stat
-//
-//                        EntityType entity = EntityType.fromName((String) metadata.get("entityType"));
-//
-//                        String entityName = entity != null ? entity.toString() : "UNKNOWN";
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.KILLS_MOBS,
-//                                StatzUtil.makeQuery("value", (value), "mob", entityName, "world", worldName,
-//                                        "weapon", "UNKNOWN"));
-//
-//                    } else if (stat instanceof Teleports) {
-//                        // Teleport stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.TELEPORTS, StatzUtil.makeQuery("value",
-//                                (value), "world", "UNKNOWN", "destWorld", worldName, "cause", "UNKNOWN"));
-//
-//                    } else if (stat instanceof Arrows) {
-//                        // Arrows shot stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ARROWS_SHOT,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName, "forceShot", 1));
-//
-//                    } else if (stat instanceof BedEnter) {
-//                        // Beds entered stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ENTERED_BEDS,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof BlockBreak) {
-//                        // Blocks broken stat
-//
-//                        int dataValue = Integer.parseInt(metadata.get("data").toString());
-//                        String blockName = (String) metadata.get("name");
-//
-//                        Material material = Material.getMaterial(blockName);
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.BLOCKS_BROKEN,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName, "datavalue", dataValue,
-//                                        "typeid", material.getId()));
-//
-//                    } else if (stat instanceof BlockPlace) {
-//                        // Blocks placed stat
-//
-//                        int dataValue = Integer.parseInt(metadata.get("data").toString());
-//                        String blockName = (String) metadata.get("name");
-//
-//                        Material material = Material.getMaterial(blockName);
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.BLOCKS_PLACED,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName, "datavalue", dataValue,
-//                                        "typeid", material.getId()));
-//
-//                    } else if (stat instanceof BucketEmpty) {
-//                        // Buckets emptied stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.BUCKETS_EMPTIED,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof BucketFill) {
-//                        // Buckets filled stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.BUCKETS_FILLED,
-//                                StatzUtil.makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof CommandsDone) {
-//                        // Commands performed stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.COMMANDS_PERFORMED, StatzUtil
-//                        .makeQuery(
-//                                "value", (value), "world", worldName, "command", "UNKNOWN", "arguments", "UNKNOWN"));
-//
-//                    } else if (stat instanceof DamageTaken) {
-//                        // Damage taken stat
-//
-//                        String cause = metadata == null ? "UNKNOWN" : (metadata.get("cause") != null ? metadata.get
-//                                ("cause").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.DAMAGE_TAKEN, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "cause", cause));
-//
-//                    } else if (stat instanceof Death) {
-//                        // Times died stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.DEATHS, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof EggsThrown) {
-//                        // Eggs thrown stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.EGGS_THROWN, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof FishCaught) {
-//                        // Fish caught stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ITEMS_CAUGHT, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "caught", "UNKNOWN"));
-//
-//                    } else if (stat instanceof ItemsCrafted) {
-//                        // Items crafted stat
-//
-//                        String name = metadata == null ? "UNKNOWN" : (metadata.get("name") != null ? metadata.get
-//                                ("name").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ITEMS_CRAFTED, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "item", name));
-//
-//                    } else if (stat instanceof ItemsDropped) {
-//                        // Items dropped stat
-//
-//                        String name = metadata == null ? "UNKNOWN" : (metadata.get("name") != null ? metadata.get
-//                                ("name").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ITEMS_DROPPED, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "item", name));
-//
-//                    } else if (stat instanceof ItemsPickedUp) {
-//                        // Items picked up stat
-//
-//                        String name = metadata == null ? "UNKNOWN" : (metadata.get("name") != null ? metadata.get
-//                                ("name").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ITEMS_PICKED_UP, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "item", name));
-//
-//                    } else if (stat instanceof ItemsDropped) {
-//                        // Items dropped stat
-//
-//                        String name = metadata == null ? "UNKNOWN" : (metadata.get("name") != null ? metadata.get
-//                                ("name").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.ITEMS_DROPPED, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "item", name));
-//
-//                    } else if (stat instanceof Joins) {
-//                        // Times joined stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.JOINS, StatzUtil
-//                                .makeQuery("value", (value)));
-//
-//                    } else if (stat instanceof Omnomnom) {
-//                        // Food eaten stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.FOOD_EATEN, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "foodEaten", "UNKNOWN"));
-//
-//                    } else if (stat instanceof Playtime) {
-//                        // Time played stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.TIME_PLAYED, StatzUtil
-//                                .makeQuery("value", (value / 60d
-//                                        /* Stats records in seconds, Statz does it in minutes */), "world",
-//                                        worldName));
-//
-//                    } else if (stat instanceof PVP) {
-//                        // Number of players killed stat
-//                        String victim = metadata == null ? "UNKNOWN" : (metadata.get("victim") != null ? metadata.get
-//                                ("victim").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.KILLS_PLAYERS, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "playerKilled", victim));
-//
-//                    } else if (stat instanceof Shears) {
-//                        // Number of sheep shorn stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.TIMES_SHORN, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName));
-//
-//                    } else if (stat instanceof WorldChanged) {
-//                        // Times changed of worlds stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.WORLDS_CHANGED, StatzUtil
-//                                .makeQuery("value", (value), "world", "UNKNOWN", "destWorld", "UNKNOWN"));
-//
-//                    } else if (stat instanceof TimesKicked) {
-//                        // Times kicked stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.TIMES_KICKED, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "reason", "UNKNOWN"));
-//
-//                    } else if (stat instanceof ToolsBroken) {
-//                        // Tools broken stat
-//
-//                        String name = metadata == null ? "UNKNOWN" : (metadata.get("name") != null ? metadata.get
-//                                ("name").toString() : "UNKNOWN");
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.TOOLS_BROKEN, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "item", name));
-//
-//                    } else if (stat instanceof Trades) {
-//                        // Number of trades made stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.VILLAGER_TRADES, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName, "trade", "UNKNOWN"));
-//
-//                    } else if (stat instanceof XpGained) {
-//                        // XP gained stat
-//
-//                        plugin.getDataManager().setPlayerInfo(uuid, PlayerStat.XP_GAINED, StatzUtil
-//                                .makeQuery("value", (value), "world", worldName));
-//
-//                    }
-//
-//                }
-//
-//            }
-//        }
+    /**
+     * Import statistics from the vanilla MC statistics data.
+     *
+     * @return number of players that have been imported.
+     */
+    public CompletableFuture<Integer> importFromVanilla() {
+        return CompletableFuture.supplyAsync(() -> {
+
+            List<UUID> storedPlayers = new ArrayList<>();
+            try {
+                storedPlayers = plugin.getDataManager().getStoredPlayers().get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            if (storedPlayers.isEmpty()) {
+                return 0;
+            }
+
+            int playersImported = 0;
+
+
+            for (UUID uuid : storedPlayers) {
+
+                PlayerInfo info = new PlayerInfo(uuid);
+
+                Player player = plugin.getServer().getPlayer(uuid);
+
+                if (player == null) {
+                    plugin.getLogger().info("Could not import " + uuid + " as they are not online.");
+                    continue;
+                }
+
+                importJoins(player, info);
+                importDeaths(player, info);
+                importFishCaught(player, info);
+                importBlocksPlaced(player, info);
+                importBlocksBroken(player, info);
+                importMobsKilled(player, info);
+                importPlayersKilled(player, info);
+                importPlaytime(player, info);
+                importFoodEaten(player, info);
+                importDamageTaken(player, info);
+                importDistanceTravelled(player, info);
+                importItemsCrafted(player, info);
+                importArrowsShot(player, info);
+                importToolsBroken(player, info);
+                importBedsEntered(player, info);
+                importEggsThrown(player, info);
+                importItemsPickedUp(player, info);
+                importItemsDropped(player, info);
+                importVillageTrades(player, info);
+
+                playersImported++;
+
+                plugin.getDataManager().setPlayerInfo(info);
+            }
+
+            return playersImported;
+        });
+    }
+
+    private void importJoins(Player player, PlayerInfo playerInfo) {
+        int joins = player.getStatistic(Statistic.LEAVE_GAME);
+
+        playerInfo.addRow(PlayerStat.JOINS,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", joins));
+    }
+
+    private void importDeaths(Player player, PlayerInfo playerInfo) {
+        int deaths = player.getStatistic(Statistic.DEATHS);
+
+        playerInfo.addRow(PlayerStat.DEATHS,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", deaths, "world",
+                        plugin.getServer().getWorlds().get(0).getName()));
+    }
+
+    private void importFishCaught(Player player, PlayerInfo playerInfo) {
+        int caught = player.getStatistic(Statistic.FISH_CAUGHT);
+
+        playerInfo.addRow(PlayerStat.ITEMS_CAUGHT,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", caught, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "caught", Material.TROPICAL_FISH));
+    }
+
+    private void importBlocksPlaced(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            if (material.isBlock()) {
+
+                int placed = player.getStatistic(Statistic.USE_ITEM, material);
+
+                if (placed <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.BLOCKS_PLACED,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", placed, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "block", material));
+            }
+        }
+    }
+
+    private void importBlocksBroken(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            if (material.isBlock()) {
+
+                int broken = player.getStatistic(Statistic.MINE_BLOCK, material);
+
+                if (broken <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.BLOCKS_BROKEN,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", broken, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "block", material));
+            }
+        }
+    }
+
+    private void importMobsKilled(Player player, PlayerInfo playerInfo) {
+        for (EntityType entityType : EntityType.values()) {
+
+            if (entityType.isSpawnable()) {
+                int killed = player.getStatistic(Statistic.KILL_ENTITY, entityType);
+
+                if (killed <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.KILLS_MOBS,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", killed, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "weapon", "HAND", "mob",
+                                entityType.toString()));
+            }
+        }
+    }
+
+    private void importPlayersKilled(Player player, PlayerInfo playerInfo) {
+        int playersKilled = player.getStatistic(Statistic.PLAYER_KILLS);
+
+        playerInfo.addRow(PlayerStat.KILLS_PLAYERS,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", playersKilled, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "playerKilled", "Notch"));
+    }
+
+    private void importPlaytime(Player player, PlayerInfo playerInfo) {
+        int ticksPlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+
+        playerInfo.addRow(PlayerStat.TIME_PLAYED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", ticksPlayed / (20 * 60), "world",
+                        plugin.getServer().getWorlds().get(0).getName()));
+    }
+
+    private void importFoodEaten(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            if (material.isEdible()) {
+
+                int eaten = player.getStatistic(Statistic.USE_ITEM, material);
+
+                if (eaten <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.FOOD_EATEN,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", eaten, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "foodEaten", material));
+            }
+        }
+    }
+
+    private void importDamageTaken(Player player, PlayerInfo playerInfo) {
+        int damageTaken = player.getStatistic(Statistic.DAMAGE_TAKEN);
+
+        playerInfo.addRow(PlayerStat.DAMAGE_TAKEN,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", damageTaken, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "cause",
+                        EntityDamageEvent.DamageCause.ENTITY_ATTACK));
+    }
+
+    private void importDistanceTravelled(Player player, PlayerInfo playerInfo) {
+        int walked = player.getStatistic(Statistic.WALK_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", walked, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "WALK"));
+
+        int swum = player.getStatistic(Statistic.SWIM_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", swum, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "SWIM"));
+
+        int fly = player.getStatistic(Statistic.FLY_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", fly, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "FLY WITH ELYTRA"));
+
+        int boated = player.getStatistic(Statistic.BOAT_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", boated, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "BOAT"));
+
+        int minecart = player.getStatistic(Statistic.MINECART_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", minecart, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "MINECART"));
+
+        int horse = player.getStatistic(Statistic.HORSE_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", horse, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "HORSE"));
+
+        int pig = player.getStatistic(Statistic.PIG_ONE_CM) / 100;
+
+        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", pig, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
+                        "PIG"));
+    }
+
+    private void importItemsCrafted(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            if (material.isItem()) {
+
+                int itemsCrafted = player.getStatistic(Statistic.CRAFT_ITEM, material);
+
+                if (itemsCrafted <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.ITEMS_CRAFTED,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", itemsCrafted, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "item", material));
+            }
+        }
+    }
+
+    private void importArrowsShot(Player player, PlayerInfo playerInfo) {
+        int bowUsed = player.getStatistic(Statistic.USE_ITEM, Material.BOW);
+
+        playerInfo.addRow(PlayerStat.ARROWS_SHOT,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", bowUsed, "world",
+                        plugin.getServer().getWorlds().get(0).getName()));
+    }
+
+    private void importBedsEntered(Player player, PlayerInfo playerInfo) {
+        int bedsEntered = player.getStatistic(Statistic.SLEEP_IN_BED);
+
+        playerInfo.addRow(PlayerStat.ENTERED_BEDS,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", bedsEntered, "world",
+                        plugin.getServer().getWorlds().get(0).getName()));
+    }
+
+    private void importToolsBroken(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            if (material.isItem()) {
+
+                int broken = player.getStatistic(Statistic.BREAK_ITEM, material);
+
+                if (broken <= 0) continue;
+
+                playerInfo.addRow(PlayerStat.TOOLS_BROKEN,
+                        StatzUtil.makeQuery(player.getUniqueId(), "value", broken, "world",
+                                plugin.getServer().getWorlds().get(0).getName(), "item", material));
+            }
+        }
+    }
+
+    private void importEggsThrown(Player player, PlayerInfo playerInfo) {
+        int eggsThrown = player.getStatistic(Statistic.USE_ITEM, Material.EGG);
+
+        playerInfo.addRow(PlayerStat.EGGS_THROWN,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", eggsThrown, "world",
+                        plugin.getServer().getWorlds().get(0).getName()));
+    }
+
+    private void importItemsDropped(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            int dropped = player.getStatistic(Statistic.DROP, material);
+
+            if (dropped <= 0) continue;
+
+            playerInfo.addRow(PlayerStat.ITEMS_DROPPED,
+                    StatzUtil.makeQuery(player.getUniqueId(), "value", dropped, "world",
+                            plugin.getServer().getWorlds().get(0).getName(), "item", material));
+        }
+    }
+
+    private void importItemsPickedUp(Player player, PlayerInfo playerInfo) {
+        for (Material material : Material.values()) {
+            int pickedUp = player.getStatistic(Statistic.PICKUP, material);
+
+            if (pickedUp <= 0) continue;
+
+            playerInfo.addRow(PlayerStat.ITEMS_PICKED_UP,
+                    StatzUtil.makeQuery(player.getUniqueId(), "value", pickedUp, "world",
+                            plugin.getServer().getWorlds().get(0).getName(), "item", material));
+        }
+    }
+
+    private void importVillageTrades(Player player, PlayerInfo playerInfo) {
+        int traded = player.getStatistic(Statistic.TRADED_WITH_VILLAGER);
+
+        playerInfo.addRow(PlayerStat.VILLAGER_TRADES,
+                StatzUtil.makeQuery(player.getUniqueId(), "value", traded, "world",
+                        plugin.getServer().getWorlds().get(0).getName(), "trade", Material.STICK));
     }
 
 }

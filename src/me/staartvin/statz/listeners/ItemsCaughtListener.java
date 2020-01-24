@@ -2,7 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.ItemsCaughtSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -52,10 +53,11 @@ public class ItemsCaughtListener implements Listener {
             return;
         }
 
+        PlayerStatSpecification specification = new ItemsCaughtSpecification(player.getUniqueId(), item.getAmount(),
+                player.getWorld().getName(), item.getType());
+
         // Update value to new stat.
-        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, StatzUtil.makeQuery("uuid",
-                player.getUniqueId().toString(), "value", item.getAmount(), "caught", materialName, "world", player
-                        .getWorld().getName()));
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
 
     }
 }

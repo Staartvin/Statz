@@ -1,5 +1,7 @@
 package me.staartvin.statz.database.datatype;
 
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -13,14 +15,21 @@ import java.util.Map.Entry;
  */
 public class Query {
 
-    private Map<String, String> data = new HashMap<String, String>();
+    private Map<String, Object> data = new HashMap<>();
 
-    public Query(Map<String, String> data) {
+    // Store what specification this query adheres to.
+    private Class<? extends PlayerStatSpecification> specification;
+
+    public Query(Map<String, Object> data) {
         this.setData(data);
     }
 
     public Query() {
         // Empty constructor
+    }
+
+    public Query(UUID uuid) {
+        this.setValue("uuid", uuid.toString());
     }
 
     /**
@@ -29,7 +38,7 @@ public class Query {
      *
      * @return data of this query.
      */
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
@@ -39,13 +48,13 @@ public class Query {
      *
      * @param data Map that represents data of the query.
      */
-    public void setData(Map<String, String> data) {
+    public void setData(Map<String, Object> data) {
         this.data = new HashMap<>();
 
         // Make sure that keys are lowercase.
-        for (Entry<String, String> entry : data.entrySet()) {
+        for (Entry<String, Object> entry : data.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            Object value = entry.getValue();
 
             setValue(key.toLowerCase(), value);
         }
@@ -131,8 +140,8 @@ public class Query {
         if (value == null)
             return false;
 
-        for (Entry<String, String> dataString : data.entrySet()) {
-            if (dataString != null && dataString.getValue().equalsIgnoreCase(value.toString())) {
+        for (Entry<String, Object> dataString : data.entrySet()) {
+            if (dataString != null && dataString.getValue().equals(value)) {
                 return true;
             }
         }
@@ -140,7 +149,7 @@ public class Query {
         return false;
     }
 
-    public Set<Entry<String, String>> getEntrySet() {
+    public Set<Entry<String, Object>> getEntrySet() {
         return data.entrySet();
     }
 
@@ -236,9 +245,9 @@ public class Query {
         }
 
         // Loop over each (column, value) pair of this.query
-        for (Entry<String, String> entry : data.entrySet()) {
+        for (Entry<String, Object> entry : data.entrySet()) {
             String columnName = entry.getKey();
-            String columnValue = entry.getValue();
+            Object columnValue = entry.getValue();
 
             // Ignore 'value' column, as it ought to be different.
             if (columnName.equalsIgnoreCase("value")) {
@@ -254,7 +263,7 @@ public class Query {
             }
 
             // If value of condition in stored query is not the same as the given query, they cannot conflict.
-            if (!valueOfComparedQuery.toString().equalsIgnoreCase(columnValue)) {
+            if (!valueOfComparedQuery.equals(columnValue)) {
                 return false;
             }
         }
@@ -267,7 +276,7 @@ public class Query {
 
         StringBuilder builder = new StringBuilder("{");
 
-        for (Entry<String, String> entry : data.entrySet()) {
+        for (Entry<String, Object> entry : data.entrySet()) {
             builder.append(entry.getKey() + ": " + entry.getValue() + ", ");
         }
 
@@ -459,5 +468,14 @@ public class Query {
         }
 
         return true;
+    }
+
+    public Optional<Class<? extends PlayerStatSpecification>> getSpecification() {
+        if (specification == null) return Optional.empty();
+        return Optional.of(specification);
+    }
+
+    public void setSpecification(Class<? extends PlayerStatSpecification> specification) {
+        this.specification = specification;
     }
 }

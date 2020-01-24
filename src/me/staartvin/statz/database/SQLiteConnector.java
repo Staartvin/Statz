@@ -140,12 +140,12 @@ public class SQLiteConnector extends DatabaseConnector {
             rs = ps.executeQuery();
             while (rs.next()) {
 
-                final HashMap<String, String> result = new HashMap<>();
+                final HashMap<String, Object> result = new HashMap<>();
 
                 // Populate hashmap
                 for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                     final String columnName = rs.getMetaData().getColumnName(i + 1);
-                    final String value = rs.getObject(i + 1).toString();
+                    final Object value = rs.getObject(i + 1);
 
                     // Put value in hashmap if not null, otherwise just put
                     // empty string
@@ -248,7 +248,7 @@ public class SQLiteConnector extends DatabaseConnector {
     @Override
     public void loadTables() {
         // UUID table to look up uuid of players
-        SQLiteTable newTable = new SQLiteTable("players");
+        SQLiteTable newTable = new SQLiteTable(PlayerStat.PLAYERS.getTableName());
 
         Column id = new Column("id", true, SQLDataType.INT, true);
 
@@ -813,7 +813,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
                 StringBuilder updateWhere = new StringBuilder();
 
-                for (final Entry<String, String> result : results.getEntrySet()) {
+                for (final Entry<String, Object> result : results.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
 
                     // DO NOT add for value column
@@ -823,7 +823,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
                     try {
                         // Try to check if it is an integer
-                        Integer.parseInt(result.getValue());
+                        Integer.parseInt(result.getValue().toString());
                         resultNames.append(result.getValue() + ",");
 
                         if (!result.getKey().equalsIgnoreCase("value")) {
@@ -831,10 +831,10 @@ public class SQLiteConnector extends DatabaseConnector {
                         }
 
                     } catch (final NumberFormatException e) {
-                        resultNames.append("'" + result.getValue().replace("'", "''") + "',");
+                        resultNames.append("'" + result.getValue().toString().replace("'", "''") + "',");
 
                         if (!result.getKey().equalsIgnoreCase("value")) {
-                            updateWhere.append("'" + result.getValue().replace("'", "''") + "' AND ");
+                            updateWhere.append("'" + result.getValue().toString().replace("'", "''") + "' AND ");
                         }
                     }
 
@@ -902,7 +902,7 @@ public class SQLiteConnector extends DatabaseConnector {
 
                 StringBuilder updateWhere = new StringBuilder();
 
-                for (final Entry<String, String> result : query.getEntrySet()) {
+                for (final Entry<String, Object> result : query.getEntrySet()) {
                     columnNames.append(result.getKey() + ",");
 
                     // DO NOT add for value column
@@ -912,17 +912,17 @@ public class SQLiteConnector extends DatabaseConnector {
 
                     try {
                         // Try to check if it is an integer
-                        Double.parseDouble(result.getValue());
-                        resultNames.append(result.getValue() + ",");
+                        Double.parseDouble(result.getValue().toString());
+                        resultNames.append(result.getValue().toString() + ",");
 
                         if (!result.getKey().equalsIgnoreCase("value")) {
-                            updateWhere.append(result.getValue() + " AND ");
+                            updateWhere.append(result.getValue().toString() + " AND ");
                         }
                     } catch (final NumberFormatException e) {
-                        resultNames.append("'" + result.getValue().replace("'", "''") + "',");
+                        resultNames.append("'" + result.getValue().toString().replace("'", "''") + "',");
 
                         if (!result.getKey().equalsIgnoreCase("value")) {
-                            updateWhere.append("'" + result.getValue().replace("'", "''") + "' AND ");
+                            updateWhere.append("'" + result.getValue().toString().replace("'", "''") + "' AND ");
                         }
                     }
 

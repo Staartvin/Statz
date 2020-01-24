@@ -2,6 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
+import me.staartvin.statz.datamanager.player.specification.DistanceTravelledSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
@@ -55,22 +57,21 @@ public class DistanceTravelledVehicleListener implements Listener {
 		if (player == null || movementType == null)
 			return;
 
-		// Do general check
-		if (!plugin.doGeneralCheck(player, stat))
-			return;
+        // Do general check
+        if (!plugin.doGeneralCheck(player, stat))
+            return;
 
-		final double distTravelled = event.getFrom().distance(event.getTo());
+        final double distTravelled = event.getFrom().distance(event.getTo());
 
-		if (distTravelled == 0) {
-			return;
-		}
+        if (distTravelled == 0) {
+            return;
+        }
 
-		final String movement = movementType;
+        PlayerStatSpecification specification = new DistanceTravelledSpecification(player.getUniqueId(),
+                distTravelled, player.getWorld().getName(), movementType);
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-				StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", distTravelled, "moveType",
-						movement, "world", player.getWorld().getName()));
+        // Update value to new stat.
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
 
-	}
+    }
 }

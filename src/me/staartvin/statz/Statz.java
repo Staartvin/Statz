@@ -5,8 +5,6 @@ import me.staartvin.statz.cache.CachingManager;
 import me.staartvin.statz.commands.manager.CommandsManager;
 import me.staartvin.statz.config.ConfigHandler;
 import me.staartvin.statz.database.DatabaseConnector;
-import me.staartvin.statz.database.MySQLConnector;
-import me.staartvin.statz.database.SQLiteConnector;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.DataManager;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
@@ -74,23 +72,8 @@ public class Statz extends JavaPlugin {
         // Load hooks
         this.setDependencyManager(new DependencyManager(this));
 
-        // Load SQL connector
-        if (this.getConfigHandler().isMySQLEnabled()) {
-            this.getLogger().info("Using MySQL database!");
-            this.setDatabaseConnector(new MySQLConnector(this));
-        } else {
-            this.getLogger().info("Using SQLite database!");
-            this.setDatabaseConnector(new SQLiteConnector(this));
-        }
-
         // Create patch manager and send patches
         this.setPatchManager(new PatchManager(this));
-
-        // Load tables into hashmap
-        this.getDatabaseConnector().loadTables();
-
-        // Create and load database
-        this.getDatabaseConnector().load();
 
         // Load data manager as database is loaded!
         this.setDataManager(new DataManager(this));

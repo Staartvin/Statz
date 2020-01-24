@@ -2,6 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
+import me.staartvin.statz.datamanager.player.specification.KillsMobsSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -16,71 +18,75 @@ import org.bukkit.inventory.ItemStack;
 
 public class KillsMobsListener implements Listener {
 
-	private final Statz plugin;
+    private final Statz plugin;
 
-	public KillsMobsListener(final Statz plugin) {
-		this.plugin = plugin;
-	}
+    public KillsMobsListener(final Statz plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onDie(final EntityDeathEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDie(final EntityDeathEvent event) {
 
-		final PlayerStat stat = PlayerStat.KILLS_MOBS;
+        final PlayerStat stat = PlayerStat.KILLS_MOBS;
 
-		Entity e = event.getEntity();
+        Entity e = event.getEntity();
 
-		if (!(e.getLastDamageCause() instanceof EntityDamageByEntityEvent)) {
-			return;
-		}
+        if (!(e.getLastDamageCause() instanceof EntityDamageByEntityEvent)) {
+            return;
+        }
 
-		EntityDamageByEntityEvent nEvent = (EntityDamageByEntityEvent) e.getLastDamageCause();
-		if (nEvent.getDamager() instanceof Player) {
-			// Entity died because of Player
-			// Killer
-			final Player player = (Player) nEvent.getDamager();
+        PlayerStatSpecification specification;
 
-			// Do general check
-			if (!plugin.doGeneralCheck(player, stat))
-				return;
+        EntityDamageByEntityEvent nEvent = (EntityDamageByEntityEvent) e.getLastDamageCause();
+        if (nEvent.getDamager() instanceof Player) {
+            // Entity died because of Player
+            // Killer
+            final Player player = (Player) nEvent.getDamager();
 
-			if (e instanceof Player) {
-				// Player killed player
-				// Handled by other listener
-			} else {
-				// Player killed mob		
+            // Do general check
+            if (!plugin.doGeneralCheck(player, stat))
+                return;
 
-				String mobType = StatzUtil.getMobType(e);
-				
-				String weapon = "";
-				
-				ItemStack item = player.getInventory().getItemInMainHand();
-				
-				if (item.getType() == Material.AIR) {
-					weapon = "HAND";
-				} else {
-					weapon = item.getType().toString();
-				}
-				
-				// Update value to new stat.
-				plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-						StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
-								player.getWorld().getName(), "mob", mobType, "weapon", weapon));
+            if (e instanceof Player) {
+                // Player killed player
+                // Handled by other listener
+            } else {
+                // Player killed mob
 
-			}
-		} else if (nEvent.getDamager() instanceof Arrow) {
-			// Entity was killed by an arrow, now check if it was shot by a player
-			Arrow killerArrow = (Arrow) nEvent.getDamager();
+                String mobType = StatzUtil.getMobType(e);
 
-			if (killerArrow.getShooter() instanceof Player) {
-				Player shooter = (Player) killerArrow.getShooter();
+                String weapon = "";
 
-				// Now update database.
-				plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat,
-						StatzUtil.makeQuery("uuid", shooter.getUniqueId().toString(), "value", 1, "world",
-								shooter.getWorld().getName(), "mob", StatzUtil.getMobType(e), "weapon", "BOW"));
-			}
-		}
+                ItemStack item = player.getInventory().getItemInMainHand();
 
-		//		
-	}
+                if (item.getType() == Material.AIR) {
+                    weapon = "HAND";
+                } else {
+                    weapon = item.getType().toString();
+                }
+
+                specification = new KillsMobsSpecification(player.getUniqueId(), 1, player.getWorld().getName(),
+                        mobType, weapon);
+
+                // Update value to new stat.
+                plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
+
+            }
+        } else if (nEvent.getDamager() instanceof Arrow) {
+            // Entity was killed by an arrow, now check if it was shot by a player
+            Arrow killerArrow = (Arrow) nEvent.getDamager();
+
+            if (killerArrow.getShooter() instanceof Player) {
+                Player shooter = (Player) killerArrow.getShooter();
+
+                specification = new KillsMobsSpecification(shooter.getUniqueId(), 1, shooter.getWorld().getName(),
+                        StatzUtil.getMobType(e), "BOW");
+
+                // Now update database.
+                plugin.getDataManager().setPlayerInfo(shooter.getUniqueId(), stat, specification.constructQuery());
+            }
+        }
+
+        //
+    }
 }

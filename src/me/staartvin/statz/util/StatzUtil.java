@@ -111,13 +111,27 @@ public class StatzUtil {
      * @return a {@link me.staartvin.statz.database.datatype.Query} object that represents a query to the database.
      */
     public static Query makeQuery(final Object... strings) {
-        final LinkedHashMap<String, String> queries = new LinkedHashMap<>();
+        final LinkedHashMap<String, Object> queries = new LinkedHashMap<>();
 
         for (int i = 0; i < strings.length; i += 2) {
-            queries.put(strings[i].toString(), strings[i + 1].toString());
+            queries.put(strings[i].toString(), strings[i + 1]);
         }
 
         Query query = new Query(queries);
+
+        return query;
+    }
+
+    public static Query makeQuery(UUID uuid, Object... strings) {
+
+        final LinkedHashMap<String, Object> queries = new LinkedHashMap<>();
+
+        for (int i = 0; i < strings.length; i += 2) {
+            queries.put(strings[i].toString(), strings[i + 1]);
+        }
+
+        Query query = new Query(queries);
+        query.setValue("uuid", uuid.toString());
 
         return query;
     }
@@ -133,7 +147,7 @@ public class StatzUtil {
         // Query exists with key and value.
         StringBuilder searchQuery = new StringBuilder();
 
-        for (final Entry<String, String> query : queries.getEntrySet()) {
+        for (final Entry<String, Object> query : queries.getEntrySet()) {
             searchQuery.append(query.getKey() + "='" + query.getValue() + "' AND ");
         }
 

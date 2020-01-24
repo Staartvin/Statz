@@ -2,7 +2,8 @@ package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.ItemsCraftedSpecification;
+import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,32 +14,34 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemsCraftedListener implements Listener {
 
-	private final Statz plugin;
+    private final Statz plugin;
 
-	public ItemsCraftedListener(final Statz plugin) {
-		this.plugin = plugin;
-	}
+    public ItemsCraftedListener(final Statz plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onCraft(final CraftItemEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onCraft(final CraftItemEvent event) {
 
-		final PlayerStat stat = PlayerStat.ITEMS_CRAFTED;
+        final PlayerStat stat = PlayerStat.ITEMS_CRAFTED;
 
-		// Get player
-		final Player player = (Player) event.getWhoClicked();
+        // Get player
+        final Player player = (Player) event.getWhoClicked();
 
-		// Do general check
-		if (!plugin.doGeneralCheck(player, stat))
-			return;
+        // Do general check
+        if (!plugin.doGeneralCheck(player, stat))
+            return;
 
-		final String itemCrafted = event.getCurrentItem().getType().toString();
+        final ItemStack itemCrafted = event.getCurrentItem();
 
-		// Update value to new stat.
-		plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", getCraftAmount(event), "world",
-						player.getWorld().getName(), "item", itemCrafted));
+        PlayerStatSpecification specification = new ItemsCraftedSpecification(player.getUniqueId(),
+                itemCrafted.getAmount(), player.getWorld().getName(),
+                itemCrafted.getType());
 
-	}
+        // Update value to new stat.
+        plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat, specification.constructQuery());
+
+    }
 
     /**
      * Get the amount of items the player had just crafted.
@@ -46,9 +49,7 @@ public class ItemsCraftedListener implements Listener {
      * the amount of inventory space the player has left.
      *
      * @param e CraftItemEvent
-     *
      * @return int: actual crafted item amount
-     *
      * @author lewysryan (https://www.spigotmc
      * .org/threads/util-get-the-crafted-item-amount-from-a-craftitemevent.162952/)
      */

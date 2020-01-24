@@ -3,7 +3,7 @@ package me.staartvin.statz.listeners;
 import me.staartvin.plugins.pluginlibrary.events.PlayerVotedEvent;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.util.StatzUtil;
+import me.staartvin.statz.datamanager.player.specification.VotesSpecification;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,7 +30,7 @@ public class VotesListener implements Listener {
 
         // Update value to new stat.
         plugin.getDataManager().setPlayerInfo(player.getUniqueId(), stat,
-                StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1));
+                new VotesSpecification(player.getUniqueId(), 1).constructQuery());
 
     }
 }
