@@ -176,14 +176,8 @@ public class DataManager {
             return info;
         }
 
-        for (Iterator<Query> it = info.getDataOfPlayerStat(statType).iterator(); it.hasNext(); ) {
-            Query query = it.next();
-
-            // Remove query if it does not meet the given requirements.
-            if (!query.meetsAllRequirements(Arrays.asList(requirements))) {
-                it.remove();
-            }
-        }
+        // Remove query if it does not meet the given requirements.
+        info.getDataOfPlayerStat(statType).removeIf(query -> !query.meetsAllRequirements(Arrays.asList(requirements)));
 
         return info;
     }

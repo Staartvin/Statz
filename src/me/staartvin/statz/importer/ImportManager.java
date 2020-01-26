@@ -4,15 +4,20 @@ import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -55,288 +60,598 @@ public class ImportManager {
 
             for (UUID uuid : storedPlayers) {
 
-                PlayerInfo info = new PlayerInfo(uuid);
+                Bukkit.getWorlds().forEach(world -> {
+                    PlayerInfo info = new PlayerInfo(uuid);
 
-                Player player = plugin.getServer().getPlayer(uuid);
+                    importJoins(info, world.getName());
+                    importDeaths(info, world.getName());
+                    importFishCaught(info, world.getName());
+                    importBlocksPlaced(info, world.getName());
+                    importBlocksBroken(info, world.getName());
+                    importMobsKilled(info, world.getName());
+                    importPlayersKilled(info, world.getName());
+                    importPlaytime(info, world.getName());
+                    importFoodEaten(info, world.getName());
+                    importDamageTaken(info, world.getName());
+                    importDistanceTravelled(info, world.getName());
+                    importItemsCrafted(info, world.getName());
+                    importArrowsShot(info, world.getName());
+                    importToolsBroken(info, world.getName());
+                    importBedsEntered(info, world.getName());
+                    importEggsThrown(info, world.getName());
+                    importItemsPickedUp(info, world.getName());
+                    importItemsDropped(info, world.getName());
+                    importVillageTrades(info, world.getName());
 
-                if (player == null) {
-                    plugin.getLogger().info("Could not import " + uuid + " as they are not online.");
-                    continue;
-                }
-
-                importJoins(player, info);
-                importDeaths(player, info);
-                importFishCaught(player, info);
-                importBlocksPlaced(player, info);
-                importBlocksBroken(player, info);
-                importMobsKilled(player, info);
-                importPlayersKilled(player, info);
-                importPlaytime(player, info);
-                importFoodEaten(player, info);
-                importDamageTaken(player, info);
-                importDistanceTravelled(player, info);
-                importItemsCrafted(player, info);
-                importArrowsShot(player, info);
-                importToolsBroken(player, info);
-                importBedsEntered(player, info);
-                importEggsThrown(player, info);
-                importItemsPickedUp(player, info);
-                importItemsDropped(player, info);
-                importVillageTrades(player, info);
+                    plugin.getDataManager().setPlayerInfo(info);
+                });
 
                 playersImported++;
-
-                plugin.getDataManager().setPlayerInfo(info);
             }
 
             return playersImported;
         });
     }
 
-    private void importJoins(Player player, PlayerInfo playerInfo) {
-        int joins = player.getStatistic(Statistic.LEAVE_GAME);
+    private void importJoins(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long joins = (Long) getStatistic(object.get(), Statistic.LEAVE_GAME.getKey().toString())
+                .orElse(0L);
+
+        if (joins <= 0) return;
 
         playerInfo.addRow(PlayerStat.JOINS,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", joins));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", joins));
     }
 
-    private void importDeaths(Player player, PlayerInfo playerInfo) {
-        int deaths = player.getStatistic(Statistic.DEATHS);
+    private void importDeaths(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
 
-        playerInfo.addRow(PlayerStat.DEATHS,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", deaths, "world",
-                        plugin.getServer().getWorlds().get(0).getName()));
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long deaths = (Long) getStatistic(object.get(), Statistic.DEATHS.getKey().toString())
+                .orElse(0L);
+
+        if (deaths <= 0) return;
+
+        playerInfo.addRow(PlayerStat.DEATHS, StatzUtil.makeQuery(playerInfo.getUUID(),
+                "value", deaths, "world", worldName));
     }
 
-    private void importFishCaught(Player player, PlayerInfo playerInfo) {
-        int caught = player.getStatistic(Statistic.FISH_CAUGHT);
+    private void importFishCaught(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long caught = (Long) getStatistic(object.get(), Statistic.FISH_CAUGHT.getKey().toString())
+                .orElse(0L);
+
+        if (caught <= 0) return;
 
         playerInfo.addRow(PlayerStat.ITEMS_CAUGHT,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", caught, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "caught", Material.TROPICAL_FISH));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", caught, "world",
+                        worldName, "caught", Material.TROPICAL_FISH));
     }
 
-    private void importBlocksPlaced(Player player, PlayerInfo playerInfo) {
+    private void importBlocksPlaced(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> placedSection = getUsedSection(playerInfo.getUUID(), worldName);
+
+        if (!placedSection.isPresent()) return;
+
         for (Material material : Material.values()) {
             if (material.isBlock()) {
 
-                int placed = player.getStatistic(Statistic.USE_ITEM, material);
+                long placed = (Long) getStatistic(placedSection.get(), material.getKey().toString()).orElse(0L);
 
                 if (placed <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.BLOCKS_PLACED,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", placed, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "block", material));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", placed, "world",
+                                worldName, "block", material));
             }
         }
     }
 
-    private void importBlocksBroken(Player player, PlayerInfo playerInfo) {
+    private void importBlocksBroken(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> minedSection = getMinedSection(playerInfo.getUUID(), worldName);
+
+        if (!minedSection.isPresent()) return;
+
         for (Material material : Material.values()) {
             if (material.isBlock()) {
 
-                int broken = player.getStatistic(Statistic.MINE_BLOCK, material);
+                long broken = (Long) getStatistic(minedSection.get(), material.getKey().toString()).orElse(0L);
 
                 if (broken <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.BLOCKS_BROKEN,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", broken, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "block", material));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", broken, "world",
+                                worldName, "block", material));
             }
         }
     }
 
-    private void importMobsKilled(Player player, PlayerInfo playerInfo) {
+    private void importMobsKilled(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> killedSection = getKilledSection(playerInfo.getUUID(), worldName);
+
+        if (!killedSection.isPresent()) return;
+
         for (EntityType entityType : EntityType.values()) {
 
             if (entityType.isSpawnable()) {
-                int killed = player.getStatistic(Statistic.KILL_ENTITY, entityType);
+                long killed = (Long) getStatistic(killedSection.get(), entityType.getKey().toString()).orElse(0L);
 
                 if (killed <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.KILLS_MOBS,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", killed, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "weapon", "HAND", "mob",
-                                entityType.toString()));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", killed, "world",
+                                worldName, "weapon", "HAND", "mob", entityType.toString()));
             }
         }
     }
 
-    private void importPlayersKilled(Player player, PlayerInfo playerInfo) {
-        int playersKilled = player.getStatistic(Statistic.PLAYER_KILLS);
+    private void importPlayersKilled(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long playersKilled = (Long) getStatistic(object.get(), Statistic.PLAYER_KILLS.getKey().toString())
+                .orElse(0L);
+
+        if (playersKilled <= 0) return;
 
         playerInfo.addRow(PlayerStat.KILLS_PLAYERS,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", playersKilled, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "playerKilled", "Notch"));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", playersKilled, "world",
+                        worldName, "playerKilled", "Notch"));
     }
 
-    private void importPlaytime(Player player, PlayerInfo playerInfo) {
-        int ticksPlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+    private void importPlaytime(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long ticksPlayed = (Long) getStatistic(object.get(), Statistic.PLAY_ONE_MINUTE.getKey().toString())
+                .orElse(0L);
+
+        if (ticksPlayed <= 0) return;
 
         playerInfo.addRow(PlayerStat.TIME_PLAYED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", ticksPlayed / (20 * 60), "world",
-                        plugin.getServer().getWorlds().get(0).getName()));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", ticksPlayed / (20 * 60), "world",
+                        worldName));
     }
 
-    private void importFoodEaten(Player player, PlayerInfo playerInfo) {
+    private void importFoodEaten(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> foodSection = getUsedSection(playerInfo.getUUID(), worldName);
+
+        if (!foodSection.isPresent()) return;
+
         for (Material material : Material.values()) {
             if (material.isEdible()) {
 
-                int eaten = player.getStatistic(Statistic.USE_ITEM, material);
+                long eaten = (Long) getStatistic(foodSection.get(), material.getKey().toString()).orElse(0L);
 
                 if (eaten <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.FOOD_EATEN,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", eaten, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "foodEaten", material));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", eaten, "world",
+                                worldName, "foodEaten", material));
             }
         }
     }
 
-    private void importDamageTaken(Player player, PlayerInfo playerInfo) {
-        int damageTaken = player.getStatistic(Statistic.DAMAGE_TAKEN);
+    private void importDamageTaken(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long damageTaken = (Long) getStatistic(object.get(), Statistic.DAMAGE_TAKEN.getKey().toString())
+                .orElse(0L);
+
+        if (damageTaken <= 0) return;
 
         playerInfo.addRow(PlayerStat.DAMAGE_TAKEN,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", damageTaken, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "cause",
-                        EntityDamageEvent.DamageCause.ENTITY_ATTACK));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", damageTaken, "world",
+                        worldName, "cause", EntityDamageEvent.DamageCause.ENTITY_ATTACK));
     }
 
-    private void importDistanceTravelled(Player player, PlayerInfo playerInfo) {
-        int walked = player.getStatistic(Statistic.WALK_ONE_CM) / 100;
+    private void importDistanceTravelled(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", walked, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "WALK"));
+        if (!object.isPresent()) {
+            return;
+        }
 
-        int swum = player.getStatistic(Statistic.SWIM_ONE_CM) / 100;
+        long moved = (Long) getStatistic(object.get(), Statistic.WALK_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", swum, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "SWIM"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType", "WALK"));
+        }
 
-        int fly = player.getStatistic(Statistic.FLY_ONE_CM) / 100;
+        moved = (Long) getStatistic(object.get(), Statistic.SWIM_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", fly, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "FLY WITH ELYTRA"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "SWIM"));
+        }
 
-        int boated = player.getStatistic(Statistic.BOAT_ONE_CM) / 100;
+        moved = (Long) getStatistic(object.get(), Statistic.FLY_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", boated, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "BOAT"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "FLY WITH ELYTRA"));
+        }
 
-        int minecart = player.getStatistic(Statistic.MINECART_ONE_CM) / 100;
+        moved = (Long) getStatistic(object.get(), Statistic.BOAT_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", minecart, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "MINECART"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "BOAT"));
+        }
 
-        int horse = player.getStatistic(Statistic.HORSE_ONE_CM) / 100;
+        moved = (Long) getStatistic(object.get(), Statistic.MINECART_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", horse, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "HORSE"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "MINECART"));
+        }
 
-        int pig = player.getStatistic(Statistic.PIG_ONE_CM) / 100;
+        moved = (Long) getStatistic(object.get(), Statistic.HORSE_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
 
-        playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", pig, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "moveType",
-                        "PIG"));
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "HORSE"));
+        }
+
+        moved = (Long) getStatistic(object.get(), Statistic.PIG_ONE_CM.getKey().toString())
+                .orElse(0L) / 100L;
+
+        if (moved > 0) {
+            playerInfo.addRow(PlayerStat.DISTANCE_TRAVELLED,
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", moved, "world",
+                            worldName, "moveType",
+                            "PIG"));
+        }
     }
 
-    private void importItemsCrafted(Player player, PlayerInfo playerInfo) {
+    private void importItemsCrafted(PlayerInfo playerInfo, String worldName) {
+
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> craftedSection = getCraftedSection(playerInfo.getUUID(), worldName);
+
+        if (!craftedSection.isPresent()) return;
+
         for (Material material : Material.values()) {
             if (material.isItem()) {
 
-                int itemsCrafted = player.getStatistic(Statistic.CRAFT_ITEM, material);
+                long itemsCrafted = (Long) getStatistic(craftedSection.get(), material.getKey().toString()).orElse(0L);
 
                 if (itemsCrafted <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.ITEMS_CRAFTED,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", itemsCrafted, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "item", material));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", itemsCrafted, "world",
+                                worldName, "item", material));
             }
         }
     }
 
-    private void importArrowsShot(Player player, PlayerInfo playerInfo) {
-        int bowUsed = player.getStatistic(Statistic.USE_ITEM, Material.BOW);
+    private void importArrowsShot(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> usedSection = getUsedSection(playerInfo.getUUID(), worldName);
+
+        if (!usedSection.isPresent()) return;
+
+        long bowUsed = (Long) getStatistic(usedSection.get(), Material.BOW.getKey().toString()).orElse(0L);
+
+        if (bowUsed <= 0) return;
 
         playerInfo.addRow(PlayerStat.ARROWS_SHOT,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", bowUsed, "world",
-                        plugin.getServer().getWorlds().get(0).getName()));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", bowUsed, "world",
+                        worldName));
     }
 
-    private void importBedsEntered(Player player, PlayerInfo playerInfo) {
-        int bedsEntered = player.getStatistic(Statistic.SLEEP_IN_BED);
+    private void importBedsEntered(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long bedsEntered =
+                (Long) getStatistic(object.get(), Statistic.SLEEP_IN_BED.getKey().toString()).orElse(0L);
+
+        if (bedsEntered <= 0) return;
 
         playerInfo.addRow(PlayerStat.ENTERED_BEDS,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", bedsEntered, "world",
-                        plugin.getServer().getWorlds().get(0).getName()));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", bedsEntered, "world",
+                        worldName));
     }
 
-    private void importToolsBroken(Player player, PlayerInfo playerInfo) {
+    private void importToolsBroken(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> brokenSection = getBrokenSection(playerInfo.getUUID(), worldName);
+
+        if (!brokenSection.isPresent()) return;
+
         for (Material material : Material.values()) {
             if (material.isItem()) {
 
-                int broken = player.getStatistic(Statistic.BREAK_ITEM, material);
+                long broken = (Long) getStatistic(brokenSection.get(), material.getKey().toString()).orElse(0L);
 
                 if (broken <= 0) continue;
 
                 playerInfo.addRow(PlayerStat.TOOLS_BROKEN,
-                        StatzUtil.makeQuery(player.getUniqueId(), "value", broken, "world",
-                                plugin.getServer().getWorlds().get(0).getName(), "item", material));
+                        StatzUtil.makeQuery(playerInfo.getUUID(), "value", broken, "world",
+                                worldName, "item", material));
             }
         }
     }
 
-    private void importEggsThrown(Player player, PlayerInfo playerInfo) {
-        int eggsThrown = player.getStatistic(Statistic.USE_ITEM, Material.EGG);
+    private void importEggsThrown(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> usedSection = getUsedSection(playerInfo.getUUID(), worldName);
+
+        if (!usedSection.isPresent()) return;
+
+        long eggsThrown = (Long) getStatistic(usedSection.get(), Material.EGG.getKey().toString()).orElse(0L);
+
+        if (eggsThrown <= 0) return;
 
         playerInfo.addRow(PlayerStat.EGGS_THROWN,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", eggsThrown, "world",
-                        plugin.getServer().getWorlds().get(0).getName()));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", eggsThrown, "world",
+                        worldName));
     }
 
-    private void importItemsDropped(Player player, PlayerInfo playerInfo) {
+    private void importItemsDropped(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> droppedSection = getDroppedSection(playerInfo.getUUID(), worldName);
+
+        if (!droppedSection.isPresent()) return;
+
         for (Material material : Material.values()) {
-            int dropped = player.getStatistic(Statistic.DROP, material);
+            long dropped = (Long) getStatistic(droppedSection.get(), material.getKey().toString()).orElse(0L);
 
             if (dropped <= 0) continue;
 
             playerInfo.addRow(PlayerStat.ITEMS_DROPPED,
-                    StatzUtil.makeQuery(player.getUniqueId(), "value", dropped, "world",
-                            plugin.getServer().getWorlds().get(0).getName(), "item", material));
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", dropped, "world",
+                            worldName, "item", material));
         }
     }
 
-    private void importItemsPickedUp(Player player, PlayerInfo playerInfo) {
+    private void importItemsPickedUp(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        Optional<JSONObject> pickedUpSection = getPickedUpSection(playerInfo.getUUID(), worldName);
+
+        if (!pickedUpSection.isPresent()) return;
+
         for (Material material : Material.values()) {
-            int pickedUp = player.getStatistic(Statistic.PICKUP, material);
+
+            long pickedUp = (Long) getStatistic(pickedUpSection.get(), material.getKey().toString()).orElse(0L);
 
             if (pickedUp <= 0) continue;
 
             playerInfo.addRow(PlayerStat.ITEMS_PICKED_UP,
-                    StatzUtil.makeQuery(player.getUniqueId(), "value", pickedUp, "world",
-                            plugin.getServer().getWorlds().get(0).getName(), "item", material));
+                    StatzUtil.makeQuery(playerInfo.getUUID(), "value", pickedUp, "world",
+                            worldName, "item", material));
         }
     }
 
-    private void importVillageTrades(Player player, PlayerInfo playerInfo) {
-        int traded = player.getStatistic(Statistic.TRADED_WITH_VILLAGER);
+    private void importVillageTrades(PlayerInfo playerInfo, String worldName) {
+        Optional<JSONObject> object = getCustomSection(playerInfo.getUUID(), worldName);
+
+        if (!object.isPresent()) {
+            return;
+        }
+
+        long traded =
+                (Long) getStatistic(object.get(), Statistic.TRADED_WITH_VILLAGER.getKey().toString()).orElse(0L);
+
+        if (traded <= 0) return;
 
         playerInfo.addRow(PlayerStat.VILLAGER_TRADES,
-                StatzUtil.makeQuery(player.getUniqueId(), "value", traded, "world",
-                        plugin.getServer().getWorlds().get(0).getName(), "trade", Material.STICK));
+                StatzUtil.makeQuery(playerInfo.getUUID(), "value", traded, "world",
+                        worldName, "trade", Material.STICK));
+    }
+
+    private Optional<JSONObject> getUserStatisticsFile(UUID uuid, String worldName)
+            throws IOException, ParseException {
+        Objects.requireNonNull(uuid);
+        Objects.requireNonNull(worldName);
+
+        World world = Bukkit.getWorld(worldName);
+
+        if (world == null) return Optional.empty();
+
+        File worldFolder = new File(world.getWorldFolder(), "stats");
+        File playerStatistics = new File(worldFolder, uuid.toString() + ".json");
+
+        if (!playerStatistics.exists()) {
+            return Optional.empty();
+        }
+
+        JSONObject rootObject = (JSONObject) new JSONParser().parse(new FileReader(playerStatistics));
+
+        if (rootObject == null) return Optional.empty();
+
+        if (rootObject.containsKey("stats")) {
+            return Optional.ofNullable((JSONObject) rootObject.get("stats"));
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<JSONObject> getCustomSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:custom");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getMinedSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:mined");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getUsedSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:used");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getPickedUpSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:picked_up");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getKilledBySection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:killed_by");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getKilledSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:killed");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getCraftedSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:crafted");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getDroppedSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:dropped");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getBrokenSection(UUID uuid, String worldName) {
+        try {
+            return getStatisticSubsection(getUserStatisticsFile(uuid, worldName).orElse(null), "minecraft:broken");
+        } catch (IOException | ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<JSONObject> getStatisticSubsection(JSONObject statsSection, String path) {
+        if (statsSection == null) return Optional.empty();
+
+        return Optional.ofNullable((JSONObject) this.getStatistic(statsSection,
+                path).orElse(null));
+    }
+
+    private Optional<Object> getStatistic(JSONObject root, String path) {
+        if (root == null) return Optional.empty();
+
+        if (!root.containsKey(path)) return Optional.empty();
+
+        return Optional.ofNullable(root.get(path));
     }
 
 }
