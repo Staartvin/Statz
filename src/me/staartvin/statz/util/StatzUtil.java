@@ -73,6 +73,12 @@ public class StatzUtil {
             return false;
         }
 
+        System.out.println(Integer.parseInt(splitCheck.get(0).replaceAll("[^\\d.]", "")));
+        System.out.println(Integer.parseInt(splitCur.get(0)
+                .replaceAll("[^\\d.]", "")));
+
+        // Check if the first digit of the version to be checked is higher than the first digit of the current
+        // version of MC
         if (Integer.parseInt(splitCheck.get(0).replaceAll("[^\\d.]", "")) > Integer.parseInt(splitCur.get(0)
                 .replaceAll("[^\\d.]", ""))) {
             return false;
@@ -92,11 +98,15 @@ public class StatzUtil {
             splitCheck.add("0");
         }
 
+        // Check if the second digit of the version to be checked is higher than the second digit of the current
+        // version of MC
         if (Integer.parseInt(splitCheck.get(1).replaceAll("[^\\d.]", "")) > Integer.parseInt(splitCur.get(1)
                 .replaceAll("[^\\d.]", ""))) {
             return false;
         }
 
+        // Check if the third digit of the version to be checked is higher than the third digit of the current
+        // version of MC
         return Integer.parseInt(splitCheck.get(2).replaceAll("[^\\d.]", "")) <= Integer.parseInt(splitCur.get(2)
                 .replaceAll("[^\\d.]", ""));
     }
@@ -528,17 +538,15 @@ public class StatzUtil {
     }
 
     public static String getMinecraftVersion() {
-        String version = Bukkit.getVersion();
+        String version = Bukkit.getBukkitVersion();
 
-        int index = version.indexOf("(");
+        String[] split = version.split("-");
 
-        if (index < 0) {
+        if (split.length < 1) {
             return "Unknown";
         }
 
-        version = version.substring(index).replace("(", "").replace(")", "").replace("MC:", "").trim();
-
-        return version;
+        return split[0];
     }
 
     public static String getMobType(Entity e) {
