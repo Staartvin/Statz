@@ -24,8 +24,8 @@ import java.util.*;
  */
 public class GUIManager implements Listener {
 
-    private Statz plugin;
-    private String inventoryTitle = "Statistics of ";
+    private final Statz plugin;
+    private final String inventoryTitle = "Statistics of ";
 
     public GUIManager(Statz instance) {
         this.plugin = instance;
@@ -251,6 +251,9 @@ public class GUIManager implements Listener {
 
             // Get icon of this stat type
             Material iconMaterial = this.getIconMaterialForSpecificStatistic(query, statistic);
+
+            // Set default icon if none was defined.
+            if (iconMaterial == null) iconMaterial = Material.STICK;
 
             // Find display name of this item.
             String displayName = plugin.getStatisticDescriptionConfig().getHumanFriendlyTitle(statistic);

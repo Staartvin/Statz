@@ -40,6 +40,11 @@ public class CommandsPerformedListener implements Listener {
 		if (subString > 0) {
 			command = message.substring(0, subString).trim();
 			arguments = message.substring(subString).trim();
+
+			// Cut off string so it's not too long
+			if (arguments.length() > 100) {
+				arguments = arguments.substring(0, 99);
+			}
 		} else {
 			command = message.trim();
 		}
