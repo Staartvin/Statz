@@ -17,9 +17,10 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This class can import data into Statz' database from other plugins. Currently supports Stats3
@@ -29,7 +30,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ImportManager {
 
-    private Statz plugin;
+    private final Statz plugin;
 
     public ImportManager(Statz plugin) {
         this.plugin = plugin;
@@ -44,49 +45,67 @@ public class ImportManager {
     public CompletableFuture<Integer> importFromVanilla() {
         return CompletableFuture.supplyAsync(() -> {
 
-            List<UUID> storedPlayers = new ArrayList<>();
-            try {
-                storedPlayers = plugin.getDataManager().getStoredPlayers().get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            if (storedPlayers.isEmpty()) {
-                return 0;
-            }
-
             int playersImported = 0;
 
+            // Loop over each world, try to read all files in that world
+            for (World world : Bukkit.getWorlds()) {
+                String worldName = world.getName();
 
-            for (UUID uuid : storedPlayers) {
+                File worldFolder = new File(world.getWorldFolder(), "stats");
 
-                Bukkit.getWorlds().forEach(world -> {
+                // Check if the folder exists
+                if (!worldFolder.exists()) continue;
+
+                // Get all files in this folder (each file is a player)
+                File[] playerFiles = worldFolder.listFiles();
+
+                if (playerFiles == null) continue;
+
+                // Loop over each player file
+                for (File playerFile : playerFiles) {
+                    UUID uuid = null;
+
+                    // Try to obtain the UUID of the player associated with the file
+                    try {
+                        uuid = UUID.fromString(
+                                playerFile.getName()
+                                        .replace("[Conflict]", "")
+                                        .replace(".json", "")
+                        );
+                    } catch (IllegalArgumentException e) {
+                        plugin.debugMessage("Couldn't read statistics file '" + playerFile.getName() +
+                                "' ¶on world" + world.getName());
+                        continue;
+                    }
+
+                    if (uuid == null) continue;
+
+                    // If we have a valid UUID, make sure to load the data.
                     PlayerInfo info = new PlayerInfo(uuid);
 
-                    importJoins(info, world.getName());
-                    importDeaths(info, world.getName());
-                    importFishCaught(info, world.getName());
-                    importBlocksPlaced(info, world.getName());
-                    importBlocksBroken(info, world.getName());
-                    importMobsKilled(info, world.getName());
-                    importPlayersKilled(info, world.getName());
-                    importPlaytime(info, world.getName());
-                    importFoodEaten(info, world.getName());
-                    importDamageTaken(info, world.getName());
-                    importDistanceTravelled(info, world.getName());
-                    importItemsCrafted(info, world.getName());
-                    importArrowsShot(info, world.getName());
-                    importToolsBroken(info, world.getName());
-                    importBedsEntered(info, world.getName());
-                    importEggsThrown(info, world.getName());
-                    importItemsPickedUp(info, world.getName());
-                    importItemsDropped(info, world.getName());
-                    importVillageTrades(info, world.getName());
+                    importJoins(info, worldName);
+                    importDeaths(info, worldName);
+                    importFishCaught(info, worldName);
+                    importBlocksPlaced(info, worldName);
+                    importBlocksBroken(info, worldName);
+                    importMobsKilled(info, worldName);
+                    importPlayersKilled(info, worldName);
+                    importPlaytime(info, worldName);
+                    importFoodEaten(info, worldName);
+                    importDamageTaken(info, worldName);
+                    importDistanceTravelled(info, worldName);
+                    importItemsCrafted(info, worldName);
+                    importArrowsShot(info, worldName);
+                    importToolsBroken(info, worldName);
+                    importBedsEntered(info, worldName);
+                    importEggsThrown(info, worldName);
+                    importItemsPickedUp(info, worldName);
+                    importItemsDropped(info, worldName);
+                    importVillageTrades(info, worldName);
 
                     plugin.getDataManager().setPlayerInfo(info);
-                });
-
-                playersImported++;
+                    playersImported++;
+                }
             }
 
             return playersImported;
