@@ -1,12 +1,11 @@
 package me.staartvin.statz.hooks;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
 import org.bukkit.Bukkit;
 
 public enum StatzDependency {
 
-    PLUGINLIBRARY("PluginLibrary", new PluginLibraryHandler());
+    DUMMY("Dummy", null);
 
     StatzDependency(String internalName) {
         this.internalName = internalName;
@@ -17,7 +16,7 @@ public enum StatzDependency {
         this.setDependencyHandler(handler);
     }
 
-    private String internalName;
+    private final String internalName;
     private DependencyHandler dependencyHandler;
 
     public String getInternalString() {

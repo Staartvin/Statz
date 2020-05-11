@@ -1,14 +1,12 @@
 package me.staartvin.statz.hooks;
 
-import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.hooks.handlers.PluginLibraryHandler;
+import me.staartvin.utils.pluginlibrary.Library;
+import me.staartvin.utils.pluginlibrary.PluginLibrary;
+import me.staartvin.utils.pluginlibrary.hooks.LibraryHook;
 import org.bukkit.ChatColor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -26,17 +24,12 @@ public class DependencyManager {
 
     private final Statz plugin;
 
+    private PluginLibrary pluginLibrary = null;
+
     public DependencyManager(final Statz instance) {
         plugin = instance;
 
-        for (StatzDependency dep : StatzDependency.values()) {
-            // Register handlers
-            try {
-                handlers.put(dep, dep.getDependencyHandler());
-            } catch (NoClassDefFoundError e) {
-                plugin.debugMessage("Could not load " + dep.getInternalString() + "!");
-            }
-        }
+        this.loadPluginLibrary();
     }
 
     /**
@@ -113,18 +106,6 @@ public class DependencyManager {
         return handler.isAvailable();
     }
 
-    public List<StatzDependency> getAvailableDependencies() {
-        List<StatzDependency> dependencies = new ArrayList<>();
-
-        for (StatzDependency d : StatzDependency.values()) {
-            if (this.isAvailable(d)) {
-                dependencies.add(d);
-            }
-        }
-
-        return dependencies;
-    }
-
     /**
      * Get library hook of PluginLibrary
      *
@@ -132,17 +113,12 @@ public class DependencyManager {
      * @return hook used by PluginLibrary (if available) or null if not found.
      */
     public LibraryHook getLibraryHook(Library library) {
-        if (!this.isAvailable(StatzDependency.PLUGINLIBRARY)) return null;
-
         if (library == null) return null;
 
-        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(StatzDependency.PLUGINLIBRARY);
+        if (!this.isPluginLibraryLoaded()) return null;
 
-        if (handler == null) {
-            return null;
-        }
 
-        return handler.getLibraryHook(library);
+        return PluginLibrary.getLibrary(library);
     }
 
     /**
@@ -153,23 +129,26 @@ public class DependencyManager {
      */
     public boolean isAvailable(Library library) {
 
-        if (!this.isAvailable(StatzDependency.PLUGINLIBRARY)) return false;
+        if (!this.isPluginLibraryLoaded()) return false;
 
         if (library == null) return false;
 
-        PluginLibraryHandler handler = (PluginLibraryHandler) getDependency(StatzDependency.PLUGINLIBRARY);
-
-        if (handler == null) {
-            return false;
-        }
-
-        LibraryHook hook = handler.getLibraryHook(library);
+        LibraryHook hook = this.getLibraryHook(library);
 
         if (hook == null) {
             return false;
         }
 
-        return hook.isAvailable();
+        return hook.isAvailable() && hook.isHooked();
     }
 
+    private boolean loadPluginLibrary() {
+        pluginLibrary = PluginLibrary.getPluginLibrary(this.plugin);
+
+        return pluginLibrary.enablePluginLibrary() > 0;
+    }
+
+    public boolean isPluginLibraryLoaded() {
+        return pluginLibrary != null;
+    }
 }

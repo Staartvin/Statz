@@ -1,12 +1,11 @@
 package me.staartvin.statz.statsdisabler;
 
-import me.staartvin.plugins.pluginlibrary.Library;
-import me.staartvin.plugins.pluginlibrary.hooks.GriefPreventionHook;
-import me.staartvin.plugins.pluginlibrary.hooks.LibraryHook;
-import me.staartvin.plugins.pluginlibrary.hooks.WorldGuardHook;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
-import me.staartvin.statz.hooks.StatzDependency;
+import me.staartvin.utils.pluginlibrary.Library;
+import me.staartvin.utils.pluginlibrary.hooks.GriefPreventionHook;
+import me.staartvin.utils.pluginlibrary.hooks.LibraryHook;
+import me.staartvin.utils.pluginlibrary.hooks.WorldGuardHook;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,7 +23,7 @@ import java.util.logging.Level;
  */
 public class DisableManager {
 
-    private Statz plugin;
+    private final Statz plugin;
 
     private FileConfiguration disableConfig;
     private File disableConfigFile;
@@ -43,14 +42,14 @@ public class DisableManager {
     public boolean isStatDisabledLocation(Location loc, PlayerStat stat) {
 
         // We cannot check if PluginLibrary is not available.
-        if (!plugin.getDependencyManager().isAvailable(StatzDependency.PLUGINLIBRARY)) {
+        if (!plugin.getDependencyManager().isPluginLibraryLoaded()) {
             return false;
         }
 
         LibraryHook worldGuardHook = plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
 
         // Only check for WG regions if WorldGuard is installed
-        if (worldGuardHook != null && worldGuardHook.isAvailable()) {
+        if (worldGuardHook != null && worldGuardHook.isHooked()) {
             List<String> disabledRegions = this.getDisabledWorldGuardRegions(stat);
 
             WorldGuardHook wgHook = (WorldGuardHook) plugin.getDependencyManager().getLibraryHook(Library.WORLDGUARD);
@@ -68,10 +67,11 @@ public class DisableManager {
         LibraryHook griefPreventionHook = plugin.getDependencyManager().getLibraryHook(Library.GRIEFPREVENTION);
 
         // Check GriefPrevention claims
-        if (griefPreventionHook != null && griefPreventionHook.isAvailable()) {
+        if (griefPreventionHook != null && griefPreventionHook.isHooked()) {
             List<String> disabledUUIDs = this.getDisabledGriefPreventionClaims(stat);
 
-            GriefPreventionHook gpHook = (GriefPreventionHook) plugin.getDependencyManager().getLibraryHook(Library.GRIEFPREVENTION);
+            GriefPreventionHook gpHook =
+                    (GriefPreventionHook) plugin.getDependencyManager().getLibraryHook(Library.GRIEFPREVENTION);
 
             // Check for all disabled uuid claims if a player is in them.
             if (!disabledUUIDs.isEmpty()) {
