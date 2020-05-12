@@ -73,10 +73,6 @@ public class StatzUtil {
             return false;
         }
 
-        System.out.println(Integer.parseInt(splitCheck.get(0).replaceAll("[^\\d.]", "")));
-        System.out.println(Integer.parseInt(splitCur.get(0)
-                .replaceAll("[^\\d.]", "")));
-
         // Check if the first digit of the version to be checked is higher than the first digit of the current
         // version of MC
         if (Integer.parseInt(splitCheck.get(0).replaceAll("[^\\d.]", "")) > Integer.parseInt(splitCur.get(0)
