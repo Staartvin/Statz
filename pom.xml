@@ -340,6 +340,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Testing dependencies -->
 
         <dependency>
             <groupId>junit</groupId>
