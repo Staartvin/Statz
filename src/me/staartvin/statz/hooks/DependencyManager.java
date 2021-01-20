@@ -1,13 +1,14 @@
 package me.staartvin.statz.hooks;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.utils.pluginlibrary.Library;
-import me.staartvin.utils.pluginlibrary.PluginLibrary;
-import me.staartvin.utils.pluginlibrary.hooks.LibraryHook;
+import me.staartvin.utils.pluginlibrary.statz.Library;
+import me.staartvin.utils.pluginlibrary.statz.PluginLibrary;
+import me.staartvin.utils.pluginlibrary.statz.hooks.LibraryHook;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * This class is used for loading all the dependencies Statz has. <br>
@@ -112,10 +113,10 @@ public class DependencyManager {
      * @param library library to get
      * @return hook used by PluginLibrary (if available) or null if not found.
      */
-    public LibraryHook getLibraryHook(Library library) {
-        if (library == null) return null;
+    public Optional<LibraryHook> getLibraryHook(Library library) {
+        if (library == null) return Optional.empty();
 
-        if (!this.isPluginLibraryLoaded()) return null;
+        if (!this.isPluginLibraryLoaded()) return Optional.empty();
 
 
         return PluginLibrary.getLibrary(library);
@@ -133,13 +134,9 @@ public class DependencyManager {
 
         if (library == null) return false;
 
-        LibraryHook hook = this.getLibraryHook(library);
+        Optional<LibraryHook> hook = this.getLibraryHook(library);
 
-        if (hook == null) {
-            return false;
-        }
-
-        return library.isPluginInstalled() && hook.isHooked();
+        return hook.filter(libraryHook -> LibraryHook.isPluginAvailable(library) && libraryHook.isHooked()).isPresent();
     }
 
     private boolean loadPluginLibrary() {

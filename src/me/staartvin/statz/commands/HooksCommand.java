@@ -3,9 +3,9 @@ package me.staartvin.statz.commands;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.commands.manager.StatzCommand;
 import me.staartvin.statz.language.Lang;
-import me.staartvin.utils.pluginlibrary.Library;
-import me.staartvin.utils.pluginlibrary.hooks.LibraryHook;
-import me.staartvin.utils.pluginlibrary.hooks.StatzHook;
+import me.staartvin.utils.pluginlibrary.statz.Library;
+import me.staartvin.utils.pluginlibrary.statz.hooks.LibraryHook;
+import me.staartvin.utils.pluginlibrary.statz.hooks.StatzHook;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -31,9 +31,9 @@ public class HooksCommand extends StatzCommand {
 		for (final Library dep : Library.values()) {
 
 			final LibraryHook handler = plugin.getDependencyManager()
-					.getLibraryHook(dep);
+					.getLibraryHook(dep).orElse(null);
 
-			if (handler.isHooked() && !(handler instanceof StatzHook)) {
+			if (handler != null && handler.isHooked() && !(handler instanceof StatzHook)) {
 				sender.sendMessage(org.bukkit.ChatColor.GRAY + "- " + org.bukkit.ChatColor.GREEN + dep
 						.getHumanPluginName());
 			}

@@ -3,7 +3,7 @@ package me.staartvin.statz.listeners;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.datamanager.player.specification.VotesSpecification;
-import me.staartvin.utils.pluginlibrary.events.PlayerVotedEvent;
+import me.staartvin.utils.pluginlibrary.statz.events.PlayerVotedEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
