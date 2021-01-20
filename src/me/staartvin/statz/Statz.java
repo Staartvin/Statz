@@ -17,6 +17,7 @@ import me.staartvin.statz.language.StatisticDescriptionConfig;
 import me.staartvin.statz.listeners.*;
 import me.staartvin.statz.logger.LogManager;
 import me.staartvin.statz.patches.PatchManager;
+import me.staartvin.statz.placeholders.StatzPlaceholders;
 import me.staartvin.statz.statsdisabler.DisableManager;
 import me.staartvin.statz.tasks.TaskManager;
 import me.staartvin.statz.tasks.UpdateDatabaseTask;
@@ -156,6 +157,9 @@ public class Statz extends JavaPlugin {
 
         // Load statistics.yml
         this.getStatisticDescriptionConfig().createNewFile();
+
+        // Register Statz Placeholder
+        new StatzPlaceholders(this).register();
     }
 
     @Override
