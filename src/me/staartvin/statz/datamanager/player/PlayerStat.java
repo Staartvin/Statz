@@ -1,7 +1,6 @@
 package me.staartvin.statz.datamanager.player;
 
-import me.staartvin.statz.datamanager.player.specification.ItemsPickedUpSpecification;
-import me.staartvin.statz.datamanager.player.specification.PlayerStatSpecification;
+import me.staartvin.statz.datamanager.player.specification.*;
 import org.bukkit.Material;
 
 /**
@@ -15,141 +14,143 @@ public enum PlayerStat {
     /**
      * How many times did a player join the server?
      */
-    JOINS("joins", ItemsPickedUpSpecification.class, Material.ACACIA_DOOR, "How often did I log in?"),
+    JOINS("joins", JoinsSpecification.class, Material.ACACIA_DOOR, "How often did I log in?"),
     /**
      * How many times did a player die?
      */
-    DEATHS("deaths", ItemsPickedUpSpecification.class, Material.OAK_SIGN, "How often did I die?"),
+    DEATHS("deaths", DeathsSpecification.class, Material.OAK_SIGN, "How often did I die?"),
     /**
      * How many times did a player catch an item with fishing?
      */
-    ITEMS_CAUGHT("items_caught", ItemsPickedUpSpecification.class, Material.GOLDEN_SHOVEL, "How many items caught " +
+    ITEMS_CAUGHT("items_caught", ItemsCaughtSpecification.class, Material.GOLDEN_SHOVEL, "How many items caught " +
             "while fishing?"),
     /**
      * What kind of blocks (and how many) where placed by a player?
      */
-    BLOCKS_PLACED("blocks_placed", ItemsPickedUpSpecification.class, Material.COBBLESTONE, "How many blocks did I " +
+    BLOCKS_PLACED("blocks_placed", BlocksPlacedSpecification.class, Material.COBBLESTONE, "How many blocks did I " +
             "place?"),
     /**
      * What kind of blocks (and how many) where broken by a player?
      */
-    BLOCKS_BROKEN("blocks_broken", ItemsPickedUpSpecification.class, Material.IRON_PICKAXE, "How many blocks did I " +
+    BLOCKS_BROKEN("blocks_broken", BlocksBrokenSpecification.class, Material.IRON_PICKAXE, "How many blocks did I " +
             "break?"),
 
     /**
      * What kind of mobs did a player kill?
      */
-    KILLS_MOBS("kills_mobs", ItemsPickedUpSpecification.class, Material.SKELETON_SKULL, "How many mobs did I kill?"),
+    KILLS_MOBS("kills_mobs", KillsMobsSpecification.class, Material.SKELETON_SKULL, "How many mobs did I kill?"),
 
     /**
      * How many players did a player kill?
      */
-    KILLS_PLAYERS("kills_players", ItemsPickedUpSpecification.class, Material.DIAMOND_SWORD, "How many players did I " +
+    KILLS_PLAYERS("kills_players", KillsPlayersSpecification.class, Material.DIAMOND_SWORD, "How many players did I " +
             "kill?"),
 
     /**
      * How many minutes has a player played on the server?
      */
-    TIME_PLAYED("time_played", ItemsPickedUpSpecification.class, Material.CLOCK, "What's my playtime?"),
+    TIME_PLAYED("time_played", TimePlayedSpecification.class, Material.CLOCK, "What's my playtime?"),
 
     /**
      * What food has a player eaten?
      */
-    FOOD_EATEN("food_eaten", ItemsPickedUpSpecification.class, Material.COOKED_PORKCHOP, "How much have I eaten?"),
+    FOOD_EATEN("food_eaten", FoodEatenSpecification.class, Material.COOKED_PORKCHOP, "How much have I eaten?"),
 
     /**
      * How much damage has a player taken?
      * Uses Spigot's {@link org.bukkit.event.entity.EntityDamageEvent.DamageCause} class.
      */
-    DAMAGE_TAKEN("damage_taken", ItemsPickedUpSpecification.class, Material.ROTTEN_FLESH, "How much damage did I " +
+    DAMAGE_TAKEN("damage_taken", DamageTakenSpecification.class, Material.ROTTEN_FLESH, "How much damage did I " +
             "take?"),
 
     /**
      * How many times did a player shear sheep?
      */
-    TIMES_SHORN("times_shorn", ItemsPickedUpSpecification.class, Material.SHEARS, "How many sheep have I shorn?"),
+    TIMES_SHORN("times_shorn", TimesShornSpecification.class, Material.SHEARS, "How many sheep have I shorn?"),
 
     /**
      * How far and in what way did a player travel?
      */
-    DISTANCE_TRAVELLED("distance_travelled", ItemsPickedUpSpecification.class, Material.MINECART, "How far have I " +
+    DISTANCE_TRAVELLED("distance_travelled", DistanceTravelledSpecification.class, Material.MINECART, "How far have I" +
+            " " +
             "travelled?"),
 
     /**
      * What kind of items did a player craft?
      */
-    ITEMS_CRAFTED("items_crafted", ItemsPickedUpSpecification.class, Material.CRAFTING_TABLE, "How many items did I " +
+    ITEMS_CRAFTED("items_crafted", ItemsCraftedSpecification.class, Material.CRAFTING_TABLE, "How many items did I " +
             "craft?"),
 
     /**
      * How much XP did a player gain in total?
      */
-    XP_GAINED("xp_gained", ItemsPickedUpSpecification.class, Material.EXPERIENCE_BOTTLE, "How much EXP did I gain?"),
+    XP_GAINED("xp_gained", XPGainedSpecification.class, Material.EXPERIENCE_BOTTLE, "How much EXP did I gain?"),
 
     /**
      * How many times did a player vote (with Votifier)?
      */
-    VOTES("votes", ItemsPickedUpSpecification.class, Material.MAP, "How many times did I vote?"),
+    VOTES("votes", VotesSpecification.class, Material.MAP, "How many times did I vote?"),
 
     /**
      * What are the names of corresponding UUIDs (internal database)
      */
-    PLAYERS("players", ItemsPickedUpSpecification.class),
+    PLAYERS("players", PlayerStatSpecification.class),
 
     /**
      * How many arrows did a player shoot and on what world?
      */
-    ARROWS_SHOT("arrows_shot", ItemsPickedUpSpecification.class, Material.ARROW, "How many arrows did I shoot?"),
+    ARROWS_SHOT("arrows_shot", ArrowsShotSpecification.class, Material.ARROW, "How many arrows did I shoot?"),
 
     /**
      * How many times did a player enter a bed and on what world?
      */
-    ENTERED_BEDS("entered_beds", ItemsPickedUpSpecification.class, Material.PINK_BED, "How often have I slept?"),
+    ENTERED_BEDS("entered_beds", EnteredBedsSpecification.class, Material.PINK_BED, "How often have I slept?"),
 
     /**
      * What commands did a player perform and on what world?
      */
-    COMMANDS_PERFORMED("commands_performed", ItemsPickedUpSpecification.class, Material.CAKE, "How many commands did " +
+    COMMANDS_PERFORMED("commands_performed", CommandsPerformedSpecification.class, Material.CAKE, "How many commands " +
+            "did " +
             "I perform?"),
 
     /**
      * How many times has a player been kicked?
      */
-    TIMES_KICKED("times_kicked", ItemsPickedUpSpecification.class, Material.DISPENSER, "How many times did I get " +
+    TIMES_KICKED("times_kicked", TimesKickedSpecification.class, Material.DISPENSER, "How many times did I get " +
             "kicked?"),
 
     /**
      * How many tools did a player break?
      */
-    TOOLS_BROKEN("tools_broken", ItemsPickedUpSpecification.class, Material.ANVIL, "How many tools did I break?"),
+    TOOLS_BROKEN("tools_broken", ToolsBrokenSpecification.class, Material.ANVIL, "How many tools did I break?"),
 
     /**
      * How many eggs did a player throw?
      */
-    EGGS_THROWN("eggs_thrown", ItemsPickedUpSpecification.class, Material.EGG, "How many eggs did I throw?"),
+    EGGS_THROWN("eggs_thrown", EggsThrownSpecification.class, Material.EGG, "How many eggs did I throw?"),
 
     /**
      * How many times did a player switch worlds?
      */
-    WORLDS_CHANGED("worlds_changed", ItemsPickedUpSpecification.class, Material.NETHER_STAR, "How often did I switch " +
+    WORLDS_CHANGED("worlds_changed", WorldsChangedSpecification.class, Material.NETHER_STAR, "How often did I switch " +
             "worlds?"),
 
     /**
      * How many buckets did a player fill?
      */
-    BUCKETS_FILLED("buckets_filled", ItemsPickedUpSpecification.class, Material.WATER_BUCKET, "How many buckets did I" +
+    BUCKETS_FILLED("buckets_filled", BucketsFilledSpecification.class, Material.WATER_BUCKET, "How many buckets did I" +
             " fill?"),
 
     /**
      * How many buckets did a player empty?
      */
-    BUCKETS_EMPTIED("buckets_emptied", ItemsPickedUpSpecification.class, Material.BUCKET, "How many buckets did I " +
+    BUCKETS_EMPTIED("buckets_emptied", BucketsEmptiedSpecification.class, Material.BUCKET, "How many buckets did I " +
             "empty?"),
 
     /**
      * How many items did a player drop?
      */
-    ITEMS_DROPPED("items_dropped", ItemsPickedUpSpecification.class, Material.CHEST, "How many items have I dropped?"),
+    ITEMS_DROPPED("items_dropped", ItemsDroppedSpecification.class, Material.CHEST, "How many items have I dropped?"),
 
     /**
      * How many items did a player pick up?
@@ -161,12 +162,13 @@ public enum PlayerStat {
     /**
      * How many times did a player teleport?
      */
-    TELEPORTS("teleports", ItemsPickedUpSpecification.class, Material.MELON_SEEDS, "How much did I teleport?"),
+    TELEPORTS("teleports", TeleportsSpecification.class, Material.MELON_SEEDS, "How much did I teleport?"),
 
     /**
      * How many trades with villages did a player do?
      */
-    VILLAGER_TRADES("villager_trades", ItemsPickedUpSpecification.class, Material.EMERALD, "How much did I trade with" +
+    VILLAGER_TRADES("villager_trades", VillagerTradesSpecification.class, Material.EMERALD, "How much did I trade " +
+            "with" +
             " Villagers?");
 
     private String tableName;
