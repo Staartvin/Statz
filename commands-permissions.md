@@ -14,11 +14,11 @@ Parentheses denote optional arguments, like '\(' and '\)'. Triangle brackets \('
 
 ## Permissions
 
-* _\`statz.list.self\`_ - This permission is automatically given to all players. It allows a player to perform **/statz list**.
-* _\`statz.list.others\`_ - This permission is only given to OP. It allows a player to check the statistics of other players.
-* _\`statz.help\`_ - This permission allows players to perform **/statz help** and is automatically awarded to all players.
-* _\`statz.hooks\`_ - To be able to perform **/statz hooks**, you'll need this permission. By default, only OP's have this permission.
-* _\`statz.transfer.sqlite\`_ - To be able to perform transfers with **/statz transfer**, you'll need this command. By default, only OP's get this permission.
-* _\`statz.migrate_\` - This permission allows players to perform /statz migrate.
-* _\`statz.purge\`_ - This permission allows players to purge players from the database.
+* _`statz.list.self`_ - This permission is automatically given to all players. It allows a player to perform **/statz list**.
+* _`statz.list.others`_ - This permission is only given to OP. It allows a player to check the statistics of other players.
+* _`statz.help`_ - This permission allows players to perform **/statz help** and is automatically awarded to all players.
+* _`statz.hooks`_ - To be able to perform **/statz hooks**, you'll need this permission. By default, only OP's have this permission.
+* _`statz.transfer.sqlite`_ - To be able to perform transfers with **/statz transfer**, you'll need this command. By default, only OP's get this permission.
+* _`statz.migrate`_ - This permission allows players to perform /statz migrate.
+* _`statz.purge`_ - This permission allows players to purge players from the database.
 

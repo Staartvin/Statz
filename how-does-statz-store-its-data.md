@@ -4,8 +4,8 @@ Statz records quite a bit of data, as can be seen [here](https://www.spigotmc.or
 
 Table of contents:
 
-* [Data stored in Statz's database](https://github.com/Staartvin/Statz/wiki/How-does-Statz-record-its-data%3F#data-stored-in-statzs-database)
-* [Data not stored in Statz's database, but still retrievable by Statz](https://github.com/Staartvin/Statz/wiki/How-does-Statz-record-its-data%3F#data-not-stored-in-statzs-database-but-retrievable-by-statz)  
+* [Data stored in Statz's database](how-does-statz-store-its-data.md#data-stored-in-statzs-database)
+* [Data not stored in Statz's database, but still retrievable by Statz](how-does-statz-store-its-data.md#data-not-stored-in-statzs-database-but-retrievable-by-statz)  
 
 ## Data stored in Statz's database
 
