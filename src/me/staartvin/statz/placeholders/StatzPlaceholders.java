@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.staartvin.statz.Statz;
 import me.staartvin.statz.database.datatype.RowRequirement;
 import me.staartvin.statz.datamanager.player.PlayerStat;
+import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
@@ -74,6 +75,9 @@ public class StatzPlaceholders extends PlaceholderExpansion {
             return plugin.getStatzAPI().getSpecificData(PlayerStat.KILLS_PLAYERS, player.getUniqueId()) + "";
         } else if (params.equalsIgnoreCase("time_played")) {
             return plugin.getStatzAPI().getSpecificData(PlayerStat.TIME_PLAYED, player.getUniqueId()) + "";
+        } else if (params.equalsIgnoreCase("time_played_formatted")) {
+            return StatzUtil.timeToString((int) Math.round(plugin.getStatzAPI().getSpecificData(PlayerStat.TIME_PLAYED,
+                    player.getUniqueId())), StatzUtil.Time.MINUTES);
         } else if (params.equalsIgnoreCase("times_shorn")) {
             return plugin.getStatzAPI().getSpecificData(PlayerStat.TIMES_SHORN, player.getUniqueId()) + "";
         } else if (params.equalsIgnoreCase("xp_gained")) {
