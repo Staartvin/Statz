@@ -133,8 +133,7 @@ Statz has built-in support for several placeholders. This means that you only ne
       <td style="text-align:center">
         <p><code>statz_villager_trades</code>
         </p>
-        <p><code>(total trades made)</code>
-        </p>
+        <p>(total trades made)</p>
       </td>
     </tr>
     <tr>
