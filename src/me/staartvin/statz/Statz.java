@@ -158,8 +158,11 @@ public class Statz extends JavaPlugin {
         // Load statistics.yml
         this.getStatisticDescriptionConfig().createNewFile();
 
-        // Register Statz Placeholder
-        new StatzPlaceholders(this).register();
+        // Only register placeholders if we have placeholder API available!
+        if (this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            // Register Statz Placeholder
+            new StatzPlaceholders(this).register();
+        }
     }
 
     @Override
