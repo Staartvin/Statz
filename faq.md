@@ -12,7 +12,7 @@ Set _ignore creative_ in the config.yml to false.
 
 #### How do I disable certain statistics?
 
-You can add disabled statistics in the config by adding it to the list of _disabled statistics_. To view the different statistics Statz stores, [click here](how-to-disable-statistics.md).
+You can add disabled statistics in the config by adding it to the list of _disabled statistics_. To view the different statistics Statz stores, [click here](data/how-to-disable-statistics.md).
 
 #### Where can I find a list of commands or permissions?
 
