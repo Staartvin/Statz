@@ -26,6 +26,14 @@
         <revision>1.6.2<!---SNAPSHOT-${BUILD_NUMBER}--></revision>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub</name>
+            <url>https://maven.pkg.github.com/Staartvin/Statz</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <sourceDirectory>src</sourceDirectory>
 
