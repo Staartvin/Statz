@@ -95,7 +95,18 @@ Statz has built-in support for several placeholders. This means that you only ne
       </td>
     </tr>
     <tr>
-      <td style="text-align:center"><code>statz_time_played</code>
+      <td style="text-align:center">
+        <p><code>statz_time_played</code>
+        </p>
+        <p>(total time played in minutes)</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center">
+        <p><code>statz_time_played_formatted</code>
+        </p>
+        <p>(total play time, but formatted in <b><code>x days, y hours and z minutes)</code></b>
+        </p>
       </td>
     </tr>
     <tr>
