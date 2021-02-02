@@ -55,8 +55,7 @@ Statz has built-in support for several placeholders. This means that you only ne
       <td style="text-align:center">
         <p><code>statz_distance_travelled</code>
         </p>
-        <p><code>(total distance travelled)</code>
-        </p>
+        <p>(total distance travelled)</p>
       </td>
     </tr>
     <tr>
@@ -71,8 +70,7 @@ Statz has built-in support for several placeholders. This means that you only ne
       <td style="text-align:center">
         <p><code>statz_food_eaten</code>
         </p>
-        <p><code>(total</code>
-        </p>
+        <p>(total food eaten)</p>
       </td>
     </tr>
     <tr>
@@ -121,8 +119,7 @@ Statz has built-in support for several placeholders. This means that you only ne
       <td style="text-align:center">
         <p><code>statz_mobs_killed</code>
         </p>
-        <p><code>(total mobs killed)</code>
-        </p>
+        <p>(total mobs killed)</p>
       </td>
     </tr>
     <tr>
