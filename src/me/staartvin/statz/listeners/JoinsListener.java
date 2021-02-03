@@ -1,8 +1,6 @@
 package me.staartvin.statz.listeners;
 
 import me.staartvin.statz.Statz;
-import me.staartvin.statz.database.datatype.Query;
-import me.staartvin.statz.datamanager.player.PlayerInfo;
 import me.staartvin.statz.datamanager.player.PlayerStat;
 import me.staartvin.statz.util.StatzUtil;
 import org.bukkit.entity.Player;
@@ -51,24 +49,20 @@ public class JoinsListener implements Listener {
 			BukkitRunnable run = new BukkitRunnable() {
 				public void run() {
 					if (!player.isOnline()) {
-                        updateID.remove(player.getUniqueId());
-                        this.cancel();
-                        return;
-                    }
+						updateID.remove(player.getUniqueId());
+						this.cancel();
+						return;
+					}
 
-                    // Update value to new stat.
-                    plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED,
-                            StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
-                                    player.getWorld().getName()));
+					// Check if the stat is disabled for this player.
+					if (!plugin.doGeneralCheck(player, PlayerStat.TIME_PLAYED)) return;
 
-                    PlayerInfo playerinfo = plugin.getDataManager().getPlayerInfo(player.getUniqueId(),
-                            PlayerStat.ITEMS_PICKED_UP);
+					// Update value to new stat.
+					plugin.getDataManager().setPlayerInfo(player.getUniqueId(), PlayerStat.TIME_PLAYED,
+							StatzUtil.makeQuery("uuid", player.getUniqueId().toString(), "value", 1, "world",
+									player.getWorld().getName()));
 
-                    for (Query query : playerinfo.getRows()) {
-
-                    }
-
-                }
+				}
 			};
 
 			BukkitTask task = run.runTaskTimerAsynchronously(plugin,
