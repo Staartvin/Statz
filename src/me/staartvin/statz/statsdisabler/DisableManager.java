@@ -58,12 +58,9 @@ public class DisableManager {
             // Check for all disabled regions if a player is in them.
             if (!disabledRegions.isEmpty()) {
                 for (String regionName : disabledRegions) {
-                    System.out.println("Checking disabled region: " + regionName);
                     if (wgHook.isInRegion(loc, regionName)) {
-                        System.out.println("Location " + loc + " is in region " + regionName);
                         return true;
                     }
-                    System.out.println("Location " + loc + " is NOT in region " + regionName);
                 }
             }
         }
