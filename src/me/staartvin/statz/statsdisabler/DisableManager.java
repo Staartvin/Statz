@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -57,9 +58,12 @@ public class DisableManager {
             // Check for all disabled regions if a player is in them.
             if (!disabledRegions.isEmpty()) {
                 for (String regionName : disabledRegions) {
+                    System.out.println("Checking disabled region: " + regionName);
                     if (wgHook.isInRegion(loc, regionName)) {
+                        System.out.println("Location " + loc + " is in region " + regionName);
                         return true;
                     }
+                    System.out.println("Location " + loc + " is NOT in region " + regionName);
                 }
             }
         }
@@ -87,11 +91,25 @@ public class DisableManager {
     }
 
     public List<String> getDisabledWorldGuardRegions(PlayerStat stat) {
-        return this.disableConfig.getStringList(stat.toString() + ".WorldGuard regions");
+
+        for (String definedStat : this.disableConfig.getKeys(false)) {
+            if (definedStat.equalsIgnoreCase(stat.toString())) {
+                return this.disableConfig.getStringList(definedStat + ".WorldGuard regions");
+            }
+        }
+
+        return Collections.emptyList();
     }
 
     public List<String> getDisabledGriefPreventionClaims(PlayerStat stat) {
-        return this.disableConfig.getStringList(stat.toString() + ".GriefPrevention claims");
+
+        for (String definedStat : this.disableConfig.getKeys(false)) {
+            if (definedStat.equalsIgnoreCase(stat.toString())) {
+                return this.disableConfig.getStringList(definedStat + ".GriefPrevention claims");
+            }
+        }
+
+        return Collections.emptyList();
     }
 
     public void createNewFile() {
